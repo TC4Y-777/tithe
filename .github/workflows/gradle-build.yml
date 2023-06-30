@@ -31,7 +31,7 @@ jobs:
 #         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
 #         settings-path: ${{ github.workspace/Tithe-Spring/filename=.github%2 }} # location for the settings.xml file
 
-    - name: Change GITHUB_WORKSPACE env variable
+#     - name: Change GITHUB_WORKSPACE env variable
       env: 
         GITHUB_WORKSPACE: "/home/runner/work/tithe/tithe"
 
