@@ -35,6 +35,9 @@ jobs:
 
     - name: Moving files from spring root folder to the working directory
       run: mv $GITHUB_WORKSPACE/Tithe-Spring/* $GITHUB_WORKSPACE/
+      
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
 
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
