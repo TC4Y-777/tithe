@@ -31,6 +31,9 @@ jobs:
 #         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
 #         settings-path: ${{ github.workspace/Tithe-Spring/filename=.github%2 }} # location for the settings.xml file
 
+    - name: Change directory to the java root folder
+      run: cd Tithe-Spring
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
