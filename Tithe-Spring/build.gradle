@@ -51,6 +51,8 @@ publishing {
 	}
 	publications {
 		bootJava(MavenPublication) {
+		// GitHub may not accept uppercase Artifact ID
+			artifactId = "tithe-spring"
 			artifact tasks.named("bootJar")
 		}
 	}
