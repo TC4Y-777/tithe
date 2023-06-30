@@ -41,7 +41,7 @@ test.enabled = false
 publishing{
 	repositories{
 		maven{
-			uri = "https://github.com/TC4Y-777/tithe"
+			url = "https://github.com/TC4Y-777/tithe"
 		}
 	}
 }
