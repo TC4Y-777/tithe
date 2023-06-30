@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+#   Connection Timeout and pool size (number of simultaneous connections)
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+  jpa:
+    properties:
+      hibernate:
+#     Specifies which dilect to use. Hibernate will be generating the queries automatically and here, we are saying to use postgres dialect
+#       Usage of "PostgreSQL95Dialect" is deprecated
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+#   Will update the database when there is a change in the model
+      ddl-auto: update
+#     Show what query is being executed on the database, in the console
+    show-sql: true
