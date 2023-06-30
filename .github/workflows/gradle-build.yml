@@ -19,6 +19,9 @@ jobs:
     permissions:
       contents: read
 
+    env: 
+      GITHUB_WORKSPACE: "/home/runner/work/tithe/tithe"
+    
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -32,8 +35,7 @@ jobs:
 #         settings-path: ${{ github.workspace/Tithe-Spring/filename=.github%2 }} # location for the settings.xml file
 
 #     - name: Change GITHUB_WORKSPACE env variable
-      env: 
-        GITHUB_WORKSPACE: "/home/runner/work/tithe/tithe"
+      
 
     - name: View env variables
       run: env
