@@ -39,6 +39,8 @@ jobs:
       contents: read
       packages: write
     
+    needs: build
+    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -63,4 +65,6 @@ jobs:
       - name: Release Asset
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           files: ./build/libs/*.jar
