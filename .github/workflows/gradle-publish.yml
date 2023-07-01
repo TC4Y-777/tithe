@@ -13,6 +13,7 @@ on:
       - dev
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
@@ -28,10 +29,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-#         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-#         settings-path: ${{ github.workspace/Tithe-Spring/filename=.github%2 }} # location for the settings.xml file
-
-#     - name: Change GITHUB_WORKSPACE env variable
 
     - name: Moving files from spring root folder to the working directory
       run: mv $GITHUB_WORKSPACE/Tithe-Spring/* $GITHUB_WORKSPACE/
@@ -44,7 +41,7 @@ jobs:
       with:
         arguments: build
 
-  release:
+  publish:
   
     runs-on: ubuntu-latest
     permissions:
