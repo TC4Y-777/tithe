@@ -5,12 +5,14 @@ package com.tithe.entity;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,16 +25,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class EducationEntity {
+public class ForaneEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long educationId;
+	private Long foraneId;
 	
-	@Column(unique = true)
-	private String educationName;
+	private String foraneName;
 	
-	@ManyToMany(mappedBy = "educations")
-	private List<PersonEntity> persons;
+	@ManyToOne
+	@JoinColumn(name = "address_id")
+	private AddressEntity address;
+	
+	private String phone;
+	
+	@OneToMany(mappedBy = "forane")
+	private List<ParishEntity> parishes;
+	
+	private Boolean active = true;
 
 }

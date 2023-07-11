@@ -21,3 +21,8 @@ spring:
       ddl-auto: update
 #     Show what query is being executed on the database, in the console
     show-sql: true
+  
+# For showing graphiQL
+  graphql:
+    graphiql:
+      enabled: true
