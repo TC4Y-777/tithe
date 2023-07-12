@@ -1,0 +1,20 @@
+extend type Query{
+	getOneAddress(id: ID): Address
+	getManyAddresses(filter: AddressQueryFilter): [Address]
+	getAllAddresses: [Address]
+	
+	getOneStreet(id: ID): Street
+	getAllStreets: [Street]
+	
+	getOneCity(id: ID): City
+	getAllCities: [City]
+	
+	getOneDistrict(id: ID): District
+	getAllDistricts: [District]
+	
+	getOneState(id: ID): State
+	getAllStates: [State]
+	
+	getOnePincode(id: ID): Pincode
+	getAllPincodes: [Pincode]
+}

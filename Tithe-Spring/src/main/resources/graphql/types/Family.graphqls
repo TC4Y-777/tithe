@@ -1,0 +1,16 @@
+type Family{
+	familyId: ID!
+	familyName: String!
+	address: Address
+	phone: String
+	koottayma: Koottayma
+	persons: [Person]
+	active: Boolean
+}
+
+input FamilyQueryFilter{
+	familyName: String = null
+	phone: String = null
+	koottaymaId: ID = null
+	active: Boolean = true
+}

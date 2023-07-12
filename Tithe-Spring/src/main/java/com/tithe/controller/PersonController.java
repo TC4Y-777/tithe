@@ -41,7 +41,7 @@ public class PersonController {
 	public PersonEntity getPerson() {
 		PersonEntity person = new PersonEntity();
 		person.setBaptismName("Kuttaappaayi");
-		person.setName("Komalan");
+		person.setPersonName("Komalan");
 		person.setDob(LocalDate.of(2002, 7, 23));
 		person.setPhone("9446823512");
 		person.setGender(GenderEnum.F);

@@ -1,0 +1,46 @@
+type Person{
+	personId: ID!
+	baptismName: String!
+	personName: String!
+	family: Family
+	relation: Relation
+	gender: Gender!
+	dob: String!
+	phone: String
+	tithe: Tithe
+	moved: Boolean
+	educations: [Education]
+	occupations: [Occupation]
+	active: Boolean
+}
+
+input PersonQueryFilter{
+	baptismName: String = null
+	personName: String = null
+	dob: String = null
+	phone: String = null
+	gender: Gender = null
+	active: Boolean = true
+}
+
+type Relation{
+	relationId: ID!
+	relationName: String!
+}
+
+enum Gender{
+	M
+	F
+}
+
+type Education{
+	educationId: ID!
+	educationName: String!
+	persons: [Person]
+}
+
+type Occupation{
+	occupationId: ID!
+	occupationName: String!
+	persons: [Person]
+}

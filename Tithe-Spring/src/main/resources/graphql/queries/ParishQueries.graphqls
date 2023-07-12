@@ -1,0 +1,5 @@
+extend type Query{
+	getOneParish(id: ID): Parish
+	getManyParishes(filter: ParishQueryFilter): [Parish]
+	getAllParishes: [Parish]
+}

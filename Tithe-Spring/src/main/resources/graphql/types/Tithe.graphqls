@@ -1,0 +1,6 @@
+type Tithe{
+	titheId: ID!
+	titheAmount: Float!
+	person: Person!
+	timeStamp: String!
+}
