@@ -1,0 +1,14 @@
+extend type Query{
+	getOnePerson(id: ID): Person
+	getManyPersons(filter: PersonQueryFilter): [Person]
+	getAllPersons: [Person]
+	
+	getOneEducation(id: ID): Education
+	getAllEducations: [Education]
+	
+	getOneOccupation(id: ID): Occupation
+	getAllOccupations: [Occupation]
+	
+	getOneRelation(id: ID): Relation
+	getAllRelations: [Relation]
+}
