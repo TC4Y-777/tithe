@@ -30,12 +30,28 @@ public class TitheEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long titheId;
 	
-	private double titheAmount;
+	private Double titheAmount;
 	
 //TODO	When the below two annotations were not used, an error occured. Find out why that error occured.
 	@ManyToOne
 	@JoinColumn(name = "person_id")
 	private PersonEntity person;
+	
+	@ManyToOne
+	@JoinColumn(name = "family_id")
+	private FamilyEntity family;
+	
+	@ManyToOne
+	@JoinColumn(name = "koottayma_id")
+	private KoottaymaEntity koottayma;
+	
+	@ManyToOne
+	@JoinColumn(name = "parish_id")
+	private ParishEntity parish;
+	
+	@ManyToOne
+	@JoinColumn(name = "forane_id")
+	private ForaneEntity forane;
 	
 	private LocalDate timeStamp;
 

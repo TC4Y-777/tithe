@@ -4,7 +4,7 @@ type Person{
 	personName: String!
 	family: Family
 	relation: Relation
-	gender: Gender!
+	gender: GenderEnum!
 	dob: String!
 	phone: String
 	tithe: Tithe
@@ -19,7 +19,22 @@ input PersonQueryFilter{
 	personName: String = null
 	dob: String = null
 	phone: String = null
-	gender: Gender = null
+	gender: GenderEnum = null
+	active: Boolean = true
+}
+
+input PersonMutationInput{
+	baptismName: String!
+	personName: String!
+	familyId: ID!
+	relationId: ID!
+	gender: GenderEnum!
+	dob: String
+	phone: String
+	tithe: [TitheMutationInput]
+	moved: Boolean = false
+	educationIds: [ID]
+	occupationIds: [ID]
 	active: Boolean = true
 }
 
@@ -28,7 +43,7 @@ type Relation{
 	relationName: String!
 }
 
-enum Gender{
+enum GenderEnum{
 	M
 	F
 }

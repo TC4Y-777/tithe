@@ -1,6 +1,20 @@
 version: "3.3"
 
+# For development
+
 services:
+  spring-backend:
+    container_name: tithe-spring-backend
+    image: tithe-spring-backend-image
+    build: ./Tithe-Spring/
+    volumes:
+      - ./Tithe-Spring:/spring
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgresql-db
+
   postgresql-db:
     container_name: postgres-db
     image: 'postgres'
