@@ -1,0 +1,13 @@
+type Koottayma{
+	koottaymaId: ID!
+	koottaymaName: String!
+	parish: Parish!
+	families: [Family]
+	active: Boolean
+}
+
+input KoottaymaQueryFilter{
+	koottaymaName: String = null
+	parishId: ID = null
+	active: Boolean = true
+}

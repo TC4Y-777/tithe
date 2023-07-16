@@ -1,0 +1,61 @@
+type Person{
+	personId: ID!
+	baptismName: String!
+	personName: String!
+	family: Family
+	relation: Relation
+	gender: GenderEnum!
+	dob: String!
+	phone: String
+	tithe: Tithe
+	moved: Boolean
+	educations: [Education]
+	occupations: [Occupation]
+	active: Boolean
+}
+
+input PersonQueryFilter{
+	baptismName: String = null
+	personName: String = null
+	dob: String = null
+	phone: String = null
+	gender: GenderEnum = null
+	active: Boolean = true
+}
+
+input PersonMutationInput{
+	baptismName: String!
+	personName: String!
+	familyId: ID!
+	relationId: ID!
+	gender: GenderEnum!
+	dob: String
+	phone: String
+	tithe: [TitheMutationInput]
+	moved: Boolean = false
+	educationIds: [ID]
+	occupationIds: [ID]
+	active: Boolean = true
+}
+
+type Relation{
+	relationId: ID!
+	relationName: String!
+}
+
+enum GenderEnum{
+	M
+	F
+}
+
+type Education{
+	educationId: ID!
+	educationName: String!
+	persons: [Person]
+}
+
+type Occupation{
+	occupationId: ID!
+	occupationName: String!
+	persons: [Person]
+}

@@ -1,0 +1,98 @@
+type Query{
+	sayHello(word: String): String
+	getObject: tempClass
+	
+	getPerson: Person
+}
+
+type tempClass{
+	name: String
+	age: String!
+}
+
+type Person{
+	personId: ID!
+	baptismName: String!
+	name: String!
+	family: Family
+	relation: Relation
+	gender: Gender!
+	dob: String!
+	phone: String
+	tithe: Tithe
+	moved: Boolean
+	educations: [Education]
+	occupations: [Occupation]
+}
+
+type Family{
+	familyId: ID!
+	familyName: String!
+	address: Address
+	phone: String
+	koottayma: Koottayma!
+	persons: [Person]
+}
+
+type Koottayma{
+	koottaymaId: ID!
+	koottaymaName: String!
+	parish: Parish!
+	families: [Family]
+}
+
+type Parish{
+	parishId: ID!
+	parishName: String!
+	address: Address
+	forane: Forane!
+	koottaymas: [Koottayma]
+}
+
+type Forane{
+	foraneId: ID!
+	foraneName: String!
+	address: Address
+	parishes: [Parish]
+}
+
+type Address{
+	addressId: ID!
+	street: String
+	city: String
+	district: String
+	state: String
+	pincode: String
+	families: [Family]
+	parishes: [Parish]
+	foranes: [Forane]
+}
+
+type Relation{
+	relationId: ID!
+	relationName: String!
+}
+
+type Tithe{
+	titheId: ID!
+	titheAmount: Float!
+	person: Person!
+	timeStamp: String!
+}
+
+type Education{
+	educationId: ID!
+	educationName: String!
+	persons: [Person]
+}
+
+type Occupation{
+	occupationId: ID!
+	occupationName: String!
+	persons: [Person]
+}
+
+enum Gender{
+	M
+	F
+}

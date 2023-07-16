@@ -1,0 +1,16 @@
+type Parish{
+	parishId: ID!
+	parishName: String!
+	address: Address
+	phone: String
+	forane: Forane!
+	koottaymas: [Koottayma]
+	active: Boolean
+}
+
+input ParishQueryFilter{
+	parishName: String = null
+	phone: String = null
+	foraneId: ID = null
+	active: Boolean = true
+}

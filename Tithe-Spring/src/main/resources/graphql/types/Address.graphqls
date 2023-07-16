@@ -1,0 +1,44 @@
+type Address{
+	addressId: ID!
+	street: Street
+	city: City
+	district: District
+	state: State
+	pincode: Pincode
+	families: [Family]
+	parishes: [Parish]
+	foranes: [Forane]
+}
+
+input AddressQueryFilter{
+	streetId: ID = null
+	cityId: ID = null
+	districtId: ID = null
+	stateId: ID = null
+	pincodeId: ID = null
+}
+
+type Street{
+	streetId: ID!
+	streetName: String
+}
+
+type City{
+	cityId: ID!
+	cityName: String
+}
+
+type District{
+	districtId: ID!
+	districtName: String
+}
+
+type State{
+	stateId: ID!
+	stateName: String
+}
+
+type Pincode{
+	pincodeId: ID!
+	pincode: String
+}

@@ -1,0 +1,14 @@
+type Forane{
+	foraneId: ID!
+	foraneName: String!
+	address: Address
+	phone: String
+	parishes: [Parish]
+	active: Boolean
+}
+
+input ForaneQueryFilter{
+	foraneName: String = null
+	phone: String = null
+	active: Boolean = true
+}
