@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(uniqueConstraints = 
 @UniqueConstraint(columnNames = {"baptismName", 
-		"name", 
+		"personName", 
 		"family_id", 
 		"gender", 
 		"dob"}))

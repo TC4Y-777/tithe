@@ -1,0 +1,15 @@
+type Tithe{
+	titheId: ID!
+	titheAmount: Float!
+	person: Person!
+	family: Family
+	koottayma: Koottayma
+	parish: Parish
+	forane: Forane
+	timeStamp: String!
+}
+
+type TitheMutationInput{
+	titheAmount: Float!
+	timeStamp: String!
+}
