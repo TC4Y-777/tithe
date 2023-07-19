@@ -44,6 +44,26 @@ public class PersonMutations {
 		return personMutationService.createOnePerson(personMutationInput);
 	}
 	
+	@MutationMapping(name = "activateOnePerson")
+	public PersonEntity activateOnePerson(@Argument Long id) {
+		return personMutationService.activateOnePerson(id);
+	}
+	
+	@MutationMapping(name = "activateManyPersons")
+	public List<PersonEntity> activateManyPersons(@Argument List<Long> ids) {
+		return personMutationService.activateManyPersons(ids);
+	}
+	
+	@MutationMapping(name = "deactivateOnePerson")
+	public PersonEntity deactivateOnePerson(@Argument Long id) {
+		return personMutationService.deactivateOnePerson(id);
+	}
+	
+	@MutationMapping(name = "deactivateManyPersons")
+	public List<PersonEntity> deactivateManyPersons(@Argument List<Long> ids) {
+		return personMutationService.deactivateManyPersons(ids);
+	}
+	
 	@MutationMapping(name = "createOneEducation")
 	public EducationEntity createOneEducation(@Argument String educationName) {
 		List<String> educationNames = List.of(educationName);
