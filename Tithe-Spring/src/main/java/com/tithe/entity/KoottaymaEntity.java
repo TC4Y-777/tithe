@@ -41,6 +41,9 @@ public class KoottaymaEntity {
 	
 	@OneToMany(mappedBy = "koottayma")
 	private List<FamilyEntity> families;
+	
+	@OneToMany(mappedBy = "koottayma")
+	private List<TitheEntity> tithes;
 
 	private Boolean active = true;
 	

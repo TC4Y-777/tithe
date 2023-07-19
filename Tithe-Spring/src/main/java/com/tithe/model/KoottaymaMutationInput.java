@@ -3,8 +3,8 @@
  */
 package com.tithe.model;
 
+import jakarta.annotation.Nonnull;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,13 +13,14 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-public class AddressQueryFilter {
+public class KoottaymaMutationInput {
 	
-	String buildingName;
-	Long streetId;
-	Long cityId;
-	Long districtId;
-	Long stateId;
-	Long pincodeId;
+	@Nonnull
+	String koottaymaName;
 
+	@Nonnull
+	Long parishId;
+	
+	Boolean active = true;
+	
 }

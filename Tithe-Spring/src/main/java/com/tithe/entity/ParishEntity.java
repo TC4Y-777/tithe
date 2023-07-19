@@ -5,6 +5,7 @@ package com.tithe.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +34,7 @@ public class ParishEntity {
 	
 	private String parishName;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "address_id")
 	private AddressEntity address;
 	
@@ -45,6 +46,9 @@ public class ParishEntity {
 	
 	@OneToMany(mappedBy = "parish")
 	private List<KoottaymaEntity> koottaymas;
+	
+	@OneToMany(mappedBy = "parish")
+	private List<TitheEntity> tithes;
 	
 	private Boolean active = true;
 

@@ -42,6 +42,9 @@ public class ForaneEntity {
 	@OneToMany(mappedBy = "forane")
 	private List<ParishEntity> parishes;
 	
+	@OneToMany(mappedBy = "forane")
+	private List<TitheEntity> tithes;
+	
 	private Boolean active = true;
 
 }

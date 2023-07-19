@@ -62,9 +62,8 @@ public class PersonEntity {
 //	I think it is better to store phone as string
 	private String phone;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "tithe_id")
-	private TitheEntity tithe;
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "person")
+	private List<TitheEntity> tithes;
 	
 	private Boolean moved = false;
 

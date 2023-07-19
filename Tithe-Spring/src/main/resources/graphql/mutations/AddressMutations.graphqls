@@ -1,0 +1,13 @@
+extend type Mutation{
+	createOneAddress(address: AddressMutationInput): Address
+	
+	createOneStreet(streetName: String): Street
+	
+	createOneCity(cityName: String): City
+	
+	createOneDistrict(districtName: String): District
+	
+	createOneState(stateName: String): State
+	
+	createOnePincode(pincode: String): Pincode
+}

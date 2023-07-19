@@ -1,3 +1,15 @@
 extend type Mutation{
 	createOnePerson(person: PersonMutationInput): Person
+	testMutation(time: TempInput): Temp
+}
+
+input TempInput{
+	name: String
+	timeStamp: String
+}
+
+type Temp{
+	id: ID
+	name: String
+	timeStamp: String
 }

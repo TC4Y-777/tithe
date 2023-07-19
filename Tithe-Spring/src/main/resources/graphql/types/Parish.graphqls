@@ -5,6 +5,7 @@ type Parish{
 	phone: String
 	forane: Forane!
 	koottaymas: [Koottayma]
+	tithes: [Tithe]
 	active: Boolean
 }
 
@@ -12,5 +13,13 @@ input ParishQueryFilter{
 	parishName: String = null
 	phone: String = null
 	foraneId: ID = null
+	active: Boolean = true
+}
+
+input ParishMutationInput{
+	parishName: String!
+	address: AddressMutationInput
+	phone: String
+	foraneId: ID!
 	active: Boolean = true
 }
