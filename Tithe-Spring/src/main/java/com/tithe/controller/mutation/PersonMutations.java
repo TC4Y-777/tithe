@@ -45,24 +45,31 @@ public class PersonMutations {
 	}
 	
 	@MutationMapping(name = "createManyEducations")
-	public List<EducationEntity> createManyEducations(List<String> educationNames) {
+	public List<EducationEntity> createManyEducations(@Argument List<String> educationNames) {
 		return educationMutationService.createManyEducations(educationNames);
 	}
 	
+	@MutationMapping(name = "createOneOccupation")
+	public OccupationEntity createOneOccupation(@Argument String occupationName) {
+		List<String> occupationNames = List.of(occupationName);
+		List<OccupationEntity> occupations = occupationMutationService.createManyOccupations(occupationNames);
+		return occupations.get(0);
+	}
+	
 	@MutationMapping(name = "createManyOccupations")
-	public List<OccupationEntity> createManyOccupations(List<String> occupationNames) {
+	public List<OccupationEntity> createManyOccupations(@Argument List<String> occupationNames) {
 		return occupationMutationService.createManyOccupations(occupationNames);
 	}
 	
 	@MutationMapping(name = "createOneRelation")
-	public RelationEntity createOneRelation(String relationName) {
+	public RelationEntity createOneRelation(@Argument String relationName) {
 		List<String> relationNames = List.of(relationName);
 		List<RelationEntity> relations = relationMutationService.createManyRelations(relationNames);
 		return relations.get(0);
 	}
 	
 	@MutationMapping(name = "createManyRelations")
-	public List<RelationEntity> createManyRelations(List<String> relationNames) {
+	public List<RelationEntity> createManyRelations(@Argument List<String> relationNames) {
 		return relationMutationService.createManyRelations(relationNames);
 	}
 	

@@ -3,6 +3,7 @@ extend type Mutation{
 	
 	createManyEducations(educations: [String]): [Education]
 	
+	createOneOccupation(occupation: String): Occupation
 	createManyOccupations(occupations: [String]): [Occupation]
 	
 	createOneRelation(relation: String): Relation
