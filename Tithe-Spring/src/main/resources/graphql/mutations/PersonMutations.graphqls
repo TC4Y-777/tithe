@@ -1,6 +1,7 @@
 extend type Mutation{
 	createOnePerson(person: PersonMutationInput): Person
 	
+	createOneEducation(education: String): Education
 	createManyEducations(educations: [String]): [Education]
 	
 	createOneOccupation(occupation: String): Occupation

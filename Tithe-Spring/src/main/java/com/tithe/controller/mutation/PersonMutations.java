@@ -44,6 +44,13 @@ public class PersonMutations {
 		return personMutationService.createOnePerson(personMutationInput);
 	}
 	
+	@MutationMapping(name = "createOneEducation")
+	public EducationEntity createOneEducation(@Argument String educationName) {
+		List<String> educationNames = List.of(educationName);
+		List<EducationEntity> educations = educationMutationService.createManyEducations(educationNames);
+		return educations.get(0);
+	}
+	
 	@MutationMapping(name = "createManyEducations")
 	public List<EducationEntity> createManyEducations(@Argument List<String> educationNames) {
 		return educationMutationService.createManyEducations(educationNames);
