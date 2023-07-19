@@ -3,6 +3,8 @@ extend type Mutation{
 	
 	createManyEducations(educations: [String]): [Education]
 	
+	createManyOccupations(occupations: [String]): [Occupation]
+	
 	testMutation(time: TempInput): Temp
 }
 

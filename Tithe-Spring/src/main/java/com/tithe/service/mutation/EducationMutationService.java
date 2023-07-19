@@ -25,9 +25,11 @@ public class EducationMutationService {
 	public List<EducationEntity> createManyEducations(List<String> educationNames) {
 		List<EducationEntity> educations = new ArrayList<>();
 		for (String educationName : educationNames) {
-			EducationEntity education = new EducationEntity();
-			education.setEducationName(educationName);
-			educations.add(education);
+			if (educationName!=null) {
+				EducationEntity education = new EducationEntity();
+				education.setEducationName(educationName);
+				educations.add(education);
+			}
 		}
 //		TODO If any of the element is null, returns an error. How to handle it?
 		return educationRepository.saveAll(educations);

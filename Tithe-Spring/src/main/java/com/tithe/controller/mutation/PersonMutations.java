@@ -11,9 +11,11 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
 
 import com.tithe.entity.EducationEntity;
+import com.tithe.entity.OccupationEntity;
 import com.tithe.entity.PersonEntity;
 import com.tithe.model.PersonMutationInput;
 import com.tithe.service.mutation.EducationMutationService;
+import com.tithe.service.mutation.OccupationMutationService;
 import com.tithe.service.mutation.PersonMutationService;
 
 /**
@@ -28,6 +30,9 @@ public class PersonMutations {
 	
 	@Autowired
 	private EducationMutationService educationMutationService;
+	
+	@Autowired
+	private OccupationMutationService occupationMutationService;
 
 	@MutationMapping(name = "createOnePerson")
 	public PersonEntity createOnePerson(@Argument PersonMutationInput personMutationInput) {
@@ -37,6 +42,11 @@ public class PersonMutations {
 	@MutationMapping(name = "createManyEducations")
 	public List<EducationEntity> createManyEducations(List<String> educationNames) {
 		return educationMutationService.createManyEducations(educationNames);
+	}
+	
+	@MutationMapping(name = "createManyOccupations")
+	public List<OccupationEntity> createManyOccupations(List<String> occupationNames) {
+		return occupationMutationService.createManyOccupations(occupationNames);
 	}
 	
 }
