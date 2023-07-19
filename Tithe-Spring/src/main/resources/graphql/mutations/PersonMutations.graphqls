@@ -1,5 +1,8 @@
 extend type Mutation{
 	createOnePerson(person: PersonMutationInput): Person
+	
+	createManyEducations(educations: [String]): [Education]
+	
 	testMutation(time: TempInput): Temp
 }
 
