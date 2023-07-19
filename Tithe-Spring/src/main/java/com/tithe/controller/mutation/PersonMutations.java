@@ -13,10 +13,12 @@ import org.springframework.stereotype.Controller;
 import com.tithe.entity.EducationEntity;
 import com.tithe.entity.OccupationEntity;
 import com.tithe.entity.PersonEntity;
+import com.tithe.entity.RelationEntity;
 import com.tithe.model.PersonMutationInput;
 import com.tithe.service.mutation.EducationMutationService;
 import com.tithe.service.mutation.OccupationMutationService;
 import com.tithe.service.mutation.PersonMutationService;
+import com.tithe.service.mutation.RelationMutationService;
 
 /**
  * @author Ashish Sam T George
@@ -33,6 +35,9 @@ public class PersonMutations {
 	
 	@Autowired
 	private OccupationMutationService occupationMutationService;
+	
+	@Autowired
+	private RelationMutationService relationMutationService;
 
 	@MutationMapping(name = "createOnePerson")
 	public PersonEntity createOnePerson(@Argument PersonMutationInput personMutationInput) {
@@ -47,6 +52,18 @@ public class PersonMutations {
 	@MutationMapping(name = "createManyOccupations")
 	public List<OccupationEntity> createManyOccupations(List<String> occupationNames) {
 		return occupationMutationService.createManyOccupations(occupationNames);
+	}
+	
+	@MutationMapping(name = "createOneRelation")
+	public RelationEntity createOneRelation(String relationName) {
+		List<String> relationNames = List.of(relationName);
+		List<RelationEntity> relations = relationMutationService.createManyRelations(relationNames);
+		return relations.get(0);
+	}
+	
+	@MutationMapping(name = "createManyRelations")
+	public List<RelationEntity> createManyRelations(List<String> relationNames) {
+		return relationMutationService.createManyRelations(relationNames);
 	}
 	
 }

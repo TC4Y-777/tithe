@@ -5,6 +5,9 @@ extend type Mutation{
 	
 	createManyOccupations(occupations: [String]): [Occupation]
 	
+	createOneRelation(relation: String): Relation
+	createManyRelations(relations: [String]): [Relation]
+	
 	testMutation(time: TempInput): Temp
 }
 
