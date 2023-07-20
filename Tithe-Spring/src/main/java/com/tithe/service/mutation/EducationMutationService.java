@@ -25,7 +25,7 @@ public class EducationMutationService {
 	public List<EducationEntity> createManyEducations(List<String> educationNames) {
 		List<EducationEntity> educations = new ArrayList<>();
 		for (String educationName : educationNames) {
-			if (educationName!=null) {
+			if (!educationName.isBlank()) {
 				EducationEntity education = new EducationEntity();
 				education.setEducationName(educationName);
 				educations.add(education);

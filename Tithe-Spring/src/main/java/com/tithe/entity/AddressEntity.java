@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = "address_table", uniqueConstraints = @UniqueConstraint(columnNames = {
 		"buildingName",
 		"street_id",
 		"city_id",

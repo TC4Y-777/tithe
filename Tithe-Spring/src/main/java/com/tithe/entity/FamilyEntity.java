@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"familyName", "phone"}))
+@Table(name = "family_table", uniqueConstraints = @UniqueConstraint(columnNames = {"familyName", "phone"}))
 public class FamilyEntity {
 	
 	@Id

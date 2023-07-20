@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = 
+@Table(name = "person_table", uniqueConstraints = 
 @UniqueConstraint(columnNames = {"baptismName", 
 		"personName", 
 		"family_id", 
@@ -69,12 +69,12 @@ public class PersonEntity {
 
 	@ManyToMany(cascade = CascadeType.PERSIST)
 //	I can change the column names of the join table by using attributes "joinColumns" and "inverseJoinColumns"
-	@JoinTable(uniqueConstraints = 
+	@JoinTable(name = "person_educations_table", uniqueConstraints = 
 	@UniqueConstraint(columnNames = {"persons_person_id", "educations_education_id"}))
 	private List<EducationEntity> educations;
 
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(joinColumns = @JoinColumn(name = "person_id"),
+	@JoinTable(name = "person_occupations_table", joinColumns = @JoinColumn(name = "person_id"),
 	inverseJoinColumns = @JoinColumn(name = "occupation_id"),
 	uniqueConstraints = 
 	@UniqueConstraint(columnNames = {"person_id", "occupation_id"}))
