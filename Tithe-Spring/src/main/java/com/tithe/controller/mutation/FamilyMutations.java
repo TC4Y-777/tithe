@@ -25,7 +25,7 @@ public class FamilyMutations {
 	private FamilyMutationService familyMutationService;
 	
 	@MutationMapping(name = "createOneFamily")
-	public FamilyEntity createOneFamily(@Argument FamilyMutationInput familyMutationInput) {
+	public FamilyEntity createOneFamily(@Argument(name = "family") FamilyMutationInput familyMutationInput) {
 		return familyMutationService.createOneFamily(familyMutationInput);
 	}
 	
