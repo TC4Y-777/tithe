@@ -28,32 +28,32 @@ public class AddressMutations {
 	private AddressMutationService addressMutationService;
 
 	@MutationMapping(name = "createOneAddress")
-	public AddressEntity createOneAddress(@Argument AddressMutationInput addressMutationInput) {
+	public AddressEntity createOneAddress(@Argument(name = "address") AddressMutationInput addressMutationInput) {
 		return addressMutationService.createOneAddress(addressMutationInput);
 	}
 	
 	@MutationMapping(name = "createOneStreet")
-	public StreetEntity createOneStreet(@Argument String streetName) {
+	public StreetEntity createOneStreet(@Argument(name = "streetName") String streetName) {
 		return addressMutationService.createOneStreet(streetName);
 	}
 	
 	@MutationMapping(name = "createOneCity")
-	public CityEntity createOneCity(@Argument String cityName) {
+	public CityEntity createOneCity(@Argument(name = "cityName") String cityName) {
 		return addressMutationService.createOneCity(cityName);
 	}
 	
 	@MutationMapping(name = "createOneDistrict")
-	public DistrictEntity createOneDistrict(@Argument String districtName) {
+	public DistrictEntity createOneDistrict(@Argument(name = "districtName") String districtName) {
 		return addressMutationService.createOneDistrict(districtName);
 	}
 	
 	@MutationMapping(name = "createOneState")
-	public StateEntity createOneState(@Argument String stateName) {
+	public StateEntity createOneState(@Argument(name = "stateName") String stateName) {
 		return addressMutationService.createOneState(stateName);
 	}
 	
 	@MutationMapping(name = "createOnePincode")
-	public PincodeEntity createOnePincode(@Argument String pincode) {
+	public PincodeEntity createOnePincode(@Argument(name = "pincode") String pincode) {
 		return addressMutationService.createOnePincode(pincode);
 	}
 	
