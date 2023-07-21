@@ -25,7 +25,7 @@ public class RelationMutationService {
 	public List<RelationEntity> createManyRelations(List<String> relationNames) {
 		List<RelationEntity> relations = new ArrayList<>();
 		for (String relationName : relationNames) {
-			if (relationName!=null) {
+			if (!relationName.isBlank()) {
 				RelationEntity relation = new RelationEntity();
 				relation.setRelationName(relationName);
 				relations.add(relation);

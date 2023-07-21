@@ -47,7 +47,7 @@ public class PersonQueries {
 	}
 	
 	@QueryMapping(name = "getManyPersons")
-	public List<PersonEntity> getManyPersons(@Argument PersonQueryFilter personQueryFilter){
+	public List<PersonEntity> getManyPersons(@Argument(name = "filter") PersonQueryFilter personQueryFilter){
 		return personQueryService.getManyPersons(personQueryFilter);
 	}
 	

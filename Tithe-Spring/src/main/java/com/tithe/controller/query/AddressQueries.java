@@ -35,7 +35,7 @@ public class AddressQueries {
 	}
 	
 	@QueryMapping(name = "getManyAddresses")
-	public List<AddressEntity> getManyAddresses(@Argument AddressQueryFilter addressQueryFilter) {
+	public List<AddressEntity> getManyAddresses(@Argument(name = "filter") AddressQueryFilter addressQueryFilter) {
 		return addressQueryService.getManyAddresses(addressQueryFilter);
 	}
 	
