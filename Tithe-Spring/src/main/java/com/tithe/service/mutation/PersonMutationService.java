@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,46 @@ public class PersonMutationService {
 		person.setActive(personMutationInput.getActive());
 		
 		return personRepository.save(person);
+	}
+
+	public PersonEntity activateOnePerson(Long id) {
+		Optional<PersonEntity> person = personRepository.findById(id);
+		if (person.isPresent()) {
+			person.get().setActive(true);
+			return personRepository.save(person.get());
+		}
+		return null;
+	}
+
+	public List<PersonEntity> activateManyPersons(List<Long> ids) {
+		List<PersonEntity> persons = personRepository.findAllById(ids);
+		if (persons.size()!=0) {
+			for (PersonEntity person : persons) {
+				person.setActive(true);
+			}
+			return personRepository.saveAll(persons);
+		}
+		return null;
+	}
+
+	public PersonEntity deactivateOnePerson(Long id) {
+		Optional<PersonEntity> person = personRepository.findById(id);
+		if (person.isPresent()) {
+			person.get().setActive(false);
+			return personRepository.save(person.get());
+		}
+		return null;
+	}
+
+	public List<PersonEntity> deactivateManyPersons(List<Long> ids) {
+		List<PersonEntity> persons = personRepository.findAllById(ids);
+		if (persons.size()!=0) {
+			for (PersonEntity person : persons) {
+				person.setActive(false);
+			}
+			return personRepository.saveAll(persons);
+		}
+		return null;
 	}
 
 }
