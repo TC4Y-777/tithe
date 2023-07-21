@@ -34,7 +34,8 @@ public class FamilyMutationService {
 		FamilyEntity family = new FamilyEntity();
 		family.setFamilyName(familyMutationInput.getFamilyName());
 		
-		AddressMutationInput addressInput = familyMutationInput.getAddressMutationInput();
+		AddressMutationInput addressInput = familyMutationInput.getAddress();
+		System.out.println("Address Mutation Input in create one family: " + addressInput);
 		if (addressInput!=null) {
 			AddressEntity address = addressQueryService.getOneAddress(addressInput);
 			if (address!=null) {

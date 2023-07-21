@@ -3,6 +3,7 @@
  */
 package com.tithe.model;
 
+import jakarta.annotation.Nonnull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,13 +11,16 @@ import lombok.NoArgsConstructor;
  * @author Ashish Sam T George
  *
  */
-@Data
+//@Data
+//@NoArgsConstructor
 public class AddressMutationInput extends AddressQueryFilter {
 	
-	public AddressMutationInput() {
-		super();
-	}
+//	public AddressMutationInput() {
+//		super();
+//	}
 	
-	private String buildingName;
-	
+//	public void temp() {
+//		AddressMutationInput obj = new AddressMutationInput();
+//		obj.set
+//	}
 }

@@ -18,7 +18,7 @@ public class FamilyMutationInput {
 	@Nonnull
 	String familyName;
 	
-	AddressMutationInput addressMutationInput;
+	AddressMutationInput address;
 	String phone;
 	Long koottaymaId;
 	Boolean active = true;
