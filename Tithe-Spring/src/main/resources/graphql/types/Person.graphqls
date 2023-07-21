@@ -7,7 +7,7 @@ type Person{
 	gender: GenderEnum!
 	dob: String!
 	phone: String
-	tithe: Tithe
+	tithes: [Tithe]
 	moved: Boolean
 	educations: [Education]
 	occupations: [Occupation]
@@ -31,7 +31,7 @@ input PersonMutationInput{
 	gender: GenderEnum!
 	dob: String
 	phone: String
-	tithe: [TitheMutationInput]
+	tithes: [TitheMutationInput]
 	moved: Boolean = false
 	educationIds: [ID]
 	occupationIds: [ID]

@@ -17,7 +17,9 @@ import com.tithe.model.PersonMutationInput;
 import com.tithe.model.TitheMutationInput;
 import com.tithe.repository.PersonRepository;
 import com.tithe.repository.TitheRepository;
+import com.tithe.service.query.EducationQueryService;
 import com.tithe.service.query.FamilyQueryService;
+import com.tithe.service.query.OccupationQueryService;
 import com.tithe.service.query.RelationQueryService;
 
 /**
@@ -29,15 +31,18 @@ public class PersonMutationService {
 	
 	@Autowired
 	private PersonRepository personRepository;
-	
-	@Autowired
-	private TitheRepository titheRepository;
 
 	@Autowired
 	private FamilyQueryService familyQueryService;
 	
 	@Autowired
 	private RelationQueryService relationQueryService;
+	
+	@Autowired
+	private EducationQueryService educationQueryService;
+	
+	@Autowired
+	private OccupationQueryService occupationQueryService;
 	
 	public PersonEntity createOnePerson(PersonMutationInput personMutationInput) {
 		PersonEntity person = new PersonEntity();
@@ -57,7 +62,7 @@ public class PersonMutationService {
 		
 		List<TitheMutationInput> titheInputs = personMutationInput.getTithes();
 		List<TitheEntity> tithes = new ArrayList<>();
-		if (tithes.size()!=0) {
+		if (titheInputs.size()!=0) {
 			for (TitheMutationInput titheInput : titheInputs) {
 				TitheEntity tithe = new TitheEntity();
 				tithe.setTitheAmount(titheInput.getTitheAmount());
@@ -70,14 +75,21 @@ public class PersonMutationService {
 				
 				tithes.add(tithe);
 			}
-			List<TitheEntity> savedTithes = titheRepository.saveAll(tithes);
-//			Find latest tithe
 		}
+		person.setTithes(tithes);
 		
 		person.setMoved(personMutationInput.getMoved());
 		
+		if (personMutationInput.getEducationIds().size()!=0) {
+			person.setEducations(educationQueryService.getManyEducations(personMutationInput.getEducationIds()));
+		}
+		if (personMutationInput.getOccupationIds().size()!=0) {
+			person.setOccupations(occupationQueryService.getManyOccupations(personMutationInput.getOccupationIds()));
+		}
 		
-		return null;
+		person.setActive(personMutationInput.getActive());
+		
+		return personRepository.save(person);
 	}
 
 }

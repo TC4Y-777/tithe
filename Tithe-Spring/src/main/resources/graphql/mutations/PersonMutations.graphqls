@@ -1,3 +1,24 @@
 extend type Mutation{
 	createOnePerson(person: PersonMutationInput): Person
+	
+	createManyEducations(educations: [String]): [Education]
+	
+	createOneOccupation(occupation: String): Occupation
+	createManyOccupations(occupations: [String]): [Occupation]
+	
+	createOneRelation(relation: String): Relation
+	createManyRelations(relations: [String]): [Relation]
+	
+	testMutation(time: TempInput): Temp
+}
+
+input TempInput{
+	name: String
+	timeStamp: String
+}
+
+type Temp{
+	id: ID
+	name: String
+	timeStamp: String
 }

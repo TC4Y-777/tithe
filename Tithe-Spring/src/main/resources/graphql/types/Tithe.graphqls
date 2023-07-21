@@ -9,7 +9,7 @@ type Tithe{
 	timeStamp: String!
 }
 
-type TitheMutationInput{
+input TitheMutationInput{
 	titheAmount: Float!
 	timeStamp: String!
 }

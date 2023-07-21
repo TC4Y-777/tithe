@@ -4,11 +4,19 @@ type Forane{
 	address: Address
 	phone: String
 	parishes: [Parish]
+	tithes: [Tithe]
 	active: Boolean
 }
 
 input ForaneQueryFilter{
 	foraneName: String = null
 	phone: String = null
+	active: Boolean = true
+}
+
+input ForaneMutationInput{
+	foraneName: String!
+	address: AddressMutationInput
+	phone: String
 	active: Boolean = true
 }

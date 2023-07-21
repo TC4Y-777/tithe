@@ -40,8 +40,8 @@ public class PersonMutationInput {
 	String phone;
 	List<TitheMutationInput> tithes;
 	Boolean moved = false;
-	Long[] educationIds;
-	Long[] occupationIds;
+	List<Long> educationIds;
+	List<Long> occupationIds;
 	Boolean active = true;
 
 }

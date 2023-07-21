@@ -3,11 +3,18 @@ type Koottayma{
 	koottaymaName: String!
 	parish: Parish!
 	families: [Family]
+	tithes: [Tithe]
 	active: Boolean
 }
 
 input KoottaymaQueryFilter{
 	koottaymaName: String = null
 	parishId: ID = null
+	active: Boolean = true
+}
+
+input KoottaymaMutationInput{
+	koottaymaName: String!
+	parishId: ID!
 	active: Boolean = true
 }
