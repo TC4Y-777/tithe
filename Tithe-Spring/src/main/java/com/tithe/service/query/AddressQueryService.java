@@ -56,8 +56,10 @@ public class AddressQueryService {
 	
 	public AddressEntity getOneAddress(AddressQueryFilter addressQueryFilter) {
 		 List<AddressEntity> addresses = getManyAddresses(addressQueryFilter);
-		 if (addresses.size()!=0) {
-			return addresses.get(0);
+		 if (addresses!=null) {
+			if (!addresses.isEmpty()) {
+				return addresses.get(0);
+			}
 		 }
 		 return null;
 	}
@@ -151,13 +153,7 @@ public class AddressQueryService {
 	
 	public AddressEntity buildAddressEntity(AddressQueryFilter addressQueryFilter) {
 		AddressEntity address = new AddressEntity();
-		System.out.println("Building Name: " + addressQueryFilter.getBuildingName());
-		System.out.println("Street: " + addressQueryFilter.getStreetId());
-		System.out.println("City: " + addressQueryFilter.getCityId());
-		System.out.println("District: " + addressQueryFilter.getDistrictId());
-		System.out.println("State: " + addressQueryFilter.getStateId());
-		System.out.println("Pincode: " + addressQueryFilter.getPincodeId());
-		
+
 		address.setBuildingName(addressQueryFilter.getBuildingName());
 		if (addressQueryFilter.getStreetId()!=null) {
 			address.setStreet(getOneStreet(addressQueryFilter.getStreetId()));

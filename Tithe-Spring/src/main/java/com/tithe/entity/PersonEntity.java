@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.tithe.model.GenderEnum;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +46,10 @@ public class PersonEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long personId;
 	
+	@Nonnull
 	private String baptismName;
+	
+	@Nonnull
 	private String personName;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
