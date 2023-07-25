@@ -39,6 +39,7 @@ public class KoottaymaMutationService {
 		
 		KoottaymaEntity koottayma = new KoottaymaEntity();
 		koottayma.setKoottaymaName(koottaymaMutationInput.getKoottaymaName());
+		koottayma.setParish(parishQueryService.getOneParish(koottaymaMutationInput.getParishId()));
 		koottayma.setActive(koottaymaMutationInput.getActive());
 		
 		return koottaymaRepository.save(koottayma);

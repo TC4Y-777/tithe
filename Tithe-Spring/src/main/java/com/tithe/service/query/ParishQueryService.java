@@ -34,11 +34,14 @@ public class ParishQueryService {
 
 	public List<ParishEntity> getManyParishes(ParishQueryFilter parishQueryFilter) {
 		ParishEntity parish = new ParishEntity();
-		parish.setParishName(parishQueryFilter.getParishName());
+		if (parishQueryFilter.getParishName()!=null && !parishQueryFilter.getParishName().isBlank()) {
+			parish.setParishName(parishQueryFilter.getParishName());
+		}
 		parish.setPhone(parishQueryFilter.getPhone());
 		if (parishQueryFilter.getForaneId()!=null) {
 			parish.setForane(foraneQueryService.getOneForane(parishQueryFilter.getForaneId()));
 		}
+		
 		parish.setActive(parishQueryFilter.getActive());
 		
 		Example<ParishEntity> exampleParish = Example.of(parish);

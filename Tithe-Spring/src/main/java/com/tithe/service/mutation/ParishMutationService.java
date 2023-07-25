@@ -13,6 +13,7 @@ import com.tithe.model.ParishMutationInput;
 import com.tithe.repository.ParishRepository;
 import com.tithe.service.query.AddressQueryService;
 import com.tithe.service.query.ForaneQueryService;
+import com.tithe.utils.ObjectValidation;
 
 /**
  * @author Ashish Sam T George
@@ -20,6 +21,9 @@ import com.tithe.service.query.ForaneQueryService;
  */
 @Service
 public class ParishMutationService {
+	
+	@Autowired
+	private ObjectValidation objectValidation;
 	
 	@Autowired
 	private ParishRepository parishRepository;
@@ -31,10 +35,13 @@ public class ParishMutationService {
 	private ForaneQueryService foraneQueryService;
 	
 	public ParishEntity createOneParish(ParishMutationInput parishMutationInput) {
+		
+		objectValidation.validateObject(parishMutationInput);
+		
 		ParishEntity parish = new ParishEntity();
 		parish.setParishName(parishMutationInput.getParishName());
 		
-		AddressMutationInput addressInput = parishMutationInput.getAddressMutationInput();
+		AddressMutationInput addressInput = parishMutationInput.getAddress();
 		if (addressInput!=null) {
 			AddressEntity address = addressQueryService.getOneAddress(addressInput);
 			if (address!=null) {
@@ -46,11 +53,7 @@ public class ParishMutationService {
 		}
 		
 		parish.setPhone(parishMutationInput.getPhone());
-		
-		if (parishMutationInput.getForaneId()!=null) {
-			parish.setForane(foraneQueryService.getOneForane(parishMutationInput.getForaneId()));
-		}
-		
+		parish.setForane(foraneQueryService.getOneForane(parishMutationInput.getForaneId()));
 		parish.setActive(parishMutationInput.getActive());
 		
 		return parishRepository.save(parish);
