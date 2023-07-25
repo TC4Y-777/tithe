@@ -30,7 +30,7 @@ public class KoottaymaQueries {
 	}
 	
 	@QueryMapping(name = "getManyKoottaymas")
-	public List<KoottaymaEntity> getManyKoottaymas(@Argument KoottaymaQueryFilter koottaymaQueryFilter){
+	public List<KoottaymaEntity> getManyKoottaymas(@Argument(name = "filter") KoottaymaQueryFilter koottaymaQueryFilter){
 		return koottaymaQueryService.getManyKoottaymas(koottaymaQueryFilter);
 	}
 	
