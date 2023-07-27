@@ -31,7 +31,9 @@ public class ForaneQueryService {
 
 	public List<ForaneEntity> getManyForanes(ForaneQueryFilter foraneQueryFilter) {
 		ForaneEntity forane = new ForaneEntity();
-		forane.setForaneName(foraneQueryFilter.getForaneName());
+		if (foraneQueryFilter.getForaneName()!=null && !foraneQueryFilter.getForaneName().isBlank()) {
+			forane.setForaneName(foraneQueryFilter.getForaneName());
+		}
 		forane.setPhone(foraneQueryFilter.getPhone());
 		forane.setActive(foraneQueryFilter.getActive());
 		

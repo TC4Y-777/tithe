@@ -4,6 +4,7 @@
 package com.tithe.model;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,10 +16,10 @@ import lombok.NoArgsConstructor;
 @Data
 public class ForaneMutationInput {
 
-	@Nonnull
+	@NotBlank(message = "Name of Forane cannot be empty or null")
 	String foraneName;
 	
-	AddressMutationInput addressMutationInput;
+	AddressMutationInput address;
 	String phone;
 	Boolean active = true;
 	

@@ -23,7 +23,7 @@ public class ForaneMutations {
 	private ForaneMutationService foraneMutationService;
 	
 	@MutationMapping(name = "createOneForane")
-	public ForaneEntity createOneForane(@Argument ForaneMutationInput foraneMutationInput) {
+	public ForaneEntity createOneForane(@Argument(name = "forane") ForaneMutationInput foraneMutationInput) {
 		return foraneMutationService.createOneForane(foraneMutationInput);
 	}
 	

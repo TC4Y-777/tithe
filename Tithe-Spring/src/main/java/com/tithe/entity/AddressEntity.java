@@ -4,6 +4,7 @@
 package com.tithe.entity;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.tithe.model.AddressQueryFilter;
 
