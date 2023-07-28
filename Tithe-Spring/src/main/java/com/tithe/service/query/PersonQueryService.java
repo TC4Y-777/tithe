@@ -34,10 +34,13 @@ public class PersonQueryService {
 
 	public List<PersonEntity> getManyPersons(PersonQueryFilter personQueryFilter) {
 		PersonEntity personEntity = new PersonEntity();
-		if (personQueryFilter.getBaptismName()!=null) {
+		
+//		TODO Use constraints in filter if more checking is needed
+		
+		if (personQueryFilter.getBaptismName()!=null && !personQueryFilter.getBaptismName().isBlank()) {
 			personEntity.setBaptismName(personQueryFilter.getBaptismName());
 		}
-		if (personQueryFilter.getPersonName()!=null) {
+		if (personQueryFilter.getPersonName()!=null && !personQueryFilter.getPersonName().isBlank()) {
 			personEntity.setPersonName(personQueryFilter.getPersonName());
 		}
 		personEntity.setDob(personQueryFilter.getDob());
