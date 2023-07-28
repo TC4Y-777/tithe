@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class RelationEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long relationId;
 	
+	@NotBlank(message = "Name of Relation is either empty or null")
 	@Column(unique = true)
 	private String relationName;
 

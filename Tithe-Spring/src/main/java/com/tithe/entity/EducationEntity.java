@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class EducationEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long educationId;
 	
+	@NotBlank(message = "Name of Education is either empty or null")
 	@Column(unique = true)
 	private String educationName;
 	
