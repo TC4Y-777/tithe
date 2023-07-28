@@ -61,13 +61,15 @@ public class PersonMutationService {
 		person.setDob(LocalDate.parse(personMutationInput.getDob()));
 		person.setPhone(personMutationInput.getPhone());
 		
+//		TODO How about cascading validation using @Valid
+		
 		List<TitheMutationInput> titheInputs = personMutationInput.getTithes();
 		List<TitheEntity> tithes = new ArrayList<>();
 		if (titheInputs.size()!=0) {
 			for (TitheMutationInput titheInput : titheInputs) {
 				TitheEntity tithe = new TitheEntity();
 				tithe.setTitheAmount(titheInput.getTitheAmount());
-				tithe.setTimeStamp(LocalDate.parse(titheInput.getTimeStamp()));
+				tithe.setTimeStamp(titheInput.getTimeStamp());
 				tithe.setPerson(person);
 				tithe.setFamily(person.getFamily());
 				tithe.setKoottayma(tithe.getFamily().getKoottayma());

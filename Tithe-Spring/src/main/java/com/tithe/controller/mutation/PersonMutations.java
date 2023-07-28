@@ -14,11 +14,17 @@ import com.tithe.entity.EducationEntity;
 import com.tithe.entity.OccupationEntity;
 import com.tithe.entity.PersonEntity;
 import com.tithe.entity.RelationEntity;
+import com.tithe.entity.TitheEntity;
 import com.tithe.model.PersonMutationInput;
+import com.tithe.model.TitheMutationInput;
 import com.tithe.service.mutation.EducationMutationService;
 import com.tithe.service.mutation.OccupationMutationService;
 import com.tithe.service.mutation.PersonMutationService;
 import com.tithe.service.mutation.RelationMutationService;
+import com.tithe.service.mutation.TitheMutationService;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 /**
  * @author Ashish Sam T George
@@ -38,6 +44,9 @@ public class PersonMutations {
 	
 	@Autowired
 	private RelationMutationService relationMutationService;
+	
+	@Autowired
+	private TitheMutationService titheMutationService;
 
 	@MutationMapping(name = "createOnePerson")
 	public PersonEntity createOnePerson(@Argument(name = "person") PersonMutationInput personMutationInput) {
@@ -104,6 +113,20 @@ public class PersonMutations {
 	@MutationMapping(name = "createManyRelations")
 	public List<RelationEntity> createManyRelations(@Argument(name = "relations") List<String> relationNames) {
 		return relationMutationService.createManyRelations(relationNames);
+	}
+	
+	@MutationMapping(name = "createOneTithe")
+	public TitheEntity createOneTithe(@Argument(name = "personId") Long personId, 
+			@Argument(name = "tithe") TitheMutationInput titheMutationInput) {
+		List<TitheMutationInput> titheMutationInputs = List.of(titheMutationInput);
+		List<TitheEntity> tithes = titheMutationService.createManyTithes(personId, titheMutationInputs);
+		return tithes.get(0);
+	}
+	
+	@MutationMapping(name = "createManyTithes")
+	public List<TitheEntity> createManyTithes(@Argument(name = "personId") Long personId, 
+			@Argument(name = "tithes") List<TitheMutationInput> titheMutationInputs) {
+		return titheMutationService.createManyTithes(personId, titheMutationInputs);
 	}
 	
 }
