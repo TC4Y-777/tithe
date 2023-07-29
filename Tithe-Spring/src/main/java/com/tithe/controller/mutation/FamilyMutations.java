@@ -26,9 +26,6 @@ public class FamilyMutations {
 	
 	@MutationMapping(name = "createOneFamily")
 	public FamilyEntity createOneFamily(@Argument(name = "family") FamilyMutationInput familyMutationInput) {
-		if (familyMutationInput.getFamilyName().isBlank()) {
-			familyMutationInput.setFamilyName(null);
-		}
 		return familyMutationService.createOneFamily(familyMutationInput);
 	}
 	
