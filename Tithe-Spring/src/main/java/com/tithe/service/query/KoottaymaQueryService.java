@@ -34,7 +34,9 @@ public class KoottaymaQueryService {
 
 	public List<KoottaymaEntity> getManyKoottaymas(KoottaymaQueryFilter koottaymaQueryFilter) {
 		KoottaymaEntity koottayma = new KoottaymaEntity();
-		koottayma.setKoottaymaName(koottaymaQueryFilter.getKoottaymaName());
+		if (koottaymaQueryFilter.getKoottaymaName()!=null && !koottaymaQueryFilter.getKoottaymaName().isBlank()) {
+			koottayma.setKoottaymaName(koottaymaQueryFilter.getKoottaymaName());
+		}
 		if (koottaymaQueryFilter.getParishId()!=null) {
 			koottayma.setParish(parishQueryService.getOneParish(koottaymaQueryFilter.getParishId()));
 		}

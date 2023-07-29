@@ -34,8 +34,12 @@ public class PersonQueryService {
 
 	public List<PersonEntity> getManyPersons(PersonQueryFilter personQueryFilter) {
 		PersonEntity personEntity = new PersonEntity();
-		personEntity.setBaptismName(personQueryFilter.getBaptismName());
-		personEntity.setPersonName(personQueryFilter.getPersonName());
+		if (personQueryFilter.getBaptismName()!=null) {
+			personEntity.setBaptismName(personQueryFilter.getBaptismName());
+		}
+		if (personQueryFilter.getPersonName()!=null) {
+			personEntity.setPersonName(personQueryFilter.getPersonName());
+		}
 		personEntity.setDob(personQueryFilter.getDob());
 		personEntity.setPhone(personQueryFilter.getPhone());
 		personEntity.setGender(personQueryFilter.getGender());

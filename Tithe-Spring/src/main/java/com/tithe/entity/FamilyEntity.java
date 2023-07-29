@@ -5,6 +5,7 @@ package com.tithe.entity;
 
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +36,7 @@ public class FamilyEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long familyId;
 	
+	@Nonnull
 	private String familyName;
 	
 //TODO	I am a bit confused. UNDERSTAND

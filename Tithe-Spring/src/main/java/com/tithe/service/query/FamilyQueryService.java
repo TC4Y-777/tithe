@@ -35,7 +35,10 @@ public class FamilyQueryService {
 
 	public List<FamilyEntity> getManyFamilies(FamilyQueryFilter familyQueryFilter) {
 		FamilyEntity family = new FamilyEntity();
-		family.setFamilyName(familyQueryFilter.getFamilyName());
+		if (familyQueryFilter.getFamilyName()!=null) {
+			family.setFamilyName(familyQueryFilter.getFamilyName());
+		}
+		
 		family.setPhone(familyQueryFilter.getPhone());
 		if (familyQueryFilter.getKoottaymaId()!=null) {
 			family.setKoottayma(koottaymaQueryService.getOneKoottayma(familyQueryFilter.getKoottaymaId()));

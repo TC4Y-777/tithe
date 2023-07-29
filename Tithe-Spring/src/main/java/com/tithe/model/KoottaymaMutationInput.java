@@ -4,6 +4,12 @@
 package com.tithe.model;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,10 +21,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class KoottaymaMutationInput {
 	
-	@Nonnull
+	@NotBlank(message = "Name of Koottayma cannot be empty or null")
 	String koottaymaName;
 
-	@Nonnull
+	@Positive(message = "Id of Parish should be valid")
+	@NotNull(message = "Id of Parish cannot be empty or null")
 	Long parishId;
 	
 	Boolean active = true;

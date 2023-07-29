@@ -25,7 +25,7 @@ public class OccupationMutationService {
 	public List<OccupationEntity> createManyOccupations(List<String> occupationNames) {
 		List<OccupationEntity> occupations = new ArrayList<>();
 		for (String occupationName : occupationNames) {
-			if (!occupationName.isBlank()) {
+			if (occupationName!=null && !occupationName.isBlank()) {
 				OccupationEntity occupation = new OccupationEntity();
 				occupation.setOccupationName(occupationName);
 				occupations.add(occupation);

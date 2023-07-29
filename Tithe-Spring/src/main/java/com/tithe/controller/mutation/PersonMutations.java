@@ -41,6 +41,12 @@ public class PersonMutations {
 
 	@MutationMapping(name = "createOnePerson")
 	public PersonEntity createOnePerson(@Argument(name = "person") PersonMutationInput personMutationInput) {
+		if (personMutationInput.getBaptismName().isBlank()) {
+			personMutationInput.setBaptismName(null);
+		}
+		if (personMutationInput.getPersonName().isBlank()) {
+			personMutationInput.setPersonName(null);
+		}
 		return personMutationService.createOnePerson(personMutationInput);
 	}
 	
