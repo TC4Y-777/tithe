@@ -22,6 +22,8 @@ import com.tithe.service.query.EducationQueryService;
 import com.tithe.service.query.FamilyQueryService;
 import com.tithe.service.query.OccupationQueryService;
 import com.tithe.service.query.RelationQueryService;
+import com.tithe.service.query.TitheQueryService;
+import com.tithe.utils.ObjectValidation;
 
 /**
  * @author Ashish Sam T George
@@ -29,6 +31,9 @@ import com.tithe.service.query.RelationQueryService;
  */
 @Service
 public class PersonMutationService {
+	
+	@Autowired
+	private ObjectValidation objectValidation;
 	
 	@Autowired
 	private PersonRepository personRepository;
@@ -45,39 +50,26 @@ public class PersonMutationService {
 	@Autowired
 	private OccupationQueryService occupationQueryService;
 	
+	@Autowired
+	private TitheQueryService titheQueryService;
+	
 	public PersonEntity createOnePerson(PersonMutationInput personMutationInput) {
+		
+		objectValidation.validateObject(personMutationInput);
+		
 		PersonEntity person = new PersonEntity();
 		person.setBaptismName(personMutationInput.getBaptismName());
 		person.setPersonName(personMutationInput.getPersonName());
-		
-		if (personMutationInput.getFamilyId()!=null) {
-			person.setFamily(familyQueryService.getOneFamily(personMutationInput.getFamilyId()));
-		}
-		if (personMutationInput.getRelationId()!=null) {
-			person.setRelation(relationQueryService.getOneRelation(personMutationInput.getRelationId()));
-		}
-		
+		person.setFamily(familyQueryService.getOneFamily(personMutationInput.getFamilyId()));
+		person.setRelation(relationQueryService.getOneRelation(personMutationInput.getRelationId()));
 		person.setGender(personMutationInput.getGender());
-		person.setDob(LocalDate.parse(personMutationInput.getDob()));
+		person.setDob(personMutationInput.getDob());
 		person.setPhone(personMutationInput.getPhone());
-		
-//		TODO How about cascading validation using @Valid
 		
 		List<TitheMutationInput> titheInputs = personMutationInput.getTithes();
 		List<TitheEntity> tithes = new ArrayList<>();
 		if (titheInputs.size()!=0) {
-			for (TitheMutationInput titheInput : titheInputs) {
-				TitheEntity tithe = new TitheEntity();
-				tithe.setTitheAmount(titheInput.getTitheAmount());
-				tithe.setTimeStamp(titheInput.getTimeStamp());
-				tithe.setPerson(person);
-				tithe.setFamily(person.getFamily());
-				tithe.setKoottayma(tithe.getFamily().getKoottayma());
-				tithe.setParish(tithe.getKoottayma().getParish());
-				tithe.setForane(tithe.getParish().getForane());
-				
-				tithes.add(tithe);
-			}
+			tithes = titheQueryService.buildTitheEntities(person, titheInputs);
 		}
 		person.setTithes(tithes);
 		

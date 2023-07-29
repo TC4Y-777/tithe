@@ -35,7 +35,7 @@ public class FamilyQueryService {
 
 	public List<FamilyEntity> getManyFamilies(FamilyQueryFilter familyQueryFilter) {
 		FamilyEntity family = new FamilyEntity();
-		if (familyQueryFilter.getFamilyName()!=null) {
+		if (familyQueryFilter.getFamilyName()!=null && !familyQueryFilter.getFamilyName().isBlank()) {
 			family.setFamilyName(familyQueryFilter.getFamilyName());
 		}
 		

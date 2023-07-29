@@ -17,6 +17,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +38,7 @@ public class FamilyEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long familyId;
 	
-	@Nonnull
+	@NotBlank(message = "Name of Family is empty or null")
 	private String familyName;
 	
 //TODO	I am a bit confused. UNDERSTAND
@@ -46,6 +48,7 @@ public class FamilyEntity {
 	
 	private String phone;
 	
+	@NotNull(message = "Koottayma does not exist")
 	@ManyToOne
 	@JoinColumn(name = "koottayma_id")
 	private KoottaymaEntity koottayma;

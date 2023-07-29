@@ -22,6 +22,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,23 +49,30 @@ public class PersonEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long personId;
 	
-	@Nonnull
+	@NotBlank(message = "Bapstism Name is empty or null")
 	private String baptismName;
 	
-	@Nonnull
+	@NotBlank(message =  "Name of Person is empty or null")
 	private String personName;
 	
+	@NotNull(message = "Family does not exist")
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "family_id")
 	private FamilyEntity family;
 	
 //TODO I am bit confused
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@NotNull(message = "Relation does not exist")
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "relation_id")
 	private RelationEntity relation;
 	
+	@NotNull(message = "Gender does not exist")
 	private GenderEnum gender;
+	
+	@PastOrPresent(message = "Date of Birth is not valid")
+	@NotNull(message = "Date of Birth is empty or null")
 	private LocalDate dob;
+	
 //	I think it is better to store phone as string
 	private String phone;
 	

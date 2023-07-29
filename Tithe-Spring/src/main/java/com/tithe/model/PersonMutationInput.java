@@ -3,13 +3,17 @@
  */
 package com.tithe.model;
 
+import java.time.LocalDate;
 import java.util.List;
-
-import org.antlr.v4.runtime.misc.NotNull;
 
 import com.tithe.entity.TitheEntity;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,22 +25,27 @@ import lombok.NoArgsConstructor;
 @Data
 public class PersonMutationInput {
 	
-	@Nonnull
+	@NotBlank(message = "Baptism Name should not be empty or null")
 	String baptismName;
 	
-	@Nonnull
+	@NotBlank(message = "Name of Person should not be empty or null")
 	String personName;
 	
-	@Nonnull
+	@Positive(message = "Id of Family should be valid")
+	@NotNull(message = "Id of Family should not be empty or null")
 	Long familyId;
 	
-	@Nonnull
+	@Positive(message = "Id of Relation should be valid")
+	@NotNull(message = "Id of Relation should not be empty or null")
 	Long relationId;
 	
-	@Nonnull
+	@NotNull(message = "Gender should not be empty or null")
 	GenderEnum gender;
 	
-	String dob;
+	@PastOrPresent(message = "Date of Birth should be valid")
+	@NotNull(message = "Date of Birth should not be empty or null")
+	LocalDate dob;
+	
 	String phone;
 	List<TitheMutationInput> tithes;
 	Boolean moved = false;

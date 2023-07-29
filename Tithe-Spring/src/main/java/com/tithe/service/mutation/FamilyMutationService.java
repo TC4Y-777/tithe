@@ -13,6 +13,7 @@ import com.tithe.model.FamilyMutationInput;
 import com.tithe.repository.FamilyRepository;
 import com.tithe.service.query.AddressQueryService;
 import com.tithe.service.query.KoottaymaQueryService;
+import com.tithe.utils.ObjectValidation;
 
 /**
  * @author Ashish Sam T George
@@ -20,6 +21,9 @@ import com.tithe.service.query.KoottaymaQueryService;
  */
 @Service
 public class FamilyMutationService {
+	
+	@Autowired
+	private ObjectValidation objectValidation;
 	
 	@Autowired
 	private AddressQueryService addressQueryService;
@@ -31,6 +35,9 @@ public class FamilyMutationService {
 	private FamilyRepository familyRepository;
 
 	public FamilyEntity createOneFamily(FamilyMutationInput familyMutationInput) {
+		
+		objectValidation.validateObject(familyMutationInput);
+		
 		FamilyEntity family = new FamilyEntity();
 		family.setFamilyName(familyMutationInput.getFamilyName());
 		
@@ -46,10 +53,7 @@ public class FamilyMutationService {
 		}
 		
 		family.setPhone(familyMutationInput.getPhone());
-		
-		if (familyMutationInput.getKoottaymaId()!=null) {
-			family.setKoottayma(koottaymaQueryService.getOneKoottayma(familyMutationInput.getKoottaymaId()));
-		}
+		family.setKoottayma(koottaymaQueryService.getOneKoottayma(familyMutationInput.getKoottaymaId()));
 		
 		family.setActive(familyMutationInput.getActive());
 		

@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class DistrictEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long districtId;
 	
+	@NotBlank(message = "Name of District is emtpy or null")
 	@Column(unique = true)
 	private String districtName;
 

@@ -65,9 +65,7 @@ public class AddressQueryService {
 	}
 	
 	public List<AddressEntity> getManyAddresses(AddressQueryFilter addressQueryFilter) {
-		System.out.println("Address Query Filter in Many addresses: " + addressQueryFilter);
 		AddressEntity address = buildAddressEntity(addressQueryFilter);
-		System.out.println("Address after being built: " + address);
 		
 		Example<AddressEntity> exampleAddress = Example.of(address);
 		List<AddressEntity> matchingAddresses = addressRepository.findAll(exampleAddress);
@@ -154,7 +152,9 @@ public class AddressQueryService {
 	public AddressEntity buildAddressEntity(AddressQueryFilter addressQueryFilter) {
 		AddressEntity address = new AddressEntity();
 
-		address.setBuildingName(addressQueryFilter.getBuildingName());
+		if (addressQueryFilter.getBuildingName()!=null && !addressQueryFilter.getBuildingName().isBlank()) {
+			address.setBuildingName(addressQueryFilter.getBuildingName());
+		}
 		if (addressQueryFilter.getStreetId()!=null) {
 			address.setStreet(getOneStreet(addressQueryFilter.getStreetId()));
 		}
