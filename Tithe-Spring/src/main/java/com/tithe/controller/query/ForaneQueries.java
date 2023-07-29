@@ -30,7 +30,7 @@ public class ForaneQueries {
 	}
 	
 	@QueryMapping(name = "getManyForanes")
-	public List<ForaneEntity> getManyForanes(@Argument ForaneQueryFilter foraneQueryFilter) {
+	public List<ForaneEntity> getManyForanes(@Argument(name = "filter") ForaneQueryFilter foraneQueryFilter) {
 		return foraneQueryService.getManyForanes(foraneQueryFilter);
 	}
 	

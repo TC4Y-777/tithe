@@ -12,6 +12,7 @@ import com.tithe.model.AddressMutationInput;
 import com.tithe.model.ForaneMutationInput;
 import com.tithe.repository.ForaneRepository;
 import com.tithe.service.query.AddressQueryService;
+import com.tithe.utils.ObjectValidation;
 
 /**
  * @author Ashish Sam T George
@@ -19,6 +20,9 @@ import com.tithe.service.query.AddressQueryService;
  */
 @Service
 public class ForaneMutationService {
+	
+	@Autowired
+	private ObjectValidation objectValidation;
 
 	@Autowired
 	private AddressQueryService addressQueryService;
@@ -27,10 +31,13 @@ public class ForaneMutationService {
 	private ForaneRepository foraneRepository;
 	
 	public ForaneEntity createOneForane(ForaneMutationInput foraneMutationInput) {
+		
+		objectValidation.validateObject(foraneMutationInput);
+		
 		ForaneEntity forane = new ForaneEntity();
 		forane.setForaneName(foraneMutationInput.getForaneName());
 		
-		AddressMutationInput addressInput = foraneMutationInput.getAddressMutationInput();
+		AddressMutationInput addressInput = foraneMutationInput.getAddress();
 		if (addressInput!=null) {
 			AddressEntity address = addressQueryService.getOneAddress(addressInput);
 			if (address!=null) {
