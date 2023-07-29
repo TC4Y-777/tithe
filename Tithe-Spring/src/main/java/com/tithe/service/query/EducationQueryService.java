@@ -26,6 +26,14 @@ public class EducationQueryService {
 		Optional<EducationEntity> education = educationRepository.findById(id);
 		return education.orElse(null);
 	}
+	
+	public List<EducationEntity> getManyEducations(List<Long> ids) {
+		List<EducationEntity> educations = educationRepository.findAllById(ids);
+		if (educations.size()!=0) {
+			return educations;
+		}
+		return null;
+	}
 
 	public List<EducationEntity> getAllEducations() {
 		List<EducationEntity> educations = educationRepository.findAll();

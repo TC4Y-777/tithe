@@ -3,8 +3,9 @@ type Family{
 	familyName: String!
 	address: Address
 	phone: String
-	koottayma: Koottayma
+	koottayma: Koottayma!
 	persons: [Person]
+	tithes: [Tithe]
 	active: Boolean
 }
 
@@ -12,5 +13,13 @@ input FamilyQueryFilter{
 	familyName: String = null
 	phone: String = null
 	koottaymaId: ID = null
+	active: Boolean = true
+}
+
+input FamilyMutationInput{
+	familyName: String!
+	address: AddressMutationInput
+	phone: String
+	koottaymaId: ID!
 	active: Boolean = true
 }

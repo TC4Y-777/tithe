@@ -24,7 +24,8 @@ public class PersonQueryFilter {
 	
 	String baptismName;
 	String personName;
-//	When startDate is set, automatically set the endDate as same, in frontend
+	
+//TODO	When startDate is set, automatically set the endDate as same, in frontend
 //	LocalDate startDate;
 //	LocalDate endDate;
 	

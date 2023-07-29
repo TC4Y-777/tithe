@@ -3,6 +3,8 @@
  */
 package com.tithe.model;
 
+import java.util.UUID;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class AddressQueryFilter {
 	
+	String buildingName;
 	Long streetId;
 	Long cityId;
 	Long districtId;

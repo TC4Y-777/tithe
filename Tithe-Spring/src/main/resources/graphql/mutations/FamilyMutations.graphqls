@@ -1,0 +1,3 @@
+extend type Mutation{
+	createOneFamily(family: FamilyMutationInput): Family
+}

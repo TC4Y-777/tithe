@@ -54,23 +54,18 @@ public class AddressQueryService {
 		return address.orElse(null);
 	}
 	
+	public AddressEntity getOneAddress(AddressQueryFilter addressQueryFilter) {
+		 List<AddressEntity> addresses = getManyAddresses(addressQueryFilter);
+		 if (addresses!=null) {
+			if (!addresses.isEmpty()) {
+				return addresses.get(0);
+			}
+		 }
+		 return null;
+	}
+	
 	public List<AddressEntity> getManyAddresses(AddressQueryFilter addressQueryFilter) {
-		AddressEntity address = new AddressEntity();
-		if (addressQueryFilter.getStreetId()!=null) {
-			address.setStreet(getOneStreet(addressQueryFilter.getStreetId()));
-		}
-		if (addressQueryFilter.getCityId()!=null) {
-			address.setCity(getOneCity(addressQueryFilter.getCityId()));
-		}
-		if(addressQueryFilter.getDistrictId()!=null) {
-			address.setDistrict(getOneDistrict(addressQueryFilter.getDistrictId()));
-		}
-		if (addressQueryFilter.getStateId()!=null) {
-			address.setState(getOneState(addressQueryFilter.getStateId()));
-		}
-		if (addressQueryFilter.getPincodeId()!=null) {
-			address.setPincode(getOnePincode(addressQueryFilter.getPincodeId()));
-		}
+		AddressEntity address = buildAddressEntity(addressQueryFilter);
 		
 		Example<AddressEntity> exampleAddress = Example.of(address);
 		List<AddressEntity> matchingAddresses = addressRepository.findAll(exampleAddress);
@@ -152,6 +147,30 @@ public class AddressQueryService {
 			return pincodes;
 		}
 		return null;
+	}
+	
+	public AddressEntity buildAddressEntity(AddressQueryFilter addressQueryFilter) {
+		AddressEntity address = new AddressEntity();
+
+		if (addressQueryFilter.getBuildingName()!=null && !addressQueryFilter.getBuildingName().isBlank()) {
+			address.setBuildingName(addressQueryFilter.getBuildingName());
+		}
+		if (addressQueryFilter.getStreetId()!=null) {
+			address.setStreet(getOneStreet(addressQueryFilter.getStreetId()));
+		}
+		if (addressQueryFilter.getCityId()!=null) {
+			address.setCity(getOneCity(addressQueryFilter.getCityId()));
+		}
+		if (addressQueryFilter.getDistrictId()!=null) {
+			address.setDistrict(getOneDistrict(addressQueryFilter.getDistrictId()));
+		}
+		if (addressQueryFilter.getStateId()!=null) {
+			address.setState(getOneState(addressQueryFilter.getStateId()));
+		}
+		if (addressQueryFilter.getPincodeId()!=null) {
+			address.setPincode(getOnePincode(addressQueryFilter.getPincodeId()));
+		}
+		return address;
 	}
 
 }

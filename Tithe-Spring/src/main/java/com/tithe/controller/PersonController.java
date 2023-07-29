@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
@@ -58,7 +60,7 @@ public class PersonController {
 		tithe.setPerson(person);
 //		TitheEntity savedTithe = titheRepository.save(tithe);
 		
-		person.setTithe(tithe);
+//		person.setTithe(tithe);
 		
 		FamilyEntity family = new FamilyEntity();
 		family.setFamilyName("Rich Villa");
@@ -78,6 +80,17 @@ public class PersonController {
 		
 		PersonEntity savedPerson = personRepository.save(person);
 		return savedPerson;
+	}
+	
+	@Autowired
+	private TempRepo tempRepo;
+	
+	@MutationMapping
+	public TempEntity testMutation(@Argument TempInput time) {
+		TempEntity tempEntity = new TempEntity();
+		tempEntity.setName(time.getName());
+		tempEntity.setTimeStamp(LocalDate.parse(time.getTimeStamp()));
+		return tempRepo.save(tempEntity);
 	}
 
 }

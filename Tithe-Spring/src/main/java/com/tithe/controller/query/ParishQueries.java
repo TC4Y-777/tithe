@@ -30,7 +30,7 @@ public class ParishQueries {
 	}
 	
 	@QueryMapping(name = "getManyParishes")
-	public List<ParishEntity> getManyParishes(@Argument ParishQueryFilter parishQueryFilter) {
+	public List<ParishEntity> getManyParishes(@Argument(name = "filter") ParishQueryFilter parishQueryFilter) {
 		return parishQueryService.getManyParishes(parishQueryFilter);
 	}
 

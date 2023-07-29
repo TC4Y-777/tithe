@@ -6,10 +6,10 @@ type Tithe{
 	koottayma: Koottayma
 	parish: Parish
 	forane: Forane
-	timeStamp: String!
+	timeStamp: LocalDate!
 }
 
-type TitheMutationInput{
+input TitheMutationInput{
 	titheAmount: Float!
-	timeStamp: String!
+	timeStamp: LocalDate!
 }

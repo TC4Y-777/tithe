@@ -30,7 +30,7 @@ public class FamilyQueries {
 	}
 	
 	@QueryMapping(name = "getManyFamilies")
-	public List<FamilyEntity> getManyFamilies(@Argument FamilyQueryFilter familyQueryFilter){
+	public List<FamilyEntity> getManyFamilies(@Argument(name = "filter") FamilyQueryFilter familyQueryFilter){
 		return familyQueryService.getManyFamilies(familyQueryFilter);
 	}
 	
