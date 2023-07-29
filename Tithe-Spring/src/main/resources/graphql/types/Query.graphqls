@@ -1,3 +1,5 @@
+scalar LocalDate
+
 type Query{
 
 }

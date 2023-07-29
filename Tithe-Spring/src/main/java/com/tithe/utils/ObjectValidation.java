@@ -39,5 +39,11 @@ public class ObjectValidation {
 			throw new ConstraintViolationException("Error Occured: " + errorMessages, violations);
 		}
 	}
+	
+	public void validateObjects(List<?> objs) {
+		for (Object obj : objs) {
+			validateObject(obj);
+		}
+	}
 
 }

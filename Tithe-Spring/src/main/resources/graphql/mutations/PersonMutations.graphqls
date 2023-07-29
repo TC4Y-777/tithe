@@ -16,6 +16,9 @@ extend type Mutation{
 	createOneRelation(relation: String): Relation
 	createManyRelations(relations: [String]): [Relation]
 	
+	createOneTithe(personId: ID!, tithe: TitheMutationInput!): Tithe
+	createManyTithes(personId: ID!, tithes: [TitheMutationInput!]!): [Tithe]
+	
 	testMutation(time: TempInput): Temp
 }
 
