@@ -1,3 +1,34 @@
 extend type Mutation{
 	createOnePerson(person: PersonMutationInput): Person
+	
+	activateOnePerson(id: ID): Person
+	activateManyPersons(ids: [ID]): [Person]
+	
+	deactivateOnePerson(id: ID): Person
+	deactivateManyPersons(ids: [ID]): [Person]
+	
+	createOneEducation(education: String): Education
+	createManyEducations(educations: [String]): [Education]
+	
+	createOneOccupation(occupation: String): Occupation
+	createManyOccupations(occupations: [String]): [Occupation]
+	
+	createOneRelation(relation: String): Relation
+	createManyRelations(relations: [String]): [Relation]
+	
+	createOneTithe(personId: ID!, tithe: TitheMutationInput!): Tithe
+	createManyTithes(personId: ID!, tithes: [TitheMutationInput!]!): [Tithe]
+	
+	testMutation(time: TempInput): Temp
+}
+
+input TempInput{
+	name: String
+	timeStamp: String
+}
+
+type Temp{
+	id: ID
+	name: String
+	timeStamp: String
 }

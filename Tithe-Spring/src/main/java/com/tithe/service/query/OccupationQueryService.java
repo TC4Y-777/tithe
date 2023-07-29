@@ -26,6 +26,14 @@ public class OccupationQueryService {
 		Optional<OccupationEntity> occupation = occupationRepository.findById(id);
 		return occupation.orElse(null);
 	}
+	
+	public List<OccupationEntity> getManyOccupations(List<Long> ids) {
+		List<OccupationEntity> occupations = occupationRepository.findAllById(ids);
+		if (occupations.size()!=0) {
+			return occupations;
+		}
+		return null;
+	}
 
 	public List<OccupationEntity> getAllOccupations() {
 		List<OccupationEntity> occupations = occupationRepository.findAll();

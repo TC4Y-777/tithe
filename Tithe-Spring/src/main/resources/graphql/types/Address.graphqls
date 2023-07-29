@@ -1,5 +1,6 @@
 type Address{
 	addressId: ID!
+	buildingName: String
 	street: Street
 	city: City
 	district: District
@@ -11,11 +12,21 @@ type Address{
 }
 
 input AddressQueryFilter{
+	buildingName: String = null
 	streetId: ID = null
 	cityId: ID = null
 	districtId: ID = null
 	stateId: ID = null
 	pincodeId: ID = null
+}
+
+input AddressMutationInput{
+	buildingName: String = "Nil"
+	streetId: ID!
+	cityId: ID!
+	districtId: ID!
+	stateId: ID!
+	pincodeId: ID!
 }
 
 type Street{

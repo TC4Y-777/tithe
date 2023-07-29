@@ -2,12 +2,12 @@ type Person{
 	personId: ID!
 	baptismName: String!
 	personName: String!
-	family: Family
-	relation: Relation
+	family: Family!
+	relation: Relation!
 	gender: GenderEnum!
-	dob: String!
+	dob: LocalDate!
 	phone: String
-	tithe: Tithe
+	tithes: [Tithe]
 	moved: Boolean
 	educations: [Education]
 	occupations: [Occupation]
@@ -17,7 +17,7 @@ type Person{
 input PersonQueryFilter{
 	baptismName: String = null
 	personName: String = null
-	dob: String = null
+	dob: LocalDate = null
 	phone: String = null
 	gender: GenderEnum = null
 	active: Boolean = true
@@ -29,9 +29,9 @@ input PersonMutationInput{
 	familyId: ID!
 	relationId: ID!
 	gender: GenderEnum!
-	dob: String
+	dob: LocalDate!
 	phone: String
-	tithe: [TitheMutationInput]
+	tithes: [TitheMutationInput]
 	moved: Boolean = false
 	educationIds: [ID]
 	occupationIds: [ID]
