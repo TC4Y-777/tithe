@@ -4,6 +4,7 @@ WORKDIR /spring
 
 COPY gradle/ gradle
 COPY gradlew build.gradle settings.gradle ./
+RUN chmod +x ./gradlew
 RUN ./gradlew dependencies --refresh-dependencies
 
 COPY src/ ./src
