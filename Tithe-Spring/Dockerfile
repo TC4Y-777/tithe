@@ -9,4 +9,4 @@ RUN ./gradlew dependencies --refresh-dependencies
 COPY src/ ./src
 EXPOSE 8080
 
-CMD ["./gradlew", "bootRun"]
+ENTRYPOINT chmod +x ./gradlew && ./gradlew bootRun
