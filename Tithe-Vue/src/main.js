@@ -5,7 +5,8 @@ import App from "./App.vue";
 import router from "./router";
 import { useMainStore } from "@/stores/main.js";
 import { useStyleStore } from "@/stores/style.js";
-import { darkModeKey, styleKey } from "@/config.js";
+// import { darkModeKey, styleKey } from "@/config.js";
+import { styleKey } from "@/config.js";
 
 import "./css/main.css";
 
@@ -27,13 +28,16 @@ mainStore.fetch("history");
 styleStore.setStyle(localStorage[styleKey] ?? "basic");
 
 /* Dark mode */
-if (
-  (!localStorage[darkModeKey] &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches) ||
-  localStorage[darkModeKey] === "1"
-) {
-  styleStore.setDarkMode(true);
-}
+// if (
+//   (!localStorage[darkModeKey] &&
+//     window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+//   localStorage[darkModeKey] === "1"
+// ) {
+//   styleStore.setDarkMode(true);
+// }
+
+/* Always dark mode */
+styleStore.setDarkMode(true);
 
 /* Default title tag */
 const defaultDocumentTitle = "Tithify";
