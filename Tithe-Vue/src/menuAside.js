@@ -1,16 +1,14 @@
 import {
   mdiAccountCircle,
   mdiMonitor,
-  mdiGithub,
-  mdiLock,
-  mdiAlertCircle,
-  mdiSquareEditOutline,
-  mdiTable,
-  mdiViewList,
-  mdiTelevisionGuide,
-  mdiResponsive,
-  mdiPalette,
-  mdiReact,
+  mdiChurch,
+  mdiChurchOutline,
+  mdiHandsPray,
+  mdiAccountMultiple,
+  mdiAccount,
+  mdiFamilyTree,
+  mdiSchool,
+  mdiBriefcase,
 } from "@mdi/js";
 
 export default [
@@ -20,67 +18,52 @@ export default [
     label: "Dashboard",
   },
   {
-    to: "/tables",
-    label: "Tables",
-    icon: mdiTable,
+    to: "/forane",
+    icon: mdiChurch,
+    label: "Forane",
   },
   {
-    to: "/forms",
-    label: "Forms",
-    icon: mdiSquareEditOutline,
+    to: "/parish",
+    icon: mdiChurchOutline,
+    label: "Parish",
   },
   {
-    to: "/ui",
-    label: "UI",
-    icon: mdiTelevisionGuide,
+    to: "/koottayma",
+    icon: mdiHandsPray,
+    label: "Koottayma",
   },
   {
-    to: "/responsive",
-    label: "Responsive",
-    icon: mdiResponsive,
+    to: "/family",
+    icon: mdiAccountMultiple,
+    label: "Family",
+    menu: [
+      {
+        to: "/relation",
+        icon: mdiFamilyTree,
+        label: "Relation",
+      },
+    ],
   },
   {
-    to: "/",
-    label: "Styles",
-    icon: mdiPalette,
+    to: "/person",
+    icon: mdiAccount,
+    label: "Person",
+    menu: [
+      {
+        to: "/education",
+        icon: mdiSchool,
+        label: "Education",
+      },
+      {
+        to: "/occupation",
+        icon: mdiBriefcase,
+        label: "Occupation",
+      },
+    ],
   },
   {
     to: "/profile",
     label: "Profile",
     icon: mdiAccountCircle,
-  },
-  {
-    to: "/login",
-    label: "Login",
-    icon: mdiLock,
-  },
-  {
-    to: "/error",
-    label: "Error",
-    icon: mdiAlertCircle,
-  },
-  {
-    label: "Dropdown",
-    icon: mdiViewList,
-    menu: [
-      {
-        label: "Item One",
-      },
-      {
-        label: "Item Two",
-      },
-    ],
-  },
-  {
-    href: "https://github.com/justboil/admin-one-vue-tailwind",
-    label: "GitHub",
-    icon: mdiGithub,
-    target: "_blank",
-  },
-  {
-    href: "https://github.com/justboil/admin-one-react-tailwind",
-    label: "React version",
-    icon: mdiReact,
-    target: "_blank",
   },
 ];

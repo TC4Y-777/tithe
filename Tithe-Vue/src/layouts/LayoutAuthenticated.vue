@@ -79,6 +79,7 @@ const menuClick = (event, item) => {
         >
           <BaseIcon :path="mdiMenu" size="24" />
         </NavBarItemPlain>
+        <!-- How about some basic search like, if entered forane, can go to Forane Page -->
         <NavBarItemPlain use-margin>
           <FormControl
             placeholder="Search (ctrl+k)"

@@ -11,7 +11,10 @@ const year = new Date().getFullYear();
       <div class="text-center md:text-left">
         <b
           >&copy;{{ year }},
-          <a href="https://tc4y-777.github.io/" target="_blank">By Ashish</a>.</b
+          <a href="https://tc4y-777.github.io/" target="_blank"
+            >By Ashish Sam T George</a
+          >
+          .</b
         >
         <slot />
       </div>
