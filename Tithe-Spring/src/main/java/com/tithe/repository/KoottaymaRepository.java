@@ -14,5 +14,7 @@ import com.tithe.entity.KoottaymaEntity;
  */
 @Repository
 public interface KoottaymaRepository extends JpaRepository<KoottaymaEntity, Long> {
+	
+	long countByActive(Boolean active);
 
 }

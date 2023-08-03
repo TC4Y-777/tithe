@@ -56,6 +56,11 @@ public class PersonQueries {
 		return personQueryService.getAllPersons();
 	}
 	
+	@QueryMapping(name = "getPersonCount")
+	public Long getPersonCount() {
+		return personQueryService.getPersonCount();
+	}
+	
 	@QueryMapping(name = "getOneEducation")
 	public EducationEntity getOneEducation(@Argument Long id) {
 		return educationQueryService.getOneEducation(id);

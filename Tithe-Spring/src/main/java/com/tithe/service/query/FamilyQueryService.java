@@ -63,4 +63,8 @@ public class FamilyQueryService {
 		return null;
 	}
 
+	public Long getFamilyCount() {
+		return familyRepository.countByActive(true);
+	}
+
 }

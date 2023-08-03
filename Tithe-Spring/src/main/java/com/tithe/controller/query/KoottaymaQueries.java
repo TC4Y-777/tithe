@@ -38,5 +38,10 @@ public class KoottaymaQueries {
 	public List<KoottaymaEntity> getAllKoottaymas() {
 		return koottaymaQueryService.getAllKoottaymas();
 	}
+	
+	@QueryMapping(name = "getKoottaymaCount")
+	public Long getKoottaymaCount() {
+		return koottaymaQueryService.getKoottaymaCount();
+	}
 
 }
