@@ -1,6 +1,6 @@
 <script setup>
 // import { computed, ref, onMounted } from "vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 // import { useMainStore } from "@/stores/main";
 import {
   mdiChurch,
@@ -11,7 +11,11 @@ import {
   mdiChartTimelineVariant,
   mdiReload,
   mdiFinance,
+  mdiTableLarge,
 } from "@mdi/js";
+import gql from "graphql-tag";
+import { useQuery } from "@vue/apollo-composable";
+
 import * as chartConfig from "@/components/Charts/chart.config.js";
 import LineChart from "@/components/Charts/LineChart.vue";
 import SectionMain from "@/components/SectionMain.vue";
@@ -48,6 +52,26 @@ onMounted(() => {
 // const clientBarItems = computed(() => mainStore.clients.slice(0, 4));
 
 // const transactionBarItems = computed(() => mainStore.history);
+
+const ACTIVE_ENTITY_COUNT_QUERY = gql`
+  query activeCount {
+    getPersonCount
+    getFamilyCount
+    getKoottaymaCount
+    getParishCount
+    getForaneCount
+  }
+`;
+
+// Don't use any variable below. 'result' is a ref. So, it must be used.
+const { result } = useQuery(ACTIVE_ENTITY_COUNT_QUERY);
+const activeForaneCount = computed(() => result.value?.getForaneCount ?? 0);
+const activeParishCount = computed(() => result.value?.getParishCount ?? 0);
+const activeKoottaymaCount = computed(
+  () => result.value?.getKoottaymaCount ?? 0
+);
+const activeFamilyCount = computed(() => result.value?.getFamilyCount ?? 0);
+const activePersonCount = computed(() => result.value?.getPersonCount ?? 0);
 </script>
 
 <template>
@@ -64,31 +88,31 @@ onMounted(() => {
         <CardBoxWidget
           color="text-emerald-500"
           :icon="mdiChurch"
-          :number="100"
+          :number="activeForaneCount"
           label="Foranes"
         />
         <CardBoxWidget
           color="text-blue-500"
           :icon="mdiChurchOutline"
-          :number="1000"
+          :number="activeParishCount"
           label="Parishes"
         />
         <CardBoxWidget
           color="text-red-500"
           :icon="mdiHandsPray"
-          :number="10000"
+          :number="activeKoottaymaCount"
           label="Koottaymas"
         />
         <CardBoxWidget
           color="text-yellow-500"
           :icon="mdiAccountMultiple"
-          :number="100000"
+          :number="activeFamilyCount"
           label="Families"
         />
         <CardBoxWidget
           color="text-orange-500"
           :icon="mdiAccount"
-          :number="400000"
+          :number="activePersonCount"
           label="Persons"
         />
       </div>
@@ -133,7 +157,7 @@ onMounted(() => {
         </div>
       </div> -->
 
-      <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Clients" />
+      <SectionTitleLineWithButton :icon="mdiTableLarge" title="Quick View" />
 
       <TableTabs :tabs="tableTabTitle">
         <template #default="{ index }">
