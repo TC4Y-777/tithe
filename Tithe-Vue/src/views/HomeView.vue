@@ -1,5 +1,4 @@
 <script setup>
-// import { computed, ref, onMounted } from "vue";
 import { ref, onMounted, computed } from "vue";
 // import { useMainStore } from "@/stores/main";
 import {
@@ -29,15 +28,24 @@ import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
+import {
+  homepageTableTabTitle,
+  foraneTableHeaders,
+  parishTableHeaders,
+  personTableHeaders,
+  familyTableHeaders,
+} from "@/externalized-data/tableData";
+import {
+  homepageActiveEnityCountQuery,
+  homepageActiveForaneTableQuery,
+  homepageActiveParishTableQuery,
+  homepageActiveFamilyTableQuery,
+  homepageActivePersonTableQuery,
+} from "@/externalized-data/graphqlQueries";
 
 const chartData = ref(null);
 
-const tableTabTitle = [
-  { title: "Forane", icon: "mdiChurch" },
-  { title: "Parish", icon: "mdiChurchOutline" },
-  { title: "Family", icon: "mdiAccountMultiple" },
-  { title: "Person", icon: "mdiAccount" },
-];
+const tableTabTitle = homepageTableTabTitle;
 
 const fillChartData = () => {
   chartData.value = chartConfig.sampleChartData();
@@ -54,24 +62,69 @@ onMounted(() => {
 // const transactionBarItems = computed(() => mainStore.history);
 
 const ACTIVE_ENTITY_COUNT_QUERY = gql`
-  query activeCount {
-    getPersonCount
-    getFamilyCount
-    getKoottaymaCount
-    getParishCount
-    getForaneCount
-  }
+  ${homepageActiveEnityCountQuery}
 `;
-
 // Don't use any variable below. 'result' is a ref. So, it must be used.
-const { result } = useQuery(ACTIVE_ENTITY_COUNT_QUERY);
-const activeForaneCount = computed(() => result.value?.getForaneCount ?? 0);
-const activeParishCount = computed(() => result.value?.getParishCount ?? 0);
-const activeKoottaymaCount = computed(
-  () => result.value?.getKoottaymaCount ?? 0
+const { result: activeEntityCount } = useQuery(ACTIVE_ENTITY_COUNT_QUERY);
+const activeForaneCount = computed(
+  () => activeEntityCount.value?.getForaneCount ?? 0
 );
-const activeFamilyCount = computed(() => result.value?.getFamilyCount ?? 0);
-const activePersonCount = computed(() => result.value?.getPersonCount ?? 0);
+const activeParishCount = computed(
+  () => activeEntityCount.value?.getParishCount ?? 0
+);
+const activeKoottaymaCount = computed(
+  () => activeEntityCount.value?.getKoottaymaCount ?? 0
+);
+const activeFamilyCount = computed(
+  () => activeEntityCount.value?.getFamilyCount ?? 0
+);
+const activePersonCount = computed(
+  () => activeEntityCount.value?.getPersonCount ?? 0
+);
+
+const getActiveForaneRows = computed(() => {
+  const ACTIVE_FORANE_QUERY = gql`
+    ${homepageActiveForaneTableQuery}
+  `;
+  const { result: activeForaneData } = useQuery(ACTIVE_FORANE_QUERY);
+  const activeForaneRows = computed(
+    () => activeForaneData.value?.getAllForanes ?? []
+  );
+  return activeForaneRows.value;
+});
+
+const getActiveParishRows = computed(() => {
+  const ACTIVE_PARISH_QUERY = gql`
+    ${homepageActiveParishTableQuery}
+  `;
+  const { result: activeParishData } = useQuery(ACTIVE_PARISH_QUERY);
+  const activeParishRows = computed(
+    () => activeParishData.value?.getAllParishes ?? []
+  );
+  return activeParishRows.value;
+});
+
+const getActiveFamilyRows = computed(() => {
+  const ACTIVE_FAMILY_QUERY = gql`
+    ${homepageActiveFamilyTableQuery}
+  `;
+  const { result: activeFamilyData } = useQuery(ACTIVE_FAMILY_QUERY);
+  const activeFamilyRows = computed(
+    () => activeFamilyData.value?.getAllFamilies ?? []
+  );
+  return activeFamilyRows.value;
+});
+
+const getActivePersonRows = computed(() => {
+  const ACTIVE_PERSON_QUERY = gql`
+    ${homepageActivePersonTableQuery}
+  `;
+  const { result: activePersonData } = useQuery(ACTIVE_PERSON_QUERY);
+  const activePersonRows = computed(
+    () => activePersonData.value?.getAllPersons ?? []
+  );
+  return activePersonRows.value;
+});
 </script>
 
 <template>
@@ -163,30 +216,42 @@ const activePersonCount = computed(() => result.value?.getPersonCount ?? 0);
         <template #default="{ index }">
           <div v-if="index === 0">
             <CardBox has-table>
-              <TableSampleClients />
+              <TableSampleClients
+                id-name="foraneId"
+                :table-headers="foraneTableHeaders"
+                :row-data="getActiveForaneRows"
+              />
             </CardBox>
           </div>
           <div v-if="index === 1">
             <CardBox has-table>
-              <TableSampleClients />
+              <TableSampleClients
+                id-name="parishId"
+                :table-headers="parishTableHeaders"
+                :row-data="getActiveParishRows"
+              />
             </CardBox>
           </div>
           <div v-if="index === 2">
             <CardBox has-table>
-              <TableSampleClients />
+              <TableSampleClients
+                id-name="familyId"
+                :table-headers="familyTableHeaders"
+                :row-data="getActiveFamilyRows"
+              />
             </CardBox>
           </div>
           <div v-if="index === 3">
             <CardBox has-table>
-              <TableSampleClients />
+              <TableSampleClients
+                id-name="personId"
+                :table-headers="personTableHeaders"
+                :row-data="getActivePersonRows"
+              />
             </CardBox>
           </div>
         </template>
       </TableTabs>
-
-      <!-- <CardBox has-table>
-        <TableSampleClients />
-      </CardBox> -->
     </SectionMain>
   </LayoutAuthenticated>
 </template>
