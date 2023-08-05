@@ -58,5 +58,9 @@ public class KoottaymaQueryService {
 		}
 		return null;
 	}
+
+	public Long getKoottaymaCount() {
+		return koottaymaRepository.countByActive(true);
+	}
 	
 }

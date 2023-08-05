@@ -54,4 +54,8 @@ public class ForaneQueryService {
 		return null;
 	}
 
+	public Long getForaneCount() {
+		return foraneRepository.countByActive(true);
+	}
+
 }

@@ -53,6 +53,10 @@ export default {
 }
 
 .tab.active {
-  box-shadow: inset 0px 0px 10px 5px rgba(255, 255, 255, 0.3);
+  /* box-shadow: inset 0px 0px 10px 5px rgba(255, 255, 255, 0.3); */
+  /* color: #fff; Text color when selected */
+  border-radius: 10px;
+  background-color: #3b82f6;
+  filter: drop-shadow(0 0em 1em #3b82f6);
 }
 </style>
