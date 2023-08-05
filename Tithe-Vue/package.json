@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
+    "@headlessui/vue": "^1.7.15",
+    "@heroicons/vue": "^2.0.18",
     "@mdi/js": "^7.0.96",
     "@rushstack/eslint-patch": "^1.1.4",
     "@vue/apollo-composable": "^4.0.0-beta.8",

@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import Home from "@/views/HomeView.vue";
+import Forane from "@/views/ForaneView.vue";
 
 const routes = [
   {
@@ -12,6 +13,14 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: Home,
+  },
+  {
+    meta: {
+      title: "Forane",
+    },
+    path: "/forane",
+    name: "forane",
+    component: Forane,
   },
   {
     meta: {
