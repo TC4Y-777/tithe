@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import Home from "@/views/HomeView.vue";
 import Forane from "@/views/ForaneView.vue";
+import Parish from "@/views/ParishView.vue";
 
 const routes = [
   {
@@ -21,6 +22,14 @@ const routes = [
     path: "/forane",
     name: "forane",
     component: Forane,
+  },
+  {
+    meta: {
+      title: "Parish",
+    },
+    path: "/parish",
+    name: "parish",
+    component: Parish,
   },
   {
     meta: {

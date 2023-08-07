@@ -7,6 +7,7 @@ import {
   mdiHandsPray,
   mdiAccountMultiple,
   mdiAccount,
+  mdiCashMultiple,
   mdiChartTimelineVariant,
   mdiReload,
   mdiFinance,
@@ -82,44 +83,46 @@ const activePersonCount = computed(
   () => activeEntityCount.value?.getPersonCount ?? 0
 );
 
+const activeTitheAnnual = 1;
+
+const ACTIVE_FORANE_QUERY = gql`
+  ${homepageActiveForaneTableQuery}
+`;
+const { result: activeForaneData } = useQuery(ACTIVE_FORANE_QUERY);
 const getActiveForaneRows = computed(() => {
-  const ACTIVE_FORANE_QUERY = gql`
-    ${homepageActiveForaneTableQuery}
-  `;
-  const { result: activeForaneData } = useQuery(ACTIVE_FORANE_QUERY);
   const activeForaneRows = computed(
     () => activeForaneData.value?.getAllForanes ?? []
   );
   return activeForaneRows.value;
 });
 
+const ACTIVE_PARISH_QUERY = gql`
+  ${homepageActiveParishTableQuery}
+`;
+const { result: activeParishData } = useQuery(ACTIVE_PARISH_QUERY);
 const getActiveParishRows = computed(() => {
-  const ACTIVE_PARISH_QUERY = gql`
-    ${homepageActiveParishTableQuery}
-  `;
-  const { result: activeParishData } = useQuery(ACTIVE_PARISH_QUERY);
   const activeParishRows = computed(
     () => activeParishData.value?.getAllParishes ?? []
   );
   return activeParishRows.value;
 });
 
+const ACTIVE_FAMILY_QUERY = gql`
+  ${homepageActiveFamilyTableQuery}
+`;
+const { result: activeFamilyData } = useQuery(ACTIVE_FAMILY_QUERY);
 const getActiveFamilyRows = computed(() => {
-  const ACTIVE_FAMILY_QUERY = gql`
-    ${homepageActiveFamilyTableQuery}
-  `;
-  const { result: activeFamilyData } = useQuery(ACTIVE_FAMILY_QUERY);
   const activeFamilyRows = computed(
     () => activeFamilyData.value?.getAllFamilies ?? []
   );
   return activeFamilyRows.value;
 });
 
+const ACTIVE_PERSON_QUERY = gql`
+  ${homepageActivePersonTableQuery}
+`;
+const { result: activePersonData } = useQuery(ACTIVE_PERSON_QUERY);
 const getActivePersonRows = computed(() => {
-  const ACTIVE_PERSON_QUERY = gql`
-    ${homepageActivePersonTableQuery}
-  `;
-  const { result: activePersonData } = useQuery(ACTIVE_PERSON_QUERY);
   const activePersonRows = computed(
     () => activePersonData.value?.getAllPersons ?? []
   );
@@ -167,6 +170,12 @@ const getActivePersonRows = computed(() => {
           :icon="mdiAccount"
           :number="activePersonCount"
           label="Persons"
+        />
+        <CardBoxWidget
+          color="text-purple-500"
+          :icon="mdiCashMultiple"
+          :number="activeTitheAnnual"
+          label="Annual Tithe"
         />
       </div>
 
