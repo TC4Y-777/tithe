@@ -1,7 +1,5 @@
 spring:
   datasource:
-    #url: jdbc:postgresql://postgresql-db:5432/postgres
-    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
 #   Connection Timeout and pool size (number of simultaneous connections)
@@ -27,7 +25,5 @@ spring:
   graphql:
     cors:
       allow-credentials: true
-      allowed-origins:
-        - http://localhost:5173/
     graphiql:
       enabled: true
