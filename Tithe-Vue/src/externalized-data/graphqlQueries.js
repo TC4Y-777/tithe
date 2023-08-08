@@ -80,3 +80,12 @@ export const homepageActivePersonTableQuery = `query activePerson{
     }
   }
 }`;
+
+// Forane Page
+
+export const foraneAllForaneListQuery = `query foranePageActiveForane{
+  getAllForanes{
+    foraneId
+    foraneName
+  }
+}`;
