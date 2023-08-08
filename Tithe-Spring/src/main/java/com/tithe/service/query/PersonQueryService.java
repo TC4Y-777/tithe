@@ -65,4 +65,8 @@ public class PersonQueryService {
 		return null;
 	}
 
+	public Long getPersonCount() {
+		return personRepository.countByActive(true);
+	}
+
 }

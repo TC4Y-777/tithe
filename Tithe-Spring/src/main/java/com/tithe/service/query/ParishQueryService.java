@@ -60,5 +60,9 @@ public class ParishQueryService {
 		}
 		return null;
 	}
+
+	public Long getParishCount() {
+		return parishRepository.countByActive(true);
+	}
 	
 }

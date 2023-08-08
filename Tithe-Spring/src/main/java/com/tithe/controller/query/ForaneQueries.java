@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.tithe.entity.ForaneEntity;
 import com.tithe.model.ForaneQueryFilter;
@@ -37,6 +38,11 @@ public class ForaneQueries {
 	@QueryMapping(name = "getAllForanes")
 	public List<ForaneEntity> getAllForanes() {
 		return foraneQueryService.getAllForanes();
+	}
+	
+	@QueryMapping(name = "getForaneCount")
+	public Long getForaneCount() {
+		return foraneQueryService.getForaneCount();
 	}
 	
 }

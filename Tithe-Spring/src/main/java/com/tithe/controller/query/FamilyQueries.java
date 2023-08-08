@@ -38,5 +38,10 @@ public class FamilyQueries {
 	public List<FamilyEntity> getAllFamilies(){
 		return familyQueryService.getAllFamilies();
 	}
+	
+	@QueryMapping(name = "getFamilyCount")
+	public Long getFamilyCount() {
+		return familyQueryService.getFamilyCount();
+	}
 
 }

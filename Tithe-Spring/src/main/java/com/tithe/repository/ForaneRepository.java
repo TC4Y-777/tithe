@@ -14,5 +14,7 @@ import com.tithe.entity.ForaneEntity;
  */
 @Repository
 public interface ForaneRepository extends JpaRepository<ForaneEntity, Long> {
+	
+	long countByActive(Boolean active);
 
 }

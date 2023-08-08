@@ -39,4 +39,9 @@ public class ParishQueries {
 		return parishQueryService.getAllParishes();
 	}
 	
+	@QueryMapping(name = "getParishCount")
+	public Long getParishCount() {
+		return parishQueryService.getParishCount();
+	}
+	
 }
