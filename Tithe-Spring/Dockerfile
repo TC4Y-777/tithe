@@ -10,4 +10,4 @@ RUN ./gradlew dependencies --refresh-dependencies
 COPY src/ ./src
 EXPOSE 8080
 
-ENTRYPOINT chmod +x ./gradlew && ./gradlew bootRun
+ENTRYPOINT chmod +x ./gradlew && ./gradlew bootRun --args='--spring.profiles.active=stage'
