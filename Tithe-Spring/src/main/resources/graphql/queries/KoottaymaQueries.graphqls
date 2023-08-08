@@ -2,4 +2,5 @@ extend type Query{
 	getOneKoottayma(id: ID): Koottayma
 	getManyKoottaymas(filter: KoottaymaQueryFilter): [Koottayma]
 	getAllKoottaymas: [Koottayma]
+	getKoottaymaCount: Int
 }

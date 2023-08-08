@@ -2,4 +2,5 @@ extend type Query{
 	getOneForane(id: ID): Forane
 	getManyForanes(filter: ForaneQueryFilter): [Forane]
 	getAllForanes: [Forane]
+	getForaneCount: Int
 }

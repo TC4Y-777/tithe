@@ -2,6 +2,7 @@ extend type Query{
 	getOnePerson(id: ID): Person
 	getManyPersons(filter: PersonQueryFilter): [Person]
 	getAllPersons: [Person]
+	getPersonCount: Int
 	
 	getOneEducation(id: ID): Education
 	getAllEducations: [Education]
