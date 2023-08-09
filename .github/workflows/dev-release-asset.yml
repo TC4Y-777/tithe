@@ -1,9 +1,10 @@
-name: Release Asset on Push
+name: Release Asset on Tag Push
 
 on:
   push:
     branches:
       - dev
+      - prod
 
 jobs:
   
@@ -64,6 +65,6 @@ jobs:
       
       - name: Release Asset
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags')
         with:
-          tag_name: ${{ github.run_number }}
           files: ./build/libs/*.jar
