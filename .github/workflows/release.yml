@@ -1,9 +1,9 @@
-name: Release Asset on Push
+name: Release Asset on Tag Push
 
 on:
   push:
-    branches:
-      - dev
+    tags:
+      - '*'
 
 jobs:
   
@@ -65,5 +65,4 @@ jobs:
       - name: Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.run_number }}
           files: ./build/libs/*.jar
