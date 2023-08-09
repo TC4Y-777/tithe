@@ -12,4 +12,4 @@ For local deployment:
 
 3. Test GraphQL queries and mutations on: http://localhost:8080/graphiql
 
-
+4. Test Frontend on: http://localhost/#/dashboard
