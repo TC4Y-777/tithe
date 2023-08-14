@@ -10,9 +10,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build
-RUN rm -r /var/www/html/* && cp -r dist/* /var/www/html/
 
-EXPOSE 80
+EXPOSE 5173
 
-ENTRYPOINT ["systemctl", "start", "nginx"]
+ENTRYPOINT ["npm", "run", "dev"]
