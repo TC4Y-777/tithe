@@ -8,32 +8,9 @@ on:
 jobs:
   
   build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        
-      - name: Setup JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: "17"
-          distribution: temurin
-        
-      - name: Move files from Spring root folder to working directory
-        run: mv $GITHUB_WORKSPACE/Tithe-Spring/* $GITHUB_WORKSPACE/
-      
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-        
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-        with:
-          arguments: build
+    uses: ./.github/workflows/build.yml
   
-  release:
+  release-spring:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -62,7 +39,41 @@ jobs:
         with:
           arguments: build
       
-      - name: Release Asset
+      - name: Release Spring Asset as jar
         uses: softprops/action-gh-release@v1
         with:
           files: ./build/libs/*.jar
+
+  release-vue:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    needs: build
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+    
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Move files from Vue root folder to working directory
+        run: mv $GITHUB_WORKSPACE/Tithe-Vue/* $GITHUB_WORKSPACE/
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build with Vite
+        run: npm run build
+
+      - name: Zip the generated dist directory
+        run: zip -r tithe-vue.zip dist
+
+      - name: Release Vue Asset as zip
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./tithe-vue.zip
