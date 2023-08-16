@@ -1,0 +1,11 @@
+name: Deploy to stage environment
+
+on:
+  push:
+    branches:
+      - "stage"
+
+jobs:
+
+  build:
+    uses: ./.github/workflows/build.yml

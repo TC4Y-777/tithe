@@ -8,6 +8,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew dependencies --refresh-dependencies
 
 COPY src/ ./src
+COPY spring-prod-entrypoint.sh ./
 EXPOSE 8080
 
-ENTRYPOINT chmod +x ./gradlew && ./gradlew bootRun --args='--spring.profiles.active=stage'
+ENTRYPOINT bash -c "chmod +x ./gradlew && ./gradlew bootRun --args='--spring.profiles.active=dev'"

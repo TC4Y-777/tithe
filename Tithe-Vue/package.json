@@ -4,6 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build-stage": "vite build --mode stage",
+    "build-prod": "vite build --mode prod",
     "preview": "vite preview --port 4173",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
