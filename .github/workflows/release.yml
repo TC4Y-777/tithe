@@ -10,7 +10,7 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
   
-  release:
+  release-spring:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -44,6 +44,15 @@ jobs:
         with:
           files: ./build/libs/*.jar
 
+  release-vue:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    needs: build
+
+    steps:
       - name: Setup Node.js 16
         uses: actions/setup-node@v3
         with:
