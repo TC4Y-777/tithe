@@ -12,6 +12,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu
+    environment: stage
     permissions:
       contents: write
       
