@@ -9,3 +9,56 @@ jobs:
 
   build:
     uses: ./.github/workflows/build.yml
+
+  deploy:
+    runs-on: ubuntu
+    permissions:
+      contents: write
+      
+    needs: build
+
+    steps:
+      - name: Get Github Runner IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: AWS Configure
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Add Github Runner IP to Security Group
+        env:
+          AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
+        run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/16
+          sleep 10
+
+      - name: Deploy on AWS EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{ secrets.AWS_EC2_HOSTNAME }}
+          USERNAME: ${{ secrets.AWS_EC2_USERNAME }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOSTNAME} '
+            sudo apt-get update -y
+            sudo apt-get upgrade -y
+            sudo apt-get install -y git
+            rm -rf ~/*
+            git clone -b stage https://github.com/TC4Y-777/tithe.git
+            cd tithe
+            sudo chmod +x ./stage-deploy.sh
+            ./stage-deploy.sh
+          '
+          rm -rf private_key.pem
+
+      - name: Remove Github Runner IP from Security Group
+        env:
+          AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ env.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/16
+        if: always()
