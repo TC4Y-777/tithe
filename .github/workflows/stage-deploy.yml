@@ -49,6 +49,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.AWS_EC2_HOSTNAME }}
           REMOTE_USER: ${{ secrets.AWS_EC2_USERNAME }}
           TARGET: "~/"
+          EXCLUDE: "/dist/, /node_modules/"
           SCRIPT_BEFORE: |
             ls -a
             sudo apt-get update -y
