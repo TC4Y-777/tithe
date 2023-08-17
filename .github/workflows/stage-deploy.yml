@@ -52,7 +52,7 @@ jobs:
             echo "================="
             echo "Create Directory"
             echo "================="
-            mkdir tithe-stage
+            mkdir -p tithe-stage
             
             # echo vm.swappiness=0 | sudo tee -a /etc/sysctl.conf
           SCRIPT_AFTER: |
