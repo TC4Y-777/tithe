@@ -1,17 +1,32 @@
 #!/bin/bash
 
-echo "Starting to Deploy"
+echo "================="
+echo "Starting Stage Deploy Script"
+echo "================="
 
 # Install dependencies
 
+echo "================="
+echo "Update"
+echo "================="
 sudo apt-get update -y
+
+echo "================="
+echo "Upgrade"
+echo "================="
 sudo apt-get upgrade -y
 sudo apt-get install -y ca-certificates curl gnupg
 
+echo "================="
+echo "Get docker compose version"
+echo "================="
 docker compose version
 
 # Install Docker
 
+echo "================="
+echo "Check if error has occured while checking docker compose version"
+echo "================="
 if [ $? -ne 0 ]
 then
     sudo install -m 0755 -d /etc/apt/keyrings
@@ -25,9 +40,14 @@ then
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 fi
 
-# Stop production containers and build docker-compose again
+# Stop stage containers and build docker-compose again
 
-sudo docker compose --profile prod stop
-sudo docker compose --profile prod up --build --detach
+# sudo docker compose --profile stage stop
+echo "================="
+echo "Docker compose up by building in detached mode"
+echo "================="
+sudo docker compose --profile stage up --build --detach
 
-echo "Successfully deployed"
+echo "================="
+echo "Successfully executed Stage Deploy Script"
+echo "================="

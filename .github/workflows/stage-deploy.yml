@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/build.yml
 
   deploy:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     environment: stage
     permissions:
       contents: write
@@ -19,47 +19,51 @@ jobs:
     needs: build
 
     steps:
-      - name: Get Github Runner IP
-        id: ip
-        uses: haythem/public-ip@v1.3
-
-      - name: AWS Configure
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      - name: Add Github Runner IP to Security Group
-        env:
-          AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
-        run: |
-          aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/16
-          sleep 10
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
       - name: Deploy on AWS EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{ secrets.AWS_EC2_HOSTNAME }}
-          USERNAME: ${{ secrets.AWS_EC2_USERNAME }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key.pem && chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USERNAME}@${HOSTNAME} '
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i"
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.AWS_EC2_HOSTNAME }}
+          REMOTE_USER: ${{ secrets.AWS_EC2_USERNAME }}
+          TARGET: "~/tithe-stage/"
+          EXCLUDE: "/dist/, /node_modules/"
+          SCRIPT_BEFORE: |
+            ls -a
+            echo "================="
+            echo "Update"
+            echo "================="
             sudo apt-get update -y
+            
+            echo "================="
+            echo "Upgrade"
+            echo "================="
             sudo apt-get upgrade -y
-            sudo apt-get install -y git
-            rm -rf ~/*
-            git clone -b stage https://github.com/TC4Y-777/tithe.git
-            cd tithe
+            
+            echo "================="
+            echo "Install rsync"
+            echo "================="
+            sudo apt-get install -y rsync
+
+            echo "================="
+            echo "Create Directory"
+            echo "================="
+            mkdir -p tithe-stage
+            
+            # echo vm.swappiness=0 | sudo tee -a /etc/sysctl.conf
+          SCRIPT_AFTER: |
+            ls -a
+            echo "================="
+            echo "Change current directory to tithe-stage"
+            echo "================="
+            cd tithe-stage
+
+            echo "================="
+            echo "Start Stage Deploy Script"
+            echo "================="
             sudo chmod +x ./stage-deploy.sh
             ./stage-deploy.sh
-          '
-          rm -rf private_key.pem
-
-      - name: Remove Github Runner IP from Security Group
-        env:
-          AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
-        run: |
-          aws ec2 revoke-security-group-ingress --group-id ${{ env.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/16
-        if: always()
