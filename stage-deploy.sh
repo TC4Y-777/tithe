@@ -29,6 +29,11 @@ echo "Check if error has occured while checking docker compose version"
 echo "================="
 if [ $? -ne 0 ]
 then
+    echo "Docker Compose does not exit"
+    
+    echo "================="
+    echo "Install docker and docker compose"
+    echo "================="
     sudo install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     sudo chmod a+r /etc/apt/keyrings/docker.gpg
@@ -40,9 +45,6 @@ then
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 fi
 
-# Stop stage containers and build docker-compose again
-
-# sudo docker compose --profile stage stop
 echo "================="
 echo "Docker compose up by building in detached mode"
 echo "================="
