@@ -54,6 +54,7 @@ jobs:
             ls -a
             sudo apt-get update -y
             sudo apt-get upgrade -y
+            sudo apt-get install -y rsync
           SCRIPT_AFTER: |
             ls -a
             sudo chmod +x ./stage-deploy.sh
