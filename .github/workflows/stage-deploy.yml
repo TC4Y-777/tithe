@@ -21,24 +21,6 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-    
-      # - name: Get Github Runner IP
-      #   id: ip
-      #   uses: haythem/public-ip@v1.3
-
-      # - name: AWS Configure
-      #   uses: aws-actions/configure-aws-credentials@v2
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      # - name: Add Github Runner IP to Security Group
-      #   env:
-      #     AWS_SECURITY_GROUP_ID: ${{ secrets.AWS_SECURITY_GROUP_ID }}
-      #   run: |
-      #     aws ec2 authorize-security-group-ingress --group-id ${{ env.AWS_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/16
-      #     sleep 10
 
       - name: Deploy on AWS EC2
         uses: easingthemes/ssh-deploy@main
@@ -52,9 +34,20 @@ jobs:
           EXCLUDE: "/dist/, /node_modules/"
           SCRIPT_BEFORE: |
             ls -a
+            echo "================="
+            echo "Update"
+            echo "================="
             sudo apt-get update -y
+            echo "================="
+            echo "Upgrade"
+            echo "================="
             sudo apt-get upgrade -y
+            echo "================="
+            echo "Install rsync"
+            echo "================="
             sudo apt-get install -y rsync
+            
+            echo vm.swappiness=0 | sudo tee -a /etc/sysctl.conf
           SCRIPT_AFTER: |
             ls -a
             sudo chmod +x ./stage-deploy.sh
