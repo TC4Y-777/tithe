@@ -57,5 +57,13 @@ jobs:
             # echo vm.swappiness=0 | sudo tee -a /etc/sysctl.conf
           SCRIPT_AFTER: |
             ls -a
-            sudo chmod +x tithe-stage/stage-deploy.sh
-            ./tithe-stage/stage-deploy.sh
+            echo "================="
+            echo "Change current directory to tithe-stage"
+            echo "================="
+            cd tithe-stage
+
+            echo "================="
+            echo "Start Stage Deploy Script"
+            echo "================="
+            sudo chmod +x ./stage-deploy.sh
+            ./stage-deploy.sh
