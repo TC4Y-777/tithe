@@ -24,9 +24,6 @@ docker compose version
 
 # Install Docker
 
-echo "================="
-echo "Check if error has occured while checking docker compose version"
-echo "================="
 if [ $? -ne 0 ]
 then
     echo "Docker Compose does not exit"
