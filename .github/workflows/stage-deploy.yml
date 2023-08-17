@@ -47,7 +47,7 @@ jobs:
             echo "================="
             sudo apt-get install -y rsync
             
-            echo vm.swappiness=0 | sudo tee -a /etc/sysctl.conf
+            # echo vm.swappiness=0 | sudo tee -a /etc/sysctl.conf
           SCRIPT_AFTER: |
             ls -a
             sudo chmod +x ./stage-deploy.sh
