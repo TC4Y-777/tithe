@@ -31,6 +31,10 @@ const props = defineProps({
     type: Function,
     default: () => {},
   },
+  bgColor: {
+    type: String,
+    default: "#0f172a",
+  },
   isReloadEnabled: Boolean,
 });
 
@@ -93,8 +97,9 @@ function handleUpdateModelValue(selected) {
 </script>
 
 <template>
-  <!-- Removed 'fixed' from the class below -->
-  <div class="top-16 w-72">
+  <!-- Removed 'fixed', 'top-16', w-72' from the class below -->
+  <!-- Added 'relative' to the class below -->
+  <div class="relative">
     <Combobox
       by="id"
       :model-value="props.modelValue"
@@ -103,10 +108,10 @@ function handleUpdateModelValue(selected) {
       <!-- @update:model-value="(value) => $emit('update:modelValue', value)" -->
       <div class="relative mt-1">
         <div
-          class="relative w-full cursor-default overflow-hidden rounded-lg text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
+          class="relative w-full cursor-default overflow-hidden text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
         >
           <ComboboxInput
-            class="theme-color w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-white-900 focus:ring-0"
+            class="theme-color w-full border-gray-700 py-2 pl-3 pr-10 text-sm leading-7 text-white-900 focus:ring-0 rounded"
             :display-value="(entity) => entity.label"
             @change="query = $event.target.value"
           />
@@ -116,7 +121,8 @@ function handleUpdateModelValue(selected) {
             <BaseButton
               v-if="props.isReloadEnabled"
               :icon="mdiReload"
-              color="whiteDark"
+              color="transparent"
+              outline="false"
               @click="fillChartData"
             />
             <ChevronUpDownIcon
@@ -213,7 +219,7 @@ function handleUpdateModelValue(selected) {
 
 <style scoped>
 .theme-color {
-  background-color: #0f172a;
+  background-color: v-bind(bgColor);
 }
 .option-active {
   background-color: #3b82f6;
