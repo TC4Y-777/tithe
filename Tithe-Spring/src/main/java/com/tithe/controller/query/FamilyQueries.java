@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.controller.query;
 
@@ -20,25 +20,25 @@ import com.tithe.service.query.FamilyQueryService;
  */
 @Controller
 public class FamilyQueries {
-	
+
 	@Autowired
 	private FamilyQueryService familyQueryService;
-	
+
 	@QueryMapping(name = "getOneFamily")
 	public FamilyEntity getOneFamily(@Argument Long id) {
 		return familyQueryService.getOneFamily(id);
 	}
-	
+
 	@QueryMapping(name = "getManyFamilies")
 	public List<FamilyEntity> getManyFamilies(@Argument(name = "filter") FamilyQueryFilter familyQueryFilter){
 		return familyQueryService.getManyFamilies(familyQueryFilter);
 	}
-	
+
 	@QueryMapping(name = "getAllFamilies")
 	public List<FamilyEntity> getAllFamilies(){
 		return familyQueryService.getAllFamilies();
 	}
-	
+
 	@QueryMapping(name = "getFamilyCount")
 	public Long getFamilyCount() {
 		return familyQueryService.getFamilyCount();

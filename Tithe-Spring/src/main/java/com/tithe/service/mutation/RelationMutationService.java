@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.mutation;
 
@@ -18,7 +18,7 @@ import com.tithe.repository.RelationRepository;
  */
 @Service
 public class RelationMutationService {
-	
+
 	@Autowired
 	private RelationRepository relationRepository;
 

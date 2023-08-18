@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -30,22 +30,22 @@ import com.tithe.repository.StreetRepository;
  */
 @Service
 public class AddressQueryService {
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
-	
+
 	@Autowired
 	private StreetRepository streetRepository;
-	
+
 	@Autowired
 	private CityRepository cityRepository;
-	
+
 	@Autowired
 	private DistrictRepository districtRepository;
-	
+
 	@Autowired
 	private StateRepository stateRepository;
-	
+
 	@Autowired
 	private PincodeRepository pincodeRepository;
 
@@ -53,7 +53,7 @@ public class AddressQueryService {
 		Optional<AddressEntity> address = addressRepository.findById(id);
 		return address.orElse(null);
 	}
-	
+
 	public AddressEntity getOneAddress(AddressQueryFilter addressQueryFilter) {
 		 List<AddressEntity> addresses = getManyAddresses(addressQueryFilter);
 		 if (addresses!=null) {
@@ -63,13 +63,13 @@ public class AddressQueryService {
 		 }
 		 return null;
 	}
-	
+
 	public List<AddressEntity> getManyAddresses(AddressQueryFilter addressQueryFilter) {
 		AddressEntity address = buildAddressEntity(addressQueryFilter);
-		
+
 		Example<AddressEntity> exampleAddress = Example.of(address);
 		List<AddressEntity> matchingAddresses = addressRepository.findAll(exampleAddress);
-		
+
 		if (matchingAddresses.size()!=0) {
 			return matchingAddresses;
 		}
@@ -148,7 +148,7 @@ public class AddressQueryService {
 		}
 		return null;
 	}
-	
+
 	public AddressEntity buildAddressEntity(AddressQueryFilter addressQueryFilter) {
 		AddressEntity address = new AddressEntity();
 

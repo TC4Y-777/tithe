@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.tithe.entity.FamilyEntity;
 import com.tithe.model.FamilyQueryFilter;
 import com.tithe.repository.FamilyRepository;
-import com.tithe.repository.KoottaymaRepository;
 
 /**
  * @author Ashish Sam T George
@@ -24,10 +23,10 @@ public class FamilyQueryService {
 
 	@Autowired
 	private FamilyRepository familyRepository;
-	
+
 	@Autowired
 	private KoottaymaQueryService koottaymaQueryService;
-	
+
 	public FamilyEntity getOneFamily(Long id) {
 		Optional<FamilyEntity> family = familyRepository.findById(id);
 		return family.orElse(null);
@@ -38,17 +37,17 @@ public class FamilyQueryService {
 		if (familyQueryFilter.getFamilyName()!=null && !familyQueryFilter.getFamilyName().isBlank()) {
 			family.setFamilyName(familyQueryFilter.getFamilyName());
 		}
-		
+
 		family.setPhone(familyQueryFilter.getPhone());
 		if (familyQueryFilter.getKoottaymaId()!=null) {
 			family.setKoottayma(koottaymaQueryService.getOneKoottayma(familyQueryFilter.getKoottaymaId()));
 		}
 //		What about families under a parish
 		family.setActive(familyQueryFilter.getActive());
-		
+
 		Example<FamilyEntity> exampleFamily = Example.of(family);
 		List<FamilyEntity> matchingFamilies = familyRepository.findAll(exampleFamily);
-		
+
 		if (matchingFamilies.size()!=0) {
 			return matchingFamilies;
 		}

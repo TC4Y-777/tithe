@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -18,7 +18,7 @@ import com.tithe.repository.EducationRepository;
  */
 @Service
 public class EducationQueryService {
-	
+
 	@Autowired
 	private EducationRepository educationRepository;
 
@@ -26,7 +26,7 @@ public class EducationQueryService {
 		Optional<EducationEntity> education = educationRepository.findById(id);
 		return education.orElse(null);
 	}
-	
+
 	public List<EducationEntity> getManyEducations(List<Long> ids) {
 		List<EducationEntity> educations = educationRepository.findAllById(ids);
 		if (educations.size()!=0) {

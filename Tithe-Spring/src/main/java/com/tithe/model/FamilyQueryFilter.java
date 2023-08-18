@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.model;
 
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class FamilyQueryFilter {
-	
+
 	String familyName;
 	String phone;
 	Long koottaymaId;

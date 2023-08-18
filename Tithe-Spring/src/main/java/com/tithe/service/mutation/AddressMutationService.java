@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.mutation;
 
@@ -27,25 +27,25 @@ import com.tithe.service.query.AddressQueryService;
  */
 @Service
 public class AddressMutationService {
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
-	
+
 	@Autowired
 	private StreetRepository streetRepository;
-	
+
 	@Autowired
 	private CityRepository cityRepository;
-	
+
 	@Autowired
 	private DistrictRepository districtRepository;
-	
+
 	@Autowired
 	private StateRepository stateRepository;
-	
+
 	@Autowired
 	private PincodeRepository pincodeRepository;
-	
+
 	@Autowired
 	private AddressQueryService addressQueryService;
 
