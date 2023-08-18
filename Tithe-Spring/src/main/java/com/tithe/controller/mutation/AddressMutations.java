@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.controller.mutation;
 
@@ -23,7 +23,7 @@ import com.tithe.service.mutation.AddressMutationService;
  */
 @Controller
 public class AddressMutations {
-	
+
 	@Autowired
 	private AddressMutationService addressMutationService;
 
@@ -31,30 +31,30 @@ public class AddressMutations {
 	public AddressEntity createOneAddress(@Argument(name = "address") AddressMutationInput addressMutationInput) {
 		return addressMutationService.createOneAddress(addressMutationInput);
 	}
-	
+
 	@MutationMapping(name = "createOneStreet")
 	public StreetEntity createOneStreet(@Argument(name = "streetName") String streetName) {
 		return addressMutationService.createOneStreet(streetName);
 	}
-	
+
 	@MutationMapping(name = "createOneCity")
 	public CityEntity createOneCity(@Argument(name = "cityName") String cityName) {
 		return addressMutationService.createOneCity(cityName);
 	}
-	
+
 	@MutationMapping(name = "createOneDistrict")
 	public DistrictEntity createOneDistrict(@Argument(name = "districtName") String districtName) {
 		return addressMutationService.createOneDistrict(districtName);
 	}
-	
+
 	@MutationMapping(name = "createOneState")
 	public StateEntity createOneState(@Argument(name = "stateName") String stateName) {
 		return addressMutationService.createOneState(stateName);
 	}
-	
+
 	@MutationMapping(name = "createOnePincode")
 	public PincodeEntity createOnePincode(@Argument(name = "pincode") String pincode) {
 		return addressMutationService.createOnePincode(pincode);
 	}
-	
+
 }

@@ -1,10 +1,9 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,20 +25,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "person_moved_table")
 public class PersonMoved {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long familyMovedId;
-	
+
 	@OneToOne
 	private PersonEntity person;
-	
+
 	@OneToOne
 	private FamilyEntity oldFamily;
-	
+
 	@OneToOne
 	private FamilyEntity newFamily;
-	
+
 	private Date timeStamp;
 
 }

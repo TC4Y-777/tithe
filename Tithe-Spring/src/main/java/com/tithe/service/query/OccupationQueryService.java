@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -18,7 +18,7 @@ import com.tithe.repository.OccupationRepository;
  */
 @Service
 public class OccupationQueryService {
-	
+
 	@Autowired
 	private OccupationRepository occupationRepository;
 
@@ -26,7 +26,7 @@ public class OccupationQueryService {
 		Optional<OccupationEntity> occupation = occupationRepository.findById(id);
 		return occupation.orElse(null);
 	}
-	
+
 	public List<OccupationEntity> getManyOccupations(List<Long> ids) {
 		List<OccupationEntity> occupations = occupationRepository.findAllById(ids);
 		if (occupations.size()!=0) {

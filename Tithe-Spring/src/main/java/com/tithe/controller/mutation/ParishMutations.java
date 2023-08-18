@@ -1,5 +1,5 @@
 	/**
- * 
+ *
  */
 package com.tithe.controller.mutation;
 
@@ -21,10 +21,10 @@ public class ParishMutations {
 
 	@Autowired
 	private ParishMutationService parishMutationService;
-	
+
 	@MutationMapping(name = "createOneParish")
 	public ParishEntity createOneParish(@Argument(name = "parish") ParishMutationInput parishMutationInput) {
 		return parishMutationService.createOneParish(parishMutationInput);
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.controller.query;
 
@@ -20,15 +20,15 @@ import com.tithe.service.query.ParishQueryService;
  */
 @Controller
 public class ParishQueries {
-	
+
 	@Autowired
 	private ParishQueryService parishQueryService;
-	
+
 	@QueryMapping(name = "getOneParish")
 	public ParishEntity getOneParish(@Argument Long id) {
 		return parishQueryService.getOneParish(id);
 	}
-	
+
 	@QueryMapping(name = "getManyParishes")
 	public List<ParishEntity> getManyParishes(@Argument(name = "filter") ParishQueryFilter parishQueryFilter) {
 		return parishQueryService.getManyParishes(parishQueryFilter);
@@ -38,10 +38,10 @@ public class ParishQueries {
 	public List<ParishEntity> getAllParishes() {
 		return parishQueryService.getAllParishes();
 	}
-	
+
 	@QueryMapping(name = "getParishCount")
 	public Long getParishCount() {
 		return parishQueryService.getParishCount();
 	}
-	
+
 }

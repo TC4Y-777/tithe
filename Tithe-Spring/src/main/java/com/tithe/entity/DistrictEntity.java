@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
-
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,11 +24,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "district_table")
 public class DistrictEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long districtId;
-	
+
 	@NotBlank(message = "Name of District is emtpy or null")
 	@Column(unique = true)
 	private String districtName;

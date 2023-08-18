@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.mutation;
 
@@ -18,7 +18,7 @@ import com.tithe.repository.EducationRepository;
  */
 @Service
 public class EducationMutationService {
-	
+
 	@Autowired
 	private EducationRepository educationRepository;
 
@@ -34,5 +34,5 @@ public class EducationMutationService {
 //		TODO If any of the element is null, returns an error. How to handle it?
 		return educationRepository.saveAll(educations);
 	}
-	
+
 }
