@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
 
@@ -27,15 +27,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "occupation_table")
 public class OccupationEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long occupationId;
-	
+
 	@NotBlank(message = "Name of Occupation is either empty or null")
 	@Column(unique = true)
 	private String occupationName;
-	
+
 	@ManyToMany(mappedBy = "occupations")
 	private List<PersonEntity> persons;
 

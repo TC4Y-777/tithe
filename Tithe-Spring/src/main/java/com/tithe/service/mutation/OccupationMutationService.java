@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.mutation;
 
@@ -18,7 +18,7 @@ import com.tithe.repository.OccupationRepository;
  */
 @Service
 public class OccupationMutationService {
-	
+
 	@Autowired
 	private OccupationRepository occupationRepository;
 

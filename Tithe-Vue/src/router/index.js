@@ -3,8 +3,14 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "@/views/HomeView.vue";
 import Forane from "@/views/ForaneView.vue";
 import Parish from "@/views/ParishView.vue";
+import Disclosure from "@/components/DisclosureMenu.vue";
 
 const routes = [
+  {
+    path: "/disclosure",
+    name: "Disclosure",
+    component: Disclosure,
+  },
   {
     // Document title tag
     // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook

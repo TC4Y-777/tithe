@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -20,10 +20,10 @@ import com.tithe.repository.ParishRepository;
  */
 @Service
 public class ParishQueryService {
-	
+
 	@Autowired
 	private ParishRepository parishRepository;
-	
+
 	@Autowired
 	private ForaneQueryService foraneQueryService;
 
@@ -41,12 +41,12 @@ public class ParishQueryService {
 		if (parishQueryFilter.getForaneId()!=null) {
 			parish.setForane(foraneQueryService.getOneForane(parishQueryFilter.getForaneId()));
 		}
-		
+
 		parish.setActive(parishQueryFilter.getActive());
-		
+
 		Example<ParishEntity> exampleParish = Example.of(parish);
 		List<ParishEntity> matchingParishes = parishRepository.findAll(exampleParish);
-		
+
 		if (matchingParishes.size()!=0) {
 			return matchingParishes;
 		}
@@ -64,5 +64,5 @@ public class ParishQueryService {
 	public Long getParishCount() {
 		return parishRepository.countByActive(true);
 	}
-	
+
 }

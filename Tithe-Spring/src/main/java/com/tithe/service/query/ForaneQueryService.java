@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -20,7 +20,7 @@ import com.tithe.repository.ForaneRepository;
  */
 @Service
 public class ForaneQueryService {
-	
+
 	@Autowired
 	private ForaneRepository foraneRepository;
 
@@ -36,10 +36,10 @@ public class ForaneQueryService {
 		}
 		forane.setPhone(foraneQueryFilter.getPhone());
 		forane.setActive(foraneQueryFilter.getActive());
-		
+
 		Example<ForaneEntity> exampleForane = Example.of(forane);
 		List<ForaneEntity> matchingForanes = foraneRepository.findAll(exampleForane);
-		
+
 		if (matchingForanes.size()!=0) {
 			return matchingForanes;
 		}

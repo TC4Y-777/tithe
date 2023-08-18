@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.model;
 
@@ -8,12 +8,12 @@ package com.tithe.model;
  *
  */
 public enum GenderEnum {
-	
+
 	M("Male"),
 	F("Female");
-	
+
 	private String gender;
-	
+
 	GenderEnum(String gender){
 		this.gender = gender;
 	}

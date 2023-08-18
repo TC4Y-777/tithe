@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -20,13 +20,13 @@ import com.tithe.repository.KoottaymaRepository;
  */
 @Service
 public class KoottaymaQueryService {
-	
+
 	@Autowired
 	private KoottaymaRepository koottaymaRepository;
 
 	@Autowired
 	private ParishQueryService parishQueryService;
-	
+
 	public KoottaymaEntity getOneKoottayma(Long id) {
 		Optional<KoottaymaEntity> koottayma = koottaymaRepository.findById(id);
 		return koottayma.orElse(null);
@@ -41,10 +41,10 @@ public class KoottaymaQueryService {
 			koottayma.setParish(parishQueryService.getOneParish(koottaymaQueryFilter.getParishId()));
 		}
 		koottayma.setActive(koottaymaQueryFilter.getActive());
-		
+
 		Example<KoottaymaEntity> exampleKoottayma = Example.of(koottayma);
 		List<KoottaymaEntity> matchingKoottaymas = koottaymaRepository.findAll(exampleKoottayma);
-		
+
 		if (matchingKoottaymas.size()!=0) {
 			return matchingKoottaymas;
 		}
@@ -62,5 +62,5 @@ public class KoottaymaQueryService {
 	public Long getKoottaymaCount() {
 		return koottaymaRepository.countByActive(true);
 	}
-	
+
 }

@@ -1,11 +1,9 @@
 /**
- * 
+ *
  */
 package com.tithe.service.mutation;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +15,6 @@ import com.tithe.entity.TitheEntity;
 import com.tithe.model.PersonMutationInput;
 import com.tithe.model.TitheMutationInput;
 import com.tithe.repository.PersonRepository;
-import com.tithe.repository.TitheRepository;
 import com.tithe.service.query.EducationQueryService;
 import com.tithe.service.query.FamilyQueryService;
 import com.tithe.service.query.OccupationQueryService;
@@ -31,32 +28,32 @@ import com.tithe.utils.ObjectValidation;
  */
 @Service
 public class PersonMutationService {
-	
+
 	@Autowired
 	private ObjectValidation objectValidation;
-	
+
 	@Autowired
 	private PersonRepository personRepository;
 
 	@Autowired
 	private FamilyQueryService familyQueryService;
-	
+
 	@Autowired
 	private RelationQueryService relationQueryService;
-	
+
 	@Autowired
 	private EducationQueryService educationQueryService;
-	
+
 	@Autowired
 	private OccupationQueryService occupationQueryService;
-	
+
 	@Autowired
 	private TitheQueryService titheQueryService;
-	
+
 	public PersonEntity createOnePerson(PersonMutationInput personMutationInput) {
-		
+
 		objectValidation.validateObject(personMutationInput);
-		
+
 		PersonEntity person = new PersonEntity();
 		person.setBaptismName(personMutationInput.getBaptismName());
 		person.setPersonName(personMutationInput.getPersonName());
@@ -65,25 +62,25 @@ public class PersonMutationService {
 		person.setGender(personMutationInput.getGender());
 		person.setDob(personMutationInput.getDob());
 		person.setPhone(personMutationInput.getPhone());
-		
+
 		List<TitheMutationInput> titheInputs = personMutationInput.getTithes();
 		List<TitheEntity> tithes = new ArrayList<>();
 		if (titheInputs.size()!=0) {
 			tithes = titheQueryService.buildTitheEntities(person, titheInputs);
 		}
 		person.setTithes(tithes);
-		
+
 		person.setMoved(personMutationInput.getMoved());
-		
+
 		if (personMutationInput.getEducationIds().size()!=0) {
 			person.setEducations(educationQueryService.getManyEducations(personMutationInput.getEducationIds()));
 		}
 		if (personMutationInput.getOccupationIds().size()!=0) {
 			person.setOccupations(occupationQueryService.getManyOccupations(personMutationInput.getOccupationIds()));
 		}
-		
+
 		person.setActive(personMutationInput.getActive());
-		
+
 		return personRepository.save(person);
 	}
 

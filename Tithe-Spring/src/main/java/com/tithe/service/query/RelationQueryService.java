@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -18,7 +18,7 @@ import com.tithe.repository.RelationRepository;
  */
 @Service
 public class RelationQueryService {
-	
+
 	@Autowired
 	private RelationRepository relationRepository;
 
