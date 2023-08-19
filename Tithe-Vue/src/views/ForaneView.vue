@@ -1,18 +1,35 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import gql from "graphql-tag";
 import { useLazyQuery } from "@vue/apollo-composable";
 import { useRouter } from "vue-router";
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/20/solid";
-import { mdiChurch } from "@mdi/js";
+import {
+  mdiChurch,
+  mdiReload,
+  mdiFinance,
+  mdiEye,
+  mdiChartTimelineVariant,
+  mdiChurchOutline,
+  mdiHandsPray,
+  mdiAccountMultiple,
+  mdiAccount,
+  mdiCashMultiple,
+} from "@mdi/js";
 
 import SearchBox from "@/components/SearchBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
+import BaseButton from "@/components/BaseButton.vue";
+import BaseButtons from "@/components/BaseButtons.vue";
+import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
+import CardBox from "@/components/CardBox.vue";
+import CardBoxWidget from "@/components/CardBoxWidget.vue";
+import LineChart from "@/components/Charts/LineChart.vue";
 
 import { foraneAllForaneListQuery } from "@/externalized-data/graphqlQueries";
 
@@ -89,10 +106,23 @@ const form = reactive({
   },
   phone: "",
 });
+
+// =================
+// Remove this
+import * as chartConfig from "@/components/Charts/chart.config.js";
+const chartData = ref(null);
+const fillChartData = () => {
+  chartData.value = chartConfig.sampleChartData();
+};
+onMounted(() => {
+  fillChartData();
+});
+// =================
 </script>
 
 <template>
   <LayoutAuthenticated>
+    <!-- Show only if super admin is logged in -->
     <SectionMain>
       <!-- <SearchBox v-model="user" :options="options" /> -->
 
@@ -127,6 +157,7 @@ const form = reactive({
                   <FormField label="Forane Name">
                     <FormControl
                       v-model="form.foraneName"
+                      type="text"
                       :icon="mdiChurch"
                       placeholder="St. Peter's Church"
                     />
@@ -176,6 +207,11 @@ const form = reactive({
                       bg-color="#1e293b"
                     />
                   </FormField>
+                  <BaseButton
+                    class="baseButtonStyle"
+                    color="info"
+                    label="Submit"
+                  />
                 </DisclosurePanel>
               </Disclosure>
               <!-- <Disclosure v-slot="{ open }" as="div" class="mt-2">
@@ -197,6 +233,62 @@ const form = reactive({
         </div>
       </div>
     </SectionMain>
+
+    <SectionMain v-if="forane">
+      <SectionTitleLineWithButton
+        :icon="mdiChartTimelineVariant"
+        :title="forane.label"
+        main
+      >
+      </SectionTitleLineWithButton>
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
+        <CardBoxWidget
+          color="text-blue-500"
+          :icon="mdiChurchOutline"
+          :number="10"
+          label="Parishes"
+        />
+        <CardBoxWidget
+          color="text-red-500"
+          :icon="mdiHandsPray"
+          :number="activeKoottaymaCount"
+          label="Koottaymas"
+        />
+        <CardBoxWidget
+          color="text-yellow-500"
+          :icon="mdiAccountMultiple"
+          :number="activeFamilyCount"
+          label="Families"
+        />
+        <CardBoxWidget
+          color="text-orange-500"
+          :icon="mdiAccount"
+          :number="activePersonCount"
+          label="Persons"
+        />
+        <CardBoxWidget
+          color="text-purple-500"
+          :icon="mdiCashMultiple"
+          :number="activeTitheAnnual"
+          label="Annual Tithe"
+        />
+      </div>
+      <SectionTitleLineWithButton :icon="mdiFinance" title="Tithe History">
+        <BaseButtons>
+          <BaseButton
+            :icon="mdiReload"
+            color="whiteDark"
+            @click="fillChartData"
+          />
+          <BaseButton :icon="mdiEye" color="whiteDark" @click="fillChartData" />
+        </BaseButtons>
+      </SectionTitleLineWithButton>
+      <CardBox class="mb-6">
+        <div v-if="chartData">
+          <line-chart :data="chartData" class="h-96" />
+        </div>
+      </CardBox>
+    </SectionMain>
   </LayoutAuthenticated>
 </template>
 
@@ -208,5 +300,8 @@ const form = reactive({
   background-color: #1e293b;
   color: white;
   font-weight: bold;
+}
+.baseButtonStyle {
+  width: 100%;
 }
 </style>

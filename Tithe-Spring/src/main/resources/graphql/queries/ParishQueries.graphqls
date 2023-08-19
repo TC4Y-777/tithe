@@ -3,4 +3,5 @@ extend type Query{
 	getManyParishes(filter: ParishQueryFilter): [Parish]
 	getAllParishes: [Parish]
 	getParishCount: Int
+	getParishCountByForane(foraneId: ID!): Int
 }

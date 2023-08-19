@@ -3,4 +3,6 @@ extend type Query{
 	getManyKoottaymas(filter: KoottaymaQueryFilter): [Koottayma]
 	getAllKoottaymas: [Koottayma]
 	getKoottaymaCount: Int
+	getKoottaymaCountByForane(foraneId: ID!): Int
+	getKoottaymaCountByParish(parishId: ID!): Int
 }

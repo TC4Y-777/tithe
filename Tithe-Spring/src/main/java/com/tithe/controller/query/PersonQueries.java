@@ -58,6 +58,26 @@ public class PersonQueries {
 	public Long getPersonCount() {
 		return personQueryService.getPersonCount();
 	}
+	
+	@QueryMapping(name = "getPersonCountByForane")
+	public Long getPersonCountByForane(@Argument(name = "foraneId") Long foraneId) {
+		return personQueryService.getPersonCountByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getPersonCountByParish")
+	public Long getPersonCountByParish(@Argument(name = "parishId") Long parishId) {
+		return personQueryService.getPersonCountByParish(parishId);
+	}
+	
+	@QueryMapping(name = "getPersonCountByKoottayma")
+	public Long getPersonCountByKoottayma(@Argument(name = "koottaymaId") Long koottaymaId) {
+		return personQueryService.getPersonCountByKoottayma(koottaymaId);
+	}
+	
+	@QueryMapping(name = "getPersonCountByFamily")
+	public Long getPersonCountByFamily(@Argument(name = "familyId") Long familyId) {
+		return personQueryService.getPersonCountByFamily(familyId);
+	}
 
 	@QueryMapping(name = "getOneEducation")
 	public EducationEntity getOneEducation(@Argument Long id) {

@@ -3,4 +3,7 @@ extend type Query{
 	getManyFamilies(filter: FamilyQueryFilter): [Family]
 	getAllFamilies: [Family]
 	getFamilyCount: Int
+	getFamilyCountByForane(foraneId: ID!): Int
+	getFamilyCountByParish(parishId: ID!): Int
+	getFamilyCountByKoottayma(koottaymaId: ID!): Int
 }

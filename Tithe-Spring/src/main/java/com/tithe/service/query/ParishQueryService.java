@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.tithe.entity.ForaneEntity;
 import com.tithe.entity.ParishEntity;
 import com.tithe.model.ParishQueryFilter;
 import com.tithe.repository.ParishRepository;
@@ -63,6 +64,14 @@ public class ParishQueryService {
 
 	public Long getParishCount() {
 		return parishRepository.countByActive(true);
+	}
+
+	public Long getParishCountByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			return parishRepository.countByForaneAndActive(forane, true);
+		}
+		return null;
 	}
 
 }

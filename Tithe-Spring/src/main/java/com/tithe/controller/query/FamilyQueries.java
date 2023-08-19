@@ -43,5 +43,20 @@ public class FamilyQueries {
 	public Long getFamilyCount() {
 		return familyQueryService.getFamilyCount();
 	}
+	
+	@QueryMapping(name = "getFamilyCountByForane")
+	public Long getFamilyCountByForane(@Argument(name = "foraneId") Long foraneId) {
+		return familyQueryService.getFamilyCountByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getFamilyCountByParish")
+	public Long getFamilyCountByParish(@Argument(name = "parishId") Long parishId) {
+		return familyQueryService.getFamilyCountByParish(parishId);
+	}
+	
+	@QueryMapping(name = "getFamilyCountByKoottayma")
+	public Long getFamilyCountByKoottayma(@Argument(name = "koottaymaId") Long koottaymaId) {
+		return familyQueryService.getFamilyCountByKoottayma(koottaymaId);
+	}
 
 }

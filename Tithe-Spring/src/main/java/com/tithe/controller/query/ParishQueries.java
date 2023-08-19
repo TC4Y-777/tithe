@@ -43,5 +43,10 @@ public class ParishQueries {
 	public Long getParishCount() {
 		return parishQueryService.getParishCount();
 	}
+	
+	@QueryMapping(name = "getParishCountByForane")
+	public Long getParishCountByForane(@Argument(name = "foraneId") Long foraneId) {
+		return parishQueryService.getParishCountByForane(foraneId);
+	}
 
 }

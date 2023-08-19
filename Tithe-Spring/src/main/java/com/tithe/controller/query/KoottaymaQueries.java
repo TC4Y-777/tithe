@@ -43,5 +43,15 @@ public class KoottaymaQueries {
 	public Long getKoottaymaCount() {
 		return koottaymaQueryService.getKoottaymaCount();
 	}
+	
+	@QueryMapping(name = "getKoottaymaCountByForane")
+	public Long getKoottaymaCountByForane(@Argument(name = "foraneId") Long foraneId) {
+		return koottaymaQueryService.getKoottaymaCountByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getKoottaymaCountByParish")
+	public Long getKoottaymaCountByParish(@Argument(name = "parishId") Long parishId) {
+		return koottaymaQueryService.getKoottaymaCountByParish(parishId);
+	}
 
 }
