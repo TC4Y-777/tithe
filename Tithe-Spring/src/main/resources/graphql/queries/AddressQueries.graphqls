@@ -4,17 +4,22 @@ extend type Query{
 	getAllAddresses: [Address]
 	
 	getOneStreet(id: ID): Street
+	getSimilarStreets(streetName: String): [Street]
 	getAllStreets: [Street]
 	
 	getOneCity(id: ID): City
+	getSimilarCities(cityName: String): [City]
 	getAllCities: [City]
 	
 	getOneDistrict(id: ID): District
+	getSimilarDistricts(districtName: String): [District]
 	getAllDistricts: [District]
 	
 	getOneState(id: ID): State
+	getSimilarStates(stateName: String): [State]
 	getAllStates: [State]
 	
 	getOnePincode(id: ID): Pincode
+	getSimilarPincodes(pincode: String): [Pincode]
 	getAllPincodes: [Pincode]
 }

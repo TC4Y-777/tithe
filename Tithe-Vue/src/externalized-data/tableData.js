@@ -5,6 +5,12 @@ export const homepageTableTabTitle = [
   { title: "Person", icon: "mdiAccount" },
 ];
 
+export const foranePageTableTabTitle = [
+  { title: "Parish", icon: "mdiChurchOutline" },
+  { title: "Family", icon: "mdiAccountMultiple" },
+  { title: "Person", icon: "mdiAccount" },
+];
+
 export const foraneTableHeaders = [
   { name: "Name", dataKey: "foraneName" },
   { name: "Building", dataKey: "address.buildingName" },
