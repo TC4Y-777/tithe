@@ -10,6 +10,8 @@ import com.tithe.entity.FamilyEntity;
 import com.tithe.entity.ForaneEntity;
 import com.tithe.entity.ParishEntity;
 import com.tithe.entity.KoottaymaEntity;
+import java.util.List;
+
 
 
 
@@ -25,5 +27,9 @@ public interface FamilyRepository extends JpaRepository<FamilyEntity, Long> {
 	long countByKoottayma_Parish_ForaneAndActive(ForaneEntity forane, Boolean active);
 	long countByKoottayma_ParishAndActive(ParishEntity parish, Boolean active);
 	long countByKoottaymaAndActive(KoottaymaEntity koottayma, Boolean active);
+	
+	List<FamilyEntity> findAllByKoottayma_Parish_Forane(ForaneEntity forane);
+	List<FamilyEntity> findAllByKoottayma_Parish(ParishEntity parish);
+	List<FamilyEntity> findAllByKoottayma(KoottaymaEntity koottayma);
 
 }

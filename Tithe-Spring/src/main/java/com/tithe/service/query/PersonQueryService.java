@@ -77,6 +77,50 @@ public class PersonQueryService {
 		}
 		return null;
 	}
+	
+	public List<PersonEntity> getAllPersonsByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			List<PersonEntity> persons = personRepository.findAllByFamily_Koottayma_Parish_Forane(forane);
+			if (persons.size()!=0) {
+				return persons;
+			}
+		}
+		return null;
+	}
+
+	public List<PersonEntity> getAllPersonsByParish(Long parishId) {
+		ParishEntity parish = parishQueryService.getOneParish(parishId);
+		if(parish!=null) {
+			List<PersonEntity> persons = personRepository.findAllByFamily_Koottayma_Parish(parish);
+			if (persons.size()!=0) {
+				return persons;
+			}
+		}
+		return null;
+	}
+
+	public List<PersonEntity> getAllPersonsByKoottayma(Long koottaymaId) {
+		KoottaymaEntity koottayma = koottaymaQueryService.getOneKoottayma(koottaymaId);
+		if (koottayma!=null) {
+			List<PersonEntity> persons = personRepository.findAllByFamily_Koottayma(koottayma);
+			if (persons.size()!=0) {
+				return persons;
+			}
+		}
+		return null;
+	}
+
+	public List<PersonEntity> getAllPersonsByFamily(Long familyId) {
+		FamilyEntity family = familyQueryService.getOneFamily(familyId);
+		if (family!=null) {
+			List<PersonEntity> persons = personRepository.findAllByFamily(family);
+			if (persons.size()!=0) {
+				return persons;
+			}
+		}
+		return null;
+	}
 
 	public Long getPersonCount() {
 		return personRepository.countByActive(true);

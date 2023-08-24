@@ -38,6 +38,11 @@ public class ParishQueries {
 	public List<ParishEntity> getAllParishes() {
 		return parishQueryService.getAllParishes();
 	}
+	
+	@QueryMapping(name = "getAllParishesByForane")
+	public List<ParishEntity> getAllParishesByForane(@Argument(name = "foraneId") Long foraneId) {
+		return parishQueryService.getAllParishesByForane(foraneId);
+	}
 
 	@QueryMapping(name = "getParishCount")
 	public Long getParishCount() {

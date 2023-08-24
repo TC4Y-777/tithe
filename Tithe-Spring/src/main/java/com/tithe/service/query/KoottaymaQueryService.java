@@ -63,6 +63,28 @@ public class KoottaymaQueryService {
 		}
 		return null;
 	}
+	
+	public List<KoottaymaEntity> getAllKoottaymasByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			List<KoottaymaEntity> koottaymas = koottaymaRepository.findAllByParish_Forane(forane);
+			if (koottaymas.size()!=0) {
+				return koottaymas;
+			}
+		}
+		return null;
+	}
+	
+	public List<KoottaymaEntity> getAllKoottaymasByParish(Long parishId) {
+		ParishEntity parish = parishQueryService.getOneParish(parishId);
+		if (parish!=null) {
+			List<KoottaymaEntity> koottaymas = koottaymaRepository.findAllByParish(parish);
+			if (koottaymas.size()!=0) {
+				return koottaymas;
+			}
+		}
+		return null;
+	}
 
 	public Long getKoottaymaCount() {
 		return koottaymaRepository.countByActive(true);

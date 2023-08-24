@@ -61,6 +61,17 @@ public class ParishQueryService {
 		}
 		return null;
 	}
+	
+	public List<ParishEntity> getAllParishesByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			List<ParishEntity> parishes = parishRepository.findAllByForane(forane);
+			if (parishes.size()!=0) {
+				return parishes;
+			}
+		}
+		return null;
+	}
 
 	public Long getParishCount() {
 		return parishRepository.countByActive(true);

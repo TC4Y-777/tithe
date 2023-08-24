@@ -3,6 +3,8 @@
  */
 package com.tithe.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,5 +30,10 @@ public interface PersonRepository extends JpaRepository<PersonEntity, Long> {
 	long countByFamily_Koottayma_ParishAndActive(ParishEntity parish, Boolean active);
 	long countByFamily_KoottaymaAndActive(KoottaymaEntity koottayma, Boolean active);
 	long countByFamilyAndActive(FamilyEntity family, Boolean active);
+	
+	List<PersonEntity> findAllByFamily_Koottayma_Parish_Forane(ForaneEntity forane);
+	List<PersonEntity> findAllByFamily_Koottayma_Parish(ParishEntity parish);
+	List<PersonEntity> findAllByFamily_Koottayma(KoottaymaEntity koottayma);
+	List<PersonEntity> findAllByFamily(FamilyEntity family);
 
 }

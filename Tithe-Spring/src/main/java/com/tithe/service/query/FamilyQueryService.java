@@ -70,6 +70,39 @@ public class FamilyQueryService {
 		}
 		return null;
 	}
+	
+	public List<FamilyEntity> getAllFamiliesByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			List<FamilyEntity> families = familyRepository.findAllByKoottayma_Parish_Forane(forane);
+			if (families.size()!=0) {
+				return families;
+			}
+		}
+		return null;
+	}
+	
+	public List<FamilyEntity> getAllFamiliesByParish(Long parishId) {
+		ParishEntity parish = parishQueryService.getOneParish(parishId);
+		if (parish!=null) {
+			List<FamilyEntity> families = familyRepository.findAllByKoottayma_Parish(parish);
+			if (families.size()!=0) {
+				return families;
+			}
+		}
+		return null;
+	}
+	
+	public List<FamilyEntity> getAllFamiliesByKoottayma(Long koottaymaId) {
+		KoottaymaEntity koottayma = koottaymaQueryService.getOneKoottayma(koottaymaId);
+		if (koottayma!=null) {
+			List<FamilyEntity> families = familyRepository.findAllByKoottayma(koottayma);
+			if (families.size()!=0) {
+				return families;
+			}
+		}
+		return null;
+	}
 
 	public Long getFamilyCount() {
 		return familyRepository.countByActive(true);

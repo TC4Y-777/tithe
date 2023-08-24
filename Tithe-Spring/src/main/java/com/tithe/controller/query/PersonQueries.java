@@ -53,6 +53,26 @@ public class PersonQueries {
 	public List<PersonEntity> getAllPersons(){
 		return personQueryService.getAllPersons();
 	}
+	
+	@QueryMapping(name = "getAllPersonsByForane")
+	public List<PersonEntity> getAllPersonsByForane(@Argument(name = "foraneId") Long foraneId){
+		return personQueryService.getAllPersonsByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getAllPersonsByParish")
+	public List<PersonEntity> getAllPersonsByParish(@Argument(name = "parishId") Long parishId){
+		return personQueryService.getAllPersonsByParish(parishId);
+	}
+	
+	@QueryMapping(name = "getAllPersonsByKoottayma")
+	public List<PersonEntity> getAllPersonsByKoottayma(@Argument(name = "koottaymaId") Long koottaymaId){
+		return personQueryService.getAllPersonsByKoottayma(koottaymaId);
+	}
+	
+	@QueryMapping(name = "getAllPersonsByFamily")
+	public List<PersonEntity> getAllPersonsByFamily(@Argument(name = "familyId") Long familyId){
+		return personQueryService.getAllPersonsByFamily(familyId);
+	}
 
 	@QueryMapping(name = "getPersonCount")
 	public Long getPersonCount() {
