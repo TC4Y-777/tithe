@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref, watch } from "vue";
 import gql from "graphql-tag";
-import { useQuery } from "@vue/apollo-composable";
+import { useQuery, useMutation } from "@vue/apollo-composable";
 
 import {
   similarStreetListQuery,
@@ -10,6 +10,13 @@ import {
   similarStateListQuery,
   similarPincodeListQuery,
 } from "@/externalized-data/graphqlQueries";
+import {
+  createStreetMutation,
+  createCityMutation,
+  createDistrictMutation,
+  createStateMutation,
+  createPincodeMutation,
+} from "@/externalized-data/graphqlMutations";
 
 import FormField from "@/components/FormField.vue";
 import SearchBox from "@/components/SearchBox.vue";
@@ -69,6 +76,31 @@ watch(street, (value) => {
   emit("addressFormChange", address);
 });
 
+// Create Street Option
+const CREATE_STREET_MUTATION = gql`
+  ${createStreetMutation}
+`;
+
+const {
+  mutate: createStreet,
+  loading: createStreetLoading,
+  onDone: createStreetDone,
+  onError: createStreetError,
+} = useMutation(CREATE_STREET_MUTATION);
+
+const createStreetOption = (option, setSelected) => {
+  createStreet({ streetName: option.label });
+
+  // Not using loading for now
+
+  createStreetDone((mutationResult) => {
+    setSelected({
+      id: mutationResult.data?.createOneStreet?.streetId ?? "",
+      label: mutationResult.data?.createOneStreet?.streetName ?? "",
+    });
+  });
+};
+
 // City Search Box
 const city = ref();
 
@@ -112,6 +144,31 @@ watch(city, (value) => {
   address.cityId = value.id;
   emit("addressFormChange", address);
 });
+
+// Create City Option
+const CREATE_CITY_MUTATION = gql`
+  ${createCityMutation}
+`;
+
+const {
+  mutate: createCity,
+  loading: createCityLoading,
+  onDone: createCityDone,
+  onError: createCityError,
+} = useMutation(CREATE_CITY_MUTATION);
+
+const createCityOption = (option, setSelected) => {
+  createCity({ cityName: option.label });
+
+  // Not using loading for now
+
+  createCityDone((mutationResult) => {
+    setSelected({
+      id: mutationResult.data?.createOneCity?.cityId ?? "",
+      label: mutationResult.data?.createOneCity?.cityName ?? "",
+    });
+  });
+};
 
 // District Search Box
 const district = ref();
@@ -157,6 +214,31 @@ watch(district, (value) => {
   emit("addressFormChange", address);
 });
 
+// Create District Option
+const CREATE_DISTRICT_MUTATION = gql`
+  ${createDistrictMutation}
+`;
+
+const {
+  mutate: createDistrict,
+  loading: createDistrictLoading,
+  onDone: createDistrictDone,
+  onError: createDistrictError,
+} = useMutation(CREATE_DISTRICT_MUTATION);
+
+const createDistrictOption = (option, setSelected) => {
+  createDistrict({ districtName: option.label });
+
+  // Not using loading for now
+
+  createDistrictDone((mutationResult) => {
+    setSelected({
+      id: mutationResult.data?.createOneDistrict?.districtId ?? "",
+      label: mutationResult.data?.createOneDistrict?.districtName ?? "",
+    });
+  });
+};
+
 // State Search Box
 const state = ref();
 
@@ -200,6 +282,31 @@ watch(state, (value) => {
   address.stateId = value.id;
   emit("addressFormChange", address);
 });
+
+// Create State Option
+const CREATE_STATE_MUTATION = gql`
+  ${createStateMutation}
+`;
+
+const {
+  mutate: createState,
+  loading: createStateLoading,
+  onDone: createStateDone,
+  onError: createStateError,
+} = useMutation(CREATE_STATE_MUTATION);
+
+const createStateOption = (option, setSelected) => {
+  createState({ stateName: option.label });
+
+  // Not using loading for now
+
+  createStateDone((mutationResult) => {
+    setSelected({
+      id: mutationResult.data?.createOneState?.stateId ?? "",
+      label: mutationResult.data?.createOneState?.stateName ?? "",
+    });
+  });
+};
 
 // Pincode Search Box
 const pincode = ref();
@@ -245,6 +352,31 @@ watch(pincode, (value) => {
   emit("addressFormChange", address);
 });
 
+// Create Pincode Option
+const CREATE_PINCODE_MUTATION = gql`
+  ${createPincodeMutation}
+`;
+
+const {
+  mutate: createPincode,
+  loading: createPincodeLoading,
+  onDone: createPincodeDone,
+  onError: createPincodeError,
+} = useMutation(CREATE_PINCODE_MUTATION);
+
+const createPincodeOption = (option, setSelected) => {
+  createPincode({ pincode: option.label });
+
+  // Not using loading for now
+
+  createPincodeDone((mutationResult) => {
+    setSelected({
+      id: mutationResult.data?.createOnePincode?.pincodeId ?? "",
+      label: mutationResult.data?.createOnePincode?.pincode ?? "",
+    });
+  });
+};
+
 const clearAddressFields = () => {
   street.value = "";
   city.value = "";
@@ -263,7 +395,7 @@ defineExpose({
     <SearchBox
       v-model="street"
       :load-options="loadStreets"
-      :create-option="false"
+      :create-option="createStreetOption"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -272,7 +404,7 @@ defineExpose({
     <SearchBox
       v-model="city"
       :load-options="loadCities"
-      :create-option="false"
+      :create-option="createCityOption"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -281,7 +413,7 @@ defineExpose({
     <SearchBox
       v-model="district"
       :load-options="loadDistricts"
-      :create-option="false"
+      :create-option="createDistrictOption"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -290,7 +422,7 @@ defineExpose({
     <SearchBox
       v-model="state"
       :load-options="loadStates"
-      :create-option="false"
+      :create-option="createStateOption"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -299,7 +431,7 @@ defineExpose({
     <SearchBox
       v-model="pincode"
       :load-options="loadPincodes"
-      :create-option="false"
+      :create-option="createPincodeOption"
       :reload-method="false"
       bg-color="#1e293b"
     />
