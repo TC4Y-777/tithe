@@ -1,4 +1,4 @@
-// Address Mutations
+// Forane Page
 
 export const createForaneMutation = `mutation createForane ($forane: ForaneMutationInput!){
     createOneForane (forane: $forane){
@@ -24,7 +24,15 @@ export const activateForaneMutation = `mutation activateForane ($foraneId: ID!){
 }
 `;
 
+// Parish Page
 
+export const createParishMutation = `mutation createParish ($parish: ParishMutationInput!){
+    createOneParish (parish: $parish){
+        parishId
+        parishName
+    }
+}
+`;
 
 export const deactivateParishMutation = `mutation removeParish ($parishId: ID!){
     deactivateOneParish (parishId: $parishId){
@@ -41,3 +49,6 @@ export const activateParishMutation = `mutation activateParish ($parishId: ID!){
     }
 }
 `;
+
+// Address Mutations
+

@@ -216,6 +216,54 @@ export const parishPageActivePersonTableQuery = `query activePersonByParish ($pa
   }
 }`;
 
+// Koottayma Page
+
+export const koottaymaAllForaneListQuery = foraneAllForaneListQuery;
+
+export const koottaymaAllParishListQuery = parishAllParishListQuery;
+
+export const koottaymaAllKoottaymaListQuery = `query koottaymaPageActiveKoottayma ($parishId: ID!){
+  getAllKoottaymasByParish (parishId: $parishId){
+    koottaymaId
+    koottaymaName
+  }
+}`;
+
+export const koottaymaPageActiveEnityCountQuery = `query activeCountByKoottayma ($id: ID!) {
+    getPersonCountByKoottayma (koottaymaId: $id)
+    getFamilyCountByKoottayma (koottaymaId: $id)
+  }`;
+
+// Family Page
+
+export const familyAllForaneListQuery = foraneAllForaneListQuery;
+
+export const familyAllParishListQuery = parishAllParishListQuery;
+
+export const familyAllFamilyListQuery = `query familyPageActiveFamily ($parishId: ID!){
+  getAllFamiliesByParish (parishId: $parishId){
+    familyId
+    familyName
+  }
+}`;
+
+export const familyPageActiveEnityCountQuery = `query activeCountByFamily ($id: ID!) {
+    getPersonCountByFamily (familyId: $id)
+  }`;
+
+// Person Page
+
+export const personAllForaneListQuery = foraneAllForaneListQuery;
+
+export const personAllParishListQuery = parishAllParishListQuery;
+
+export const personAllPersonListQuery = `query personPageActivePerson ($parishId: ID!){
+  getAllPersonsByParish (parishId: $parishId){
+    personId
+    personName
+  }
+}`;
+
 // Address Queries
 
 export const similarStreetListQuery = `query similarStreetList ($streetName: String!){

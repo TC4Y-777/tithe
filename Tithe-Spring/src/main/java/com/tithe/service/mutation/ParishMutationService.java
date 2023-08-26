@@ -79,8 +79,10 @@ public class ParishMutationService {
 		if (parishId!=null) {
 			Optional<ParishEntity> obtainedParish = parishRepository.findById(parishId);
 			ParishEntity parish = obtainedParish.orElseThrow();
-			parish.setActive(false);
-			return parishRepository.save(parish);
+			if (parish.getKoottaymas().size()==0) {
+				parish.setActive(false);
+				return parishRepository.save(parish);
+			}
 		}
 		GraphQLException exception = new GraphQLException("Some Error Occured") ;
 		throw exception;

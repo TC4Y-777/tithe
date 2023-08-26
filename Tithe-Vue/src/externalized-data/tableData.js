@@ -17,6 +17,15 @@ export const parishPageTableTabTitle = [
   { title: "Person", icon: "mdiAccount" },
 ];
 
+export const koottaymaPageTableTabTitle = [
+  { title: "Family", icon: "mdiAccountMultiple" },
+  { title: "Person", icon: "mdiAccount" },
+];
+
+export const familyPageTableTabTitle = [
+  { title: "Person", icon: "mdiAccount" },
+];
+
 export const foraneTableHeaders = [
   { name: "Name", dataKey: "foraneName" },
   { name: "Building", dataKey: "address.buildingName" },

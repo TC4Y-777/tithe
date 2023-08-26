@@ -15,8 +15,6 @@ import {
   mdiAccountMultiple,
   mdiAccount,
   mdiCashMultiple,
-  mdiInformation,
-  mdiCheckCircle,
   mdiTableLarge,
 } from "@mdi/js";
 
@@ -32,24 +30,21 @@ import SectionTitle from "@/components/SectionTitle.vue";
 import CardBox from "@/components/CardBox.vue";
 import CardBoxWidget from "@/components/CardBoxWidget.vue";
 import LineChart from "@/components/Charts/LineChart.vue";
-import NotificationBar from "@/components/NotificationBar.vue";
+import AllNotifications from "@/components/AllNotifications.vue";
 import TableSampleClients from "@/components/TableSampleClients.vue";
+import AddressForm from "@/components/AddressForm.vue";
+import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
   parishAllForaneListQuery,
   parishAllParishListQuery,
   parishPageActiveEnityCountQuery,
-  similarStreetListQuery,
-  similarCityListQuery,
-  similarDistrictListQuery,
-  similarStateListQuery,
-  similarPincodeListQuery,
   parishPageActiveKoottaymaTableQuery,
   parishPageActiveFamilyTableQuery,
   parishPageActivePersonTableQuery,
 } from "@/externalized-data/graphqlQueries";
-import { createForaneMutation } from "@/externalized-data/graphqlMutations";
+import { createParishMutation, deactivateParishMutation } from "@/externalized-data/graphqlMutations";
 import {
   parishPageTableTabTitle,
   koottaymaTableHeaders,
@@ -57,16 +52,29 @@ import {
   personTableHeaders,
 } from "@/externalized-data/tableData";
 
-const tableTabTitle = parishPageTableTabTitle;
+// Notification Settings
 
-// const options = [
-//   { id: 1, label: "Wade Cooper" },
-//   { id: 2, label: "Arlene Mccoy" },
-//   { id: 3, label: "Devon Webb" },
-//   { id: 4, label: "Tom Cook" },
-//   { id: 5, label: "Tanya Fox" },
-//   { id: 6, label: "Hellen Schmidt" },
-// ];
+// Info Notification
+const infoNotificationEnabled = ref(false);
+const infoNotificationHeading = ref("");
+const infoNotificationContent = ref("");
+
+// Success Notification
+const successNotificationEnabled = ref(false);
+const successNotificationHeading = ref("");
+const successNotificationContent = ref("");
+
+// Warning Notification
+const warningNotificationEnabled = ref(false);
+const warningNotificationHeading = ref("");
+const warningNotificationContent = ref("");
+
+// Danger Notification
+const dangerNotificationEnabled = ref(false);
+const dangerNotificationHeading = ref("");
+const dangerNotificationContent = ref("");
+
+const tableTabTitle = parishPageTableTabTitle;
 
 const forane = ref();
 const parish = ref();
@@ -168,221 +176,6 @@ watch(formForane, (value) => {
   createParishForm.foraneId = value.id;
 });
 
-// Street Search Box
-const street = ref();
-
-const streetListQueryEnabled = ref(false);
-
-const STREET_LIST_QUERY = gql`
-  ${similarStreetListQuery}
-`;
-
-const {
-  onResult: similarStreetListOnResult,
-  variables: similarStreetListVariables,
-} = useQuery(
-  STREET_LIST_QUERY,
-  {
-    streetName: "",
-  },
-  () => ({
-    enabled: streetListQueryEnabled,
-  })
-);
-
-const loadStreets = (query, setOptions) => {
-  streetListQueryEnabled.value = true;
-  similarStreetListVariables.value = {
-    streetName: query,
-  };
-  similarStreetListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarStreets?.map((entity) => {
-        return {
-          id: entity.streetId,
-          label: entity.streetName,
-        };
-      }) ?? []
-    );
-  });
-};
-
-watch(street, (value) => {
-  createParishForm.address.streetId = value.id;
-});
-
-// City Search Box
-const city = ref();
-
-const cityListQueryEnabled = ref(false);
-
-const CITY_LIST_QUERY = gql`
-  ${similarCityListQuery}
-`;
-
-const {
-  onResult: similarCityListOnResult,
-  variables: similarCityListVariables,
-} = useQuery(
-  CITY_LIST_QUERY,
-  {
-    cityName: "",
-  },
-  () => ({
-    enabled: cityListQueryEnabled,
-  })
-);
-
-const loadCities = (query, setOptions) => {
-  cityListQueryEnabled.value = true;
-  similarCityListVariables.value = {
-    cityName: query,
-  };
-  similarCityListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarCities?.map((entity) => {
-        return {
-          id: entity.cityId,
-          label: entity.cityName,
-        };
-      }) ?? []
-    );
-  });
-};
-
-watch(city, (value) => {
-  createParishForm.address.cityId = value.id;
-});
-
-// District Search Box
-const district = ref();
-
-const districtListQueryEnabled = ref(false);
-
-const DISTRICT_LIST_QUERY = gql`
-  ${similarDistrictListQuery}
-`;
-
-const {
-  onResult: similarDistrictListOnResult,
-  variables: similarDistrictListVariables,
-} = useQuery(
-  DISTRICT_LIST_QUERY,
-  {
-    districtName: "",
-  },
-  () => ({
-    enabled: districtListQueryEnabled,
-  })
-);
-
-const loadDistricts = (query, setOptions) => {
-  districtListQueryEnabled.value = true;
-  similarDistrictListVariables.value = {
-    districtName: query,
-  };
-  similarDistrictListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarDistricts?.map((entity) => {
-        return {
-          id: entity.districtId,
-          label: entity.districtName,
-        };
-      }) ?? []
-    );
-  });
-};
-
-watch(district, (value) => {
-  createParishForm.address.districtId = value.id;
-});
-
-// State Search Box
-const state = ref();
-
-const stateListQueryEnabled = ref(false);
-
-const STATE_LIST_QUERY = gql`
-  ${similarStateListQuery}
-`;
-
-const {
-  onResult: similarStateListOnResult,
-  variables: similarStateListVariables,
-} = useQuery(
-  STATE_LIST_QUERY,
-  {
-    stateName: "",
-  },
-  () => ({
-    enabled: stateListQueryEnabled,
-  })
-);
-
-const loadStates = (query, setOptions) => {
-  stateListQueryEnabled.value = true;
-  similarStateListVariables.value = {
-    stateName: query,
-  };
-  similarStateListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarStates?.map((entity) => {
-        return {
-          id: entity.stateId,
-          label: entity.stateName,
-        };
-      }) ?? []
-    );
-  });
-};
-
-watch(state, (value) => {
-  createParishForm.address.stateId = value.id;
-});
-
-// Pincode Search Box
-const pincode = ref();
-
-const pincodeListQueryEnabled = ref(false);
-
-const PINCODE_LIST_QUERY = gql`
-  ${similarPincodeListQuery}
-`;
-
-const {
-  onResult: similarPincodeListOnResult,
-  variables: similarPincodeListVariables,
-} = useQuery(
-  PINCODE_LIST_QUERY,
-  {
-    pincode: "",
-  },
-  () => ({
-    enabled: pincodeListQueryEnabled,
-  })
-);
-
-const loadPincodes = (query, setOptions) => {
-  pincodeListQueryEnabled.value = true;
-  similarPincodeListVariables.value = {
-    pincode: query,
-  };
-  similarPincodeListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarPincodes?.map((entity) => {
-        return {
-          id: entity.pincodeId,
-          label: entity.pincode,
-        };
-      }) ?? []
-    );
-  });
-};
-
-watch(pincode, (value) => {
-  createParishForm.address.pincodeId = value.id;
-});
-
 // Code for checking whether object has empty values
 function hasEmptyValues(obj, arrKey) {
   for (let key in obj) {
@@ -401,66 +194,102 @@ function hasEmptyValues(obj, arrKey) {
   return false;
 }
 
-// Submit Create Forane Form
-const foraneCreatedNotification = ref(false);
+const changeInAddressFormData = (eventData) => {
+  console.log(eventData);
+  createParishForm.address = eventData;
+};
 
-const CREATE_FORANE_MUTATION = gql`
-  ${createForaneMutation}
+const addressFormComponent = ref(null);
+
+// Submit Create Parish Form
+const CREATE_PARISH_MUTATION = gql`
+  ${createParishMutation}
 `;
 
 const {
-  mutate: createForane,
-  loading: createForaneLoading,
-  onDone: createForaneDone,
-} = useMutation(CREATE_FORANE_MUTATION);
+  mutate: createParish,
+  loading: createParishLoading,
+  onDone: createParishDone,
+} = useMutation(CREATE_PARISH_MUTATION);
 
-const submitCreateForaneForm = () => {
-  if (hasEmptyValues(createForaneForm, ["buildingName", "phone"])) {
-    console.log("Empty Values: " + createForaneForm);
+const submitCreateParishForm = () => {
+  if (hasEmptyValues(createParishForm, ["buildingName", "phone"])) {
+    console.log("Empty Values: " + createParishForm);
   } else {
-    console.log("Complete Values: " + createForaneForm);
-    createForane({ forane: createForaneForm });
+    console.log("Complete Values: " + createParishForm);
+    createParish({ parish: createParishForm });
   }
 };
 
-createForaneDone(() => {
+watch(createParishLoading, (value) => {
+  infoNotificationEnabled.value = createParishLoading.value;
+  if (value === true) {
+    infoNotificationHeading.value = "Creating Parish.";
+    infoNotificationContent.value = "Please Wait...";
+  } else {
+    infoNotificationHeading.value = "";
+    infoNotificationContent.value = "";
+  }
+});
+
+createParishDone(() => {
   console.log("onDone called");
-  foraneCreatedNotification.value = true;
-  createForaneForm.foraneName = "";
-  createForaneForm.phone = "";
-  createForaneForm.address.buildingName = "";
-  street.value = {};
-  city.value = {};
-  district.value = {};
-  state.value = {};
-  pincode.value = {};
+  successNotificationEnabled.value = true;
+  successNotificationHeading.value = "Created Parish.";
+  successNotificationContent.value = "";
+
+  createParishForm.parishName = "";
+  createParishForm.phone = "";
+  createParishForm.address.buildingName = "";
+  formForane.value = "";
+  addressFormComponent.value.clearAddressFields();
+
   setTimeout(() => {
-    foraneCreatedNotification.value = false;
+    successNotificationEnabled.value = false;
+    successNotificationHeading.value = "";
+    successNotificationContent.value = "";
   }, 3000);
 });
 
-// Remove Forane
-const DEACTIVATE_FORANE_MUTATION = gql`
-  ${activateForaneMutation}
+// Remove Parish
+const DEACTIVATE_PARISH_MUTATION = gql`
+  ${deactivateParishMutation}
 `;
 
 const {
-    mutate: deactivateForane,
-    loading: deactivateForaneLoading,
-    onDone: deactivateForaneDone,
-    onError: deactivateForaneError,
-} = useMutation(DEACTIVATE_FORANE_MUTATION);
+  mutate: deactivateParish,
+  loading: deactivateParishLoading,
+  onDone: deactivateParishDone,
+  onError: deactivateParishError,
+} = useMutation(DEACTIVATE_PARISH_MUTATION);
 
-const removeForaneButtonMethod = () => {
-    if (forane.value.id != "") {
-        deactivateForane({ foraneId: forane.value.id });
-    } else {
-        console.log("Forane ID is empty");
-    }
+const deactivateParishButtonMethod = () => {
+  if (parish.value.id != "") {
+    deactivateParish({ parishId: parish.value.id });
+  } else {
+    console.log("Parish ID is empty");
+  }
 };
 
-deactivateForaneDone(() => location.reload());
+watch(deactivateParishLoading, (value) => {
+  infoNotificationEnabled.value = deactivateParishLoading.value;
+  if (value === true) {
+    infoNotificationHeading.value = "Removing Parish.";
+    infoNotificationContent.value = "Please Wait...";
+  } else {
+    infoNotificationHeading.value = "";
+    infoNotificationContent.value = "";
+  }
+});
 
+deactivateParishDone(() => location.reload());
+
+deactivateParishError(() => {
+  console.log("Some Error occured while removing parish");
+  dangerNotificationEnabled.value = true;
+  dangerNotificationHeading.value = "Error Removing Parish.";
+  dangerNotificationContent.value = "Try Again";
+});
 
 // =================
 // Remove this
@@ -474,7 +303,7 @@ onMounted(() => {
 });
 // =================
 
-// Parish Table Data
+// Koottayma Table Data
 const ACTIVE_KOOTTAYMA_QUERY = gql`
   ${parishPageActiveKoottaymaTableQuery}
 `;
@@ -560,7 +389,7 @@ const getActivePersonRows = computed(() => {
                   />
                 </DisclosureButton>
                 <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
-                  <FormField label="Forane Name">
+                  <FormField label="Parish Name">
                     <FormControl
                       v-model="createParishForm.parishName"
                       type="text"
@@ -589,104 +418,43 @@ const getActivePersonRows = computed(() => {
                       placeholder="04792662745"
                     />
                   </FormField>
-                  <FormField label="Street">
-                    <SearchBox
-                      v-model="street"
-                      :load-options="loadStreets"
-                      :create-option="false"
-                      :reload-method="false"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="City">
-                    <SearchBox
-                      v-model="city"
-                      :load-options="loadCities"
-                      :create-option="false"
-                      :reload-method="false"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="District">
-                    <SearchBox
-                      v-model="district"
-                      :load-options="loadDistricts"
-                      :create-option="false"
-                      :reload-method="false"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="State">
-                    <SearchBox
-                      v-model="state"
-                      :load-options="loadStates"
-                      :create-option="false"
-                      :reload-method="false"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="Pincode">
-                    <SearchBox
-                      v-model="pincode"
-                      :load-options="loadPincodes"
-                      :create-option="false"
-                      :reload-method="false"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
+                  <AddressForm
+                    ref="addressFormComponent"
+                    @address-form-change="changeInAddressFormData"
+                  />
                   <BaseButton
                     class="baseButtonStyle"
                     color="info"
                     label="Submit"
-                    @click="submitcreateParishForm"
+                    @click="submitCreateParishForm"
                   />
                 </DisclosurePanel>
               </Disclosure>
               <RemoveEntityDisclosure
-                    :entity="parish"
-                    heading="Remove Parish"
-                    content="Are you sure you want to remove this parish"
-                    button-label="Yes, Remove this Parish"
-                    :button-method="removeForaneButtonMethod"
-                  />
+                :entity="parish"
+                heading="Remove Parish"
+                content="Are you sure you want to remove this parish"
+                button-label="Yes, Remove this Parish"
+                :button-method="deactivateParishButtonMethod"
+              />
             </div>
           </div>
         </div>
       </div>
-      <NotificationBar
-        v-if="createParishLoading"
-        color="info"
-        :icon="mdiInformation"
-        :outline="false"
-      >
-        <b>Creating Parish</b>. Please Wait...
-        <template #right>
-          <BaseButton
-            color="info"
-            :icon="mdiInformation"
-            :outline="false"
-            rounded-full
-            small
-          />
-        </template>
-      </NotificationBar>
-      <NotificationBar
-        v-if="parishCreatedNotification"
-        color="success"
-        :icon="mdiCheckCircle"
-        :outline="false"
-      >
-        <b>Parish Created</b>.
-        <template #right>
-          <BaseButton
-            color="success"
-            :icon="mdiCheckCircle"
-            :outline="false"
-            rounded-full
-            small
-          />
-        </template>
-      </NotificationBar>
+      <AllNotifications
+        :info-notification-enabled="infoNotificationEnabled"
+        :info-notification-heading="infoNotificationHeading"
+        :info-notification-content="infoNotificationContent"
+        :success-notification-enabled="successNotificationEnabled"
+        :success-notification-heading="successNotificationHeading"
+        :success-notification-content="successNotificationContent"
+        :warning-notification-enabled="warningNotificationEnabled"
+        :warning-notification-heading="warningNotificationHeading"
+        :warning-notification-content="warningNotificationContent"
+        :danger-notification-enabled="dangerNotificationEnabled"
+        :danger-notification-heading="dangerNotificationHeading"
+        :danger-notification-content="dangerNotificationContent"
+      />
     </SectionMain>
 
     <SectionMain v-if="parish">
