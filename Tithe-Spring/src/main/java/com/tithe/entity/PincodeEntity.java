@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
-
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,11 +24,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "pincode_table")
 public class PincodeEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long pincodeId;
-	
+
 	@NotBlank(message = "Pincode is empty or null")
 	@Column(unique = true)
 	private String pincode;

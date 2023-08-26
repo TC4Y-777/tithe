@@ -1,12 +1,9 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
 
 import java.util.List;
-import java.util.UUID;
-
-import com.tithe.model.AddressQueryFilter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,39 +35,39 @@ import lombok.NoArgsConstructor;
 		"pincode_id"
 }))
 public class AddressEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long addressId;
-	
+
 	private String buildingName;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "street_id")
 	private StreetEntity street;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "city_id")
 	private CityEntity city;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "district_id")
 	private DistrictEntity district;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "state_id")
 	private StateEntity state;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "pincode_id")
 	private PincodeEntity pincode;
-	
+
 	@OneToMany(mappedBy = "address")
 	private List<FamilyEntity> families;
-	
+
 	@OneToMany(mappedBy = "address")
 	private List<ParishEntity> parishes;
-	
+
 	@OneToMany(mappedBy = "address")
 	private List<ForaneEntity> foranes;
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.controller;
 
@@ -29,16 +29,16 @@ import com.tithe.repository.TitheRepository;
  */
 @Controller
 public class PersonController {
-	
+
 	@Autowired
 	private PersonRepository personRepository;
-	
+
 	@Autowired
 	private RelationRepository relationRepository;
-	
+
 	@Autowired
 	private TitheRepository titheRepository;
-	
+
 	@QueryMapping
 	public PersonEntity getPerson() {
 		PersonEntity person = new PersonEntity();
@@ -47,44 +47,44 @@ public class PersonController {
 		person.setDob(LocalDate.of(2002, 7, 23));
 		person.setPhone("9446823512");
 		person.setGender(GenderEnum.F);
-		
+
 		RelationEntity relation = new RelationEntity();
 		relation.setRelationName("Father");
 //		RelationEntity savedRelation = relationRepository.save(relation);
-		
+
 		person.setRelation(relation);
-		
+
 		TitheEntity tithe = new TitheEntity();
 		tithe.setTitheAmount(1000.39);
 		tithe.setTimeStamp(LocalDate.now());
 		tithe.setPerson(person);
 //		TitheEntity savedTithe = titheRepository.save(tithe);
-		
+
 //		person.setTithe(tithe);
-		
+
 		FamilyEntity family = new FamilyEntity();
 		family.setFamilyName("Rich Villa");
 		family.setPhone("97347834323");
-		
+
 		person.setFamily(family);
-		
+
 		EducationEntity education = new EducationEntity();
 		education.setEducationName("MCA");
-		
+
 		person.setEducations(List.of(education));
-		
+
 		OccupationEntity occupation = new OccupationEntity();
-		occupation.setOccupationName("Engineer");;
-		
+		occupation.setOccupationName("Engineer");
+
 		person.setOccupations(List.of(occupation));
-		
+
 		PersonEntity savedPerson = personRepository.save(person);
 		return savedPerson;
 	}
-	
+
 	@Autowired
 	private TempRepo tempRepo;
-	
+
 	@MutationMapping
 	public TempEntity testMutation(@Argument TempInput time) {
 		TempEntity tempEntity = new TempEntity();

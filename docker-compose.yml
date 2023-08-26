@@ -1,29 +1,6 @@
 version: "3.3"
 
-# For development
-
 services:
-  vue-frontend:
-    container_name: tithe-vue-frontend
-    image: tithe-vue-frontend-image
-    build: ./Tithe-Vue/
-    ports:
-      - 80:80
-    restart: always
-    depends_on:
-      - spring-backend
-
-  spring-backend:
-    container_name: tithe-spring-backend
-    image: tithe-spring-backend-image
-    build: ./Tithe-Spring/
-    #volumes:
-      #- ./Tithe-Spring:/spring
-    ports:
-      - 8080:8080
-    restart: always
-    depends_on:
-      - postgresql-db
 
   postgresql-db:
     container_name: postgres-db
@@ -36,3 +13,79 @@ services:
       - 5432:5432
 #    volumes:
 #      - ./postgres-volume:/var/lib/postgresql/data:z
+
+# Local Environment
+
+  dev-vue-tithe:
+    container_name: tithe-vue-dev
+    image: tithe-vue-dev-image
+    build: ./Tithe-Vue/
+    ports:
+      - 5173:5173
+    restart: always
+    depends_on:
+      - dev-spring-tithe
+    profiles: ["dev"]
+
+  dev-spring-tithe:
+    container_name: tithe-spring-dev
+    image: tithe-spring-dev-image
+    build: ./Tithe-Spring/
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgresql-db
+    profiles: ["dev"]
+
+# Stage Environment
+
+  stage-vue-tithe:
+    container_name: tithe-vue-stage
+    image: tithe-vue-stage-image
+    build: ./Tithe-Vue/
+    entrypoint: bash -c "npm run build-stage && npm run preview"
+    ports:
+      - 4173:4173
+    restart: always
+    depends_on:
+      - stage-spring-tithe
+    profiles: ["stage"]
+
+  stage-spring-tithe:
+    container_name: tithe-spring-stage
+    image: tithe-spring-stage-image
+    build: ./Tithe-Spring/
+    entrypoint: bash -c "chmod +x ./gradlew && ./gradlew bootRun --args='--spring.profiles.active=stage'"
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgresql-db
+    profiles: ["stage"]
+
+# Production Environment
+
+  prod-vue-tithe:
+    container_name: tithe-vue-prod
+    image: tithe-vue-prod-image
+    build: ./Tithe-Vue/
+    entrypoint: bash -c "chmod +x ./vue-prod-entrypoint.sh && ./vue-prod-entrypoint.sh"
+    ports:
+      - 80:80
+    restart: always
+    depends_on:
+      - prod-spring-tithe
+    profiles: ["prod"]
+
+  prod-spring-tithe:
+    container_name: tithe-spring-prod
+    image: tithe-spring-prod-image
+    build: ./Tithe-Spring/
+    entrypoint: bash -c "chmod +x ./spring-prod-entrypoint.sh && ./spring-prod-entrypoint.sh"
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgresql-db
+    profiles: ["prod"]

@@ -9,5 +9,5 @@ public class TempInput {
 
 	String name;
 	String timeStamp;
-	
+
 }

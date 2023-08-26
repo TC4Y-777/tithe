@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.repository;
 
@@ -14,7 +14,7 @@ import com.tithe.entity.PersonEntity;
  */
 @Repository
 public interface PersonRepository extends JpaRepository<PersonEntity, Long> {
-	
+
 	long countByActive(Boolean active);
 
 }

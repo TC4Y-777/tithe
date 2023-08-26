@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.service.query;
 
@@ -20,16 +20,16 @@ import com.tithe.utils.ObjectValidation;
  */
 @Service
 public class TitheQueryService {
-	
+
 	@Autowired
 	private ObjectValidation objectValidation;
-	
-	public List<TitheEntity> buildTitheEntities(PersonEntity person, 
+
+	public List<TitheEntity> buildTitheEntities(PersonEntity person,
 			List<TitheMutationInput> titheMutationInputs) {
-		
+
 		objectValidation.validateObjects(titheMutationInputs);
-		
-		List<TitheEntity> tithes = new ArrayList<TitheEntity>();
+
+		List<TitheEntity> tithes = new ArrayList<>();
 		for (TitheMutationInput titheInput : titheMutationInputs) {
 			TitheEntity tithe = new TitheEntity();
 			tithe.setTitheAmount(titheInput.getTitheAmount());
@@ -39,12 +39,12 @@ public class TitheQueryService {
 			tithe.setKoottayma(tithe.getFamily().getKoottayma());
 			tithe.setParish(tithe.getKoottayma().getParish());
 			tithe.setForane(tithe.getParish().getForane());
-			
+
 			tithes.add(tithe);
 		}
-		
+
 		return tithes;
-		
+
 	}
 
 }

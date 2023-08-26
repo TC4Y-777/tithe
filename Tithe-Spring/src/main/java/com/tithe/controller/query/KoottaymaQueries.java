@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.controller.query;
 
@@ -20,25 +20,25 @@ import com.tithe.service.query.KoottaymaQueryService;
  */
 @Controller
 public class KoottaymaQueries {
-	
+
 	@Autowired
 	private KoottaymaQueryService koottaymaQueryService;
-	
+
 	@QueryMapping(name = "getOneKoottayma")
 	public KoottaymaEntity getOneKoottayma(@Argument Long id) {
 		return koottaymaQueryService.getOneKoottayma(id);
 	}
-	
+
 	@QueryMapping(name = "getManyKoottaymas")
 	public List<KoottaymaEntity> getManyKoottaymas(@Argument(name = "filter") KoottaymaQueryFilter koottaymaQueryFilter){
 		return koottaymaQueryService.getManyKoottaymas(koottaymaQueryFilter);
 	}
-	
+
 	@QueryMapping(name = "getAllKoottaymas")
 	public List<KoottaymaEntity> getAllKoottaymas() {
 		return koottaymaQueryService.getAllKoottaymas();
 	}
-	
+
 	@QueryMapping(name = "getKoottaymaCount")
 	public Long getKoottaymaCount() {
 		return koottaymaQueryService.getKoottaymaCount();

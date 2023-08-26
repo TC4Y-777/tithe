@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
 
@@ -24,11 +24,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "relation_table")
 public class RelationEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long relationId;
-	
+
 	@NotBlank(message = "Name of Relation is either empty or null")
 	@Column(unique = true)
 	private String relationName;

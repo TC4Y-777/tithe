@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
-
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,11 +24,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "state_table")
 public class StateEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long stateId;
-	
+
 	@NotBlank(message = "Name of State in empty or null")
 	@Column(unique = true)
 	private String stateName;

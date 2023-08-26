@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 package com.tithe.entity;
-
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,11 +24,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "street_table")
 public class StreetEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long streetId;
-	
+
 	@NotBlank(message = "Name of Street is empty or null")
 	@Column(unique = true)
 	private String streetName;

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tithe.model;
 
@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class TitheMutationInput {
-	
+
 	@Positive(message = "Tithe Amount should be valid")
 	@NotNull(message = "Tithe Amount should not be emtpy or null")
 	Double titheAmount;
-	
+
 	@NotNull(message = "Timestamp should not be empty or null")
 	LocalDate timeStamp;
 
