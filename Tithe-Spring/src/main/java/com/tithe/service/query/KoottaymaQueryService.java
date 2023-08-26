@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import com.tithe.entity.ForaneEntity;
 import com.tithe.entity.KoottaymaEntity;
+import com.tithe.entity.ParishEntity;
 import com.tithe.model.KoottaymaQueryFilter;
 import com.tithe.repository.KoottaymaRepository;
 
@@ -26,6 +28,9 @@ public class KoottaymaQueryService {
 
 	@Autowired
 	private ParishQueryService parishQueryService;
+	
+	@Autowired
+	private ForaneQueryService foraneQueryService;
 
 	public KoottaymaEntity getOneKoottayma(Long id) {
 		Optional<KoottaymaEntity> koottayma = koottaymaRepository.findById(id);
@@ -58,9 +63,47 @@ public class KoottaymaQueryService {
 		}
 		return null;
 	}
+	
+	public List<KoottaymaEntity> getAllKoottaymasByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			List<KoottaymaEntity> koottaymas = koottaymaRepository.findAllByParish_Forane(forane);
+			if (koottaymas.size()!=0) {
+				return koottaymas;
+			}
+		}
+		return null;
+	}
+	
+	public List<KoottaymaEntity> getAllKoottaymasByParish(Long parishId) {
+		ParishEntity parish = parishQueryService.getOneParish(parishId);
+		if (parish!=null) {
+			List<KoottaymaEntity> koottaymas = koottaymaRepository.findAllByParish(parish);
+			if (koottaymas.size()!=0) {
+				return koottaymas;
+			}
+		}
+		return null;
+	}
 
 	public Long getKoottaymaCount() {
 		return koottaymaRepository.countByActive(true);
+	}
+
+	public Long getKoottaymaCountByForane(Long foraneId) {
+		ForaneEntity forane = foraneQueryService.getOneForane(foraneId);
+		if (forane!=null) {
+			return koottaymaRepository.countByParish_ForaneAndActive(forane, true);
+		}
+		return null;
+	}
+
+	public Long getKoottaymaCountByParish(Long parishId) {
+		ParishEntity parish = parishQueryService.getOneParish(parishId);
+		if (parish!=null) {
+			return koottaymaRepository.countByParishAndActive(parish, true);
+		}
+		return null;
 	}
 
 }

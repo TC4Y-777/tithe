@@ -1,3 +1,5 @@
 extend type Mutation{
 	createOneFamily(family: FamilyMutationInput): Family
+	activateOneFamily(familyId: ID!): Family
+	deactivateOneFamily(familyId: ID!): Family
 }

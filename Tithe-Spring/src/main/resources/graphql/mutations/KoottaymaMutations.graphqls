@@ -1,3 +1,5 @@
 extend type Mutation{
 	createOneKoottayma(koottayma: KoottaymaMutationInput): Koottayma
+	activateOneKoottayma(koottaymaId: ID!): Koottayma
+	deactivateOneKoottayma(koottaymaId: ID!): Koottayma
 }

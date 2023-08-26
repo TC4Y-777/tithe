@@ -104,6 +104,7 @@ public class PersonMutationService {
 		return null;
 	}
 
+//	TODO If the operation is not successful, should throw an error or something to the frontend
 	public PersonEntity deactivateOnePerson(Long id) {
 		Optional<PersonEntity> person = personRepository.findById(id);
 		if (person.isPresent()) {

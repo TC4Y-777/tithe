@@ -96,10 +96,26 @@ public class AddressQueryService {
 		}
 		return null;
 	}
+	
+	public List<StreetEntity> getSimilarStreets(String streetName) {
+		List<StreetEntity> streets = streetRepository.findByStreetNameContainingIgnoringCase(streetName);
+		if (streets.size()!=0) {
+			return streets;
+		}
+		return null;
+	}
 
 	public CityEntity getOneCity(Long id) {
 		Optional<CityEntity> city = cityRepository.findById(id);
 		return city.orElse(null);
+	}
+	
+	public List<CityEntity> getSimilarCities(String cityName) {
+		List<CityEntity> cities = cityRepository.findByCityNameContainingIgnoringCase(cityName);
+		if (cities.size()!=0) {
+			return cities;
+		}
+		return null;
 	}
 
 	public List<CityEntity> getAllCities() {
@@ -114,6 +130,14 @@ public class AddressQueryService {
 		Optional<DistrictEntity> district = districtRepository.findById(id);
 		return district.orElse(null);
 	}
+	
+	public List<DistrictEntity> getSimilarDistricts(String districtName) {
+		List<DistrictEntity> districts = districtRepository.findByDistrictNameContainingIgnoringCase(districtName);
+		if (districts.size()!=0) {
+			return districts;
+		}
+		return null;
+	}
 
 	public List<DistrictEntity> getAllDistricts() {
 		List<DistrictEntity> districts = districtRepository.findAll();
@@ -127,6 +151,14 @@ public class AddressQueryService {
 		Optional<StateEntity> state = stateRepository.findById(id);
 		return state.orElse(null);
 	}
+	
+	public List<StateEntity> getSimilarStates(String stateName) {
+		List<StateEntity> states = stateRepository.findByStateNameContainingIgnoringCase(stateName);
+		if (states.size()!=0) {
+			return states;
+		}
+		return null;
+	}
 
 	public List<StateEntity> getAllStates() {
 		List<StateEntity> states = stateRepository.findAll();
@@ -139,6 +171,14 @@ public class AddressQueryService {
 	public PincodeEntity getOnePincode(Long id) {
 		Optional<PincodeEntity> pincode = pincodeRepository.findById(id);
 		return pincode.orElse(null);
+	}
+	
+	public List<PincodeEntity> getSimilarPincodes(String pincode) {
+		List<PincodeEntity> pincodes = pincodeRepository.findByPincodeContainingIgnoringCase(pincode);
+		if (pincodes.size()!=0) {
+			return pincodes;
+		}
+		return null;
 	}
 
 	public List<PincodeEntity> getAllPincodes() {
