@@ -52,3 +52,37 @@ export const activateParishMutation = `mutation activateParish ($parishId: ID!){
 
 // Address Mutations
 
+export const createStreetMutation = `mutation createNewStreet ($streetName: String!){
+  createOneStreet(streetName: $streetName){
+    streetId
+    streetName
+  }
+}`;
+
+export const createCityMutation = `mutation createNewCity ($cityName: String!){
+  createOneCity(cityName: $cityName){
+    cityId
+    cityName
+  }
+}`;
+
+export const createDistrictMutation = `mutation createNewDistrict ($districtName: String!){
+  createOneDistrict(districtName: $districtName){
+    districtId
+    districtName
+  }
+}`;
+
+export const createStateMutation = `mutation createNewState ($stateName: String!){
+  createOneState(stateName: $stateName){
+    stateId
+    stateName
+  }
+}`;
+
+export const createPincodeMutation = `mutation createNewPincode ($pincode: String!){
+  createOnePincode(pincode: $pincode){
+    pincodeId
+    pincode
+  }
+}`;

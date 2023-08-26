@@ -4,4 +4,4 @@ spring:
   graphql:
     cors:
       allowed-origins:
-        - http://ip-from-stage-environment
+        - http://13.53.86.195
