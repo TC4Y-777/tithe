@@ -17,8 +17,6 @@ import {
   mdiAccountMultiple,
   mdiAccount,
   mdiCashMultiple,
-  mdiInformation,
-  mdiCheckCircle,
   mdiTableLarge,
 } from "@mdi/js";
 
@@ -30,11 +28,14 @@ import FormControl from "@/components/FormControl.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
+import SectionTitle from "@/components/SectionTitle.vue";
 import CardBox from "@/components/CardBox.vue";
 import CardBoxWidget from "@/components/CardBoxWidget.vue";
 import LineChart from "@/components/Charts/LineChart.vue";
-import NotificationBar from "@/components/NotificationBar.vue";
 import TableSampleClients from "@/components/TableSampleClients.vue";
+import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
+import AllNotifications from "@/components/AllNotifications.vue";
+import AddressForm from "@/components/AddressForm.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
@@ -49,13 +50,39 @@ import {
   foranePageActiveFamilyTableQuery,
   foranePageActivePersonTableQuery,
 } from "@/externalized-data/graphqlQueries";
-import { createForaneMutation } from "@/externalized-data/graphqlMutations";
+import {
+  createForaneMutation,
+  deactivateForaneMutation,
+  activateForaneMutation,
+} from "@/externalized-data/graphqlMutations";
 import {
   foranePageTableTabTitle,
   parishTableHeaders,
   familyTableHeaders,
   personTableHeaders,
 } from "@/externalized-data/tableData";
+
+// Notification Settings
+
+// Info Notification
+const infoNotificationEnabled = ref(false);
+const infoNotificationHeading = ref("");
+const infoNotificationContent = ref("");
+
+// Success Notification
+const successNotificationEnabled = ref(false);
+const successNotificationHeading = ref("");
+const successNotificationContent = ref("");
+
+// Warning Notification
+const warningNotificationEnabled = ref(false);
+const warningNotificationHeading = ref("");
+const warningNotificationContent = ref("");
+
+// Danger Notification
+const dangerNotificationEnabled = ref(false);
+const dangerNotificationHeading = ref("");
+const dangerNotificationContent = ref("");
 
 const tableTabTitle = foranePageTableTabTitle;
 
@@ -115,15 +142,20 @@ const createForaneOption = (option, setSelected) => {
 };
 
 // Entity Count in Forane Page
+const activeEntityByForaneCountEnabled = ref(false);
+
 const ACTIVE_ENTITY_BY_FORANE_COUNT_QUERY = gql`
   ${foranePageActiveEnityCountQuery}
 `;
 
 const {
   result: activeEntityByForaneCount,
-  load: activeEntityByForaneCountLoad,
   refetch: activeEntityByForaneCountRefetch,
-} = useLazyQuery(ACTIVE_ENTITY_BY_FORANE_COUNT_QUERY, forane);
+} = useQuery(
+  ACTIVE_ENTITY_BY_FORANE_COUNT_QUERY,
+  () => ({ id: forane.value.id }),
+  () => ({ enabled: activeEntityByForaneCountEnabled })
+);
 const activeParishCount = computed(
   () => activeEntityByForaneCount.value?.getParishCountByForane ?? 0
 );
@@ -137,9 +169,8 @@ const activePersonCount = computed(
   () => activeEntityByForaneCount.value?.getPersonCountByForane ?? 0
 );
 
-watch(forane, (value) => {
-  activeEntityByForaneCountLoad(null, value) ||
-    activeEntityByForaneCountRefetch(value);
+watch(forane, () => {
+  activeEntityByForaneCountEnabled.value = true;
 });
 
 const createForaneForm = reactive({
@@ -387,22 +418,15 @@ function hasEmptyValues(obj, arrKey) {
   }
   return false;
 }
-// Code for assigning empty values to object fields
-function assignEmptyValues(obj) {
-  for (let key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      if (typeof obj[key] === "object") {
-        assignEmptyValues(obj[key]);
-      } else {
-        obj[key] = "";
-      }
-    }
-  }
-}
+
+const changeInAddressFormData = (eventData) => {
+  console.log(eventData);
+  createForaneForm.address = eventData;
+};
+
+const addressFormComponent = ref(null);
 
 // Submit Create Forane Form
-const foraneCreatedNotification = ref(false);
-
 const CREATE_FORANE_MUTATION = gql`
   ${createForaneMutation}
 `;
@@ -411,6 +435,7 @@ const {
   mutate: createForane,
   loading: createForaneLoading,
   onDone: createForaneDone,
+  onError: createForaneError,
 } = useMutation(CREATE_FORANE_MUTATION);
 
 const submitCreateForaneForm = () => {
@@ -422,20 +447,85 @@ const submitCreateForaneForm = () => {
   }
 };
 
+watch(createForaneLoading, (value) => {
+  infoNotificationEnabled.value = createForaneLoading.value;
+  if (value === true) {
+    infoNotificationHeading.value = "Creating Forane.";
+    infoNotificationContent.value = "Please Wait...";
+  } else {
+    infoNotificationHeading.value = "";
+    infoNotificationContent.value = "";
+  }
+});
+
 createForaneDone(() => {
   console.log("onDone called");
-  foraneCreatedNotification.value = true;
+  successNotificationEnabled.value = true;
+  successNotificationHeading.value = "Created Forane.";
+  successNotificationContent.value = "";
+
   createForaneForm.foraneName = "";
   createForaneForm.phone = "";
   createForaneForm.address.buildingName = "";
-  street.value = {};
-  city.value = {};
-  district.value = {};
-  state.value = {};
-  pincode.value = {};
+  street.value = "";
+  city.value = "";
+  district.value = "";
+  state.value = "";
+  pincode.value = "";
+  addressFormComponent.value.clearAddressFields();
+
   setTimeout(() => {
-    foraneCreatedNotification.value = false;
+    successNotificationEnabled.value = false;
+    successNotificationHeading.value = "";
+    successNotificationContent.value = "";
   }, 3000);
+});
+
+createForaneError(() => {
+  console.log("Some Error occured while creating forane");
+  dangerNotificationEnabled.value = true;
+  dangerNotificationHeading.value = "Error Creating Forane.";
+  dangerNotificationContent.value = "Try Again";
+});
+
+// Remove Forane
+const DEACTIVATE_FORANE_MUTATION = gql`
+  ${deactivateForaneMutation}
+`;
+
+const {
+  mutate: deactivateForane,
+  loading: deactivateForaneLoading,
+  onDone: deactivateForaneDone,
+  onError: deactivateForaneError,
+} = useMutation(DEACTIVATE_FORANE_MUTATION);
+
+const deactivateForaneButtonMethod = () => {
+  if (forane.value.id != "") {
+    deactivateForane({ foraneId: forane.value.id });
+  } else {
+    console.log("Forane ID is empty");
+  }
+};
+
+watch(deactivateForaneLoading, (value) => {
+  infoNotificationEnabled.value = deactivateForaneLoading.value;
+  if (value === true) {
+    infoNotificationHeading.value = "Removing Forane.";
+    infoNotificationContent.value = "Please Wait...";
+  } else {
+    infoNotificationHeading.value = "";
+    infoNotificationContent.value = "";
+  }
+});
+
+deactivateForaneDone(() => location.reload());
+
+deactivateForaneError(() => {
+  console.log("Some Error occured while removing forane");
+  dangerNotificationEnabled.value = true;
+  dangerNotificationHeading.value = "Error Removing Forane.";
+  dangerNotificationContent.value = "Try Again";
 });
 
 // =================
@@ -458,9 +548,11 @@ const {
   result: activeParishData,
   load: activeParishDataLoad,
   refetch: activeParishDataRefetch,
-} = useLazyQuery(ACTIVE_PARISH_QUERY);
+} = useLazyQuery(ACTIVE_PARISH_QUERY, () => ({
+  foraneId: forane.value.id,
+}));
 const getActiveParishRows = computed(() => {
-  return activeParishData.value?.getAllParishes ?? [];
+  return activeParishData.value?.getAllParishesByForane ?? [];
 });
 
 // Family Table Data
@@ -471,9 +563,11 @@ const {
   result: activeFamilyData,
   load: activeFamilyDataLoad,
   refetch: activeFamilyDataRefetch,
-} = useLazyQuery(ACTIVE_FAMILY_QUERY);
+} = useLazyQuery(ACTIVE_FAMILY_QUERY, () => ({
+  foraneId: forane.value.id,
+}));
 const getActiveFamilyRows = computed(() => {
-  return activeFamilyData.value?.getAllFamilies ?? [];
+  return activeFamilyData.value?.getAllFamiliesByForane ?? [];
 });
 
 // Person Table Data
@@ -484,9 +578,11 @@ const {
   result: activePersonData,
   load: activePersonDataLoad,
   refetch: activePersonDataRefetch,
-} = useLazyQuery(ACTIVE_PERSON_QUERY);
+} = useLazyQuery(ACTIVE_PERSON_QUERY, () => ({
+  foraneId: forane.value.id,
+}));
 const getActivePersonRows = computed(() => {
-  return activePersonData.value?.getAllPersons ?? [];
+  return activePersonData.value?.getAllPersonsByForane ?? [];
 });
 </script>
 
@@ -496,6 +592,7 @@ const getActivePersonRows = computed(() => {
     <SectionMain>
       <!-- <SearchBox v-model="user" :options="options" /> -->
 
+      <SectionTitle :first="true" :last="true"> Forane </SectionTitle>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="flex flex-col justify-between">
           <FormField label="Select Forane">
@@ -509,10 +606,8 @@ const getActivePersonRows = computed(() => {
           </FormField>
         </div>
         <div class="flex flex-col justify-between">
-          <div class="w-full px-4 pt-7">
-            <div
-              class="theme-color mx-auto w-full max-w-md rounded-2xl bg-white p-2"
-            >
+          <div class="w-full pt-7">
+            <div class="theme-color w-full rounded-2xl bg-white p-2">
               <Disclosure v-slot="{ open }">
                 <DisclosureButton
                   class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
@@ -544,7 +639,7 @@ const getActivePersonRows = computed(() => {
                       placeholder="04792662745"
                     />
                   </FormField>
-                  <FormField label="Street">
+                  <!-- <FormField label="Street">
                     <SearchBox
                       v-model="street"
                       :load-options="loadStreets"
@@ -588,7 +683,13 @@ const getActivePersonRows = computed(() => {
                       :reload-method="false"
                       bg-color="#1e293b"
                     />
-                  </FormField>
+                  </FormField> -->
+
+                  <AddressForm
+                    ref="addressFormComponent"
+                    @address-form-change="changeInAddressFormData"
+                  />
+
                   <BaseButton
                     class="baseButtonStyle"
                     color="info"
@@ -597,6 +698,14 @@ const getActivePersonRows = computed(() => {
                   />
                 </DisclosurePanel>
               </Disclosure>
+              <RemoveEntityDisclosure
+                :entity="forane"
+                heading="Remove Forane"
+                content="Are you sure you want to remove this forane"
+                button-label="Yes, Remove this Forane"
+                :button-method="deactivateForaneButtonMethod"
+              />
+
               <!-- <Disclosure v-slot="{ open }" as="div" class="mt-2">
                 <DisclosureButton
                   class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
@@ -615,40 +724,21 @@ const getActivePersonRows = computed(() => {
           </div>
         </div>
       </div>
-      <NotificationBar
-        v-if="createForaneLoading"
-        color="info"
-        :icon="mdiInformation"
-        :outline="false"
-      >
-        <b>Creating Forane</b>. Please Wait...
-        <template #right>
-          <BaseButton
-            color="info"
-            :icon="mdiInformation"
-            :outline="false"
-            rounded-full
-            small
-          />
-        </template>
-      </NotificationBar>
-      <NotificationBar
-        v-if="foraneCreatedNotification"
-        color="success"
-        :icon="mdiCheckCircle"
-        :outline="false"
-      >
-        <b>Forane Created</b>.
-        <template #right>
-          <BaseButton
-            color="success"
-            :icon="mdiCheckCircle"
-            :outline="false"
-            rounded-full
-            small
-          />
-        </template>
-      </NotificationBar>
+
+      <AllNotifications
+        :info-notification-enabled="infoNotificationEnabled"
+        :info-notification-heading="infoNotificationHeading"
+        :info-notification-content="infoNotificationContent"
+        :success-notification-enabled="successNotificationEnabled"
+        :success-notification-heading="successNotificationHeading"
+        :success-notification-content="successNotificationContent"
+        :warning-notification-enabled="warningNotificationEnabled"
+        :warning-notification-heading="warningNotificationHeading"
+        :warning-notification-content="warningNotificationContent"
+        :danger-notification-enabled="dangerNotificationEnabled"
+        :danger-notification-heading="dangerNotificationHeading"
+        :danger-notification-content="dangerNotificationContent"
+      />
     </SectionMain>
 
     <SectionMain v-if="forane">
@@ -657,6 +747,11 @@ const getActivePersonRows = computed(() => {
         :title="forane.label"
         main
       >
+        <BaseButton
+          :icon="mdiReload"
+          color="whiteDark"
+          @click="activeEntityByForaneCountRefetch"
+        />
       </SectionTitleLineWithButton>
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
         <CardBoxWidget
@@ -764,6 +859,11 @@ const getActivePersonRows = computed(() => {
 }
 .disclosure-heading {
   background-color: #1e293b;
+  color: white;
+  font-weight: bold;
+}
+.disclosure-heading-careful {
+  background-color: #ef4444;
   color: white;
   font-weight: bold;
 }

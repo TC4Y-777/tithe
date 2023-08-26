@@ -7,3 +7,37 @@ export const createForaneMutation = `mutation createForane ($forane: ForaneMutat
     }
 }
 `;
+
+export const deactivateForaneMutation = `mutation removeForane ($foraneId: ID!){
+    deactivateOneForane (foraneId: $foraneId){
+        foraneId
+        foraneName
+    }
+}
+`;
+
+export const activateForaneMutation = `mutation activateForane ($foraneId: ID!){
+    activateOneForane (foraneId: $foraneId){
+        foraneId
+        foraneName
+    }
+}
+`;
+
+
+
+export const deactivateParishMutation = `mutation removeParish ($parishId: ID!){
+    deactivateOneParish (parishId: $parishId){
+        parishId
+        parishName
+    }
+}
+`;
+
+export const activateParishMutation = `mutation activateParish ($parishId: ID!){
+    activateOneParish (parishId: $parishId){
+        parishId
+        parishName
+    }
+}
+`;

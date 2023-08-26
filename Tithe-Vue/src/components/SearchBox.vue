@@ -16,7 +16,7 @@ const emit = defineEmits(["update:modelValue"]);
 
 const props = defineProps({
   modelValue: {
-    type: Object,
+    type: [Object, String],
     default: () => {},
   },
   options: {

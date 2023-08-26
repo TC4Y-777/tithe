@@ -98,7 +98,7 @@ export const foranePageActiveEnityCountQuery = `query activeCountByForane ($id: 
   }`;
 
 export const foranePageActiveParishTableQuery = `query activeParishByForane ($foraneId: ID!){
-  getAllParishes{
+  getAllParishesByForane (foraneId: $foraneId){
     parishId
     parishName
     address{
@@ -116,9 +116,105 @@ export const foranePageActiveParishTableQuery = `query activeParishByForane ($fo
   }
 }`;
 
-export const foranePageActiveFamilyTableQuery = homepageActiveFamilyTableQuery;
+export const foranePageActiveFamilyTableQuery = `query activeFamilyByForane ($foraneId: ID!){
+  getAllFamiliesByForane (foraneId: $foraneId){
+    familyId
+    familyName
+    address{
+      buildingName
+      street{
+        streetName
+      }
+      city{
+        cityName
+      }
+    }
+    koottayma{
+      koottaymaName
+      parish{
+        parishName
+      }
+    }
+  }
+}`;
 
-export const foranePageActivePersonTableQuery = homepageActivePersonTableQuery;
+export const foranePageActivePersonTableQuery = `query activePersonByForane ($foraneId: ID!){
+  getAllPersonsByForane (foraneId: $foraneId) {
+    personId
+    personName
+    baptismName
+    gender
+    dob
+    relation{
+      relationName
+    }
+    family{
+      familyName
+    }
+  }
+}`;
+
+// Parish Page
+
+export const parishAllForaneListQuery = foraneAllForaneListQuery;
+
+export const parishAllParishListQuery = `query parishPageActiveParish ($foraneId: ID!){
+  getAllParishesByForane (foraneId: $foraneId){
+    parishId
+    parishName
+  }
+}`;
+
+export const parishPageActiveEnityCountQuery = `query activeCountByParish ($id: ID!) {
+    getPersonCountByParish (parishId: $id)
+    getFamilyCountByParish (parishId: $id)
+    getKoottaymaCountByParish (parishId: $id)
+  }`;
+
+export const parishPageActiveKoottaymaTableQuery = `query activeKoottaymaByParish ($parishId: ID!){
+  getAllKoottaymasByParish (parishId: $parishId){
+    koottaymaId
+    koottaymaName
+  }
+}`;
+
+export const parishPageActiveFamilyTableQuery = `query activeFamilyByParish ($parishId: ID!){
+  getAllFamiliesByParish (parishId: $parishId){
+    familyId
+    familyName
+    address{
+      buildingName
+      street{
+        streetName
+      }
+      city{
+        cityName
+      }
+    }
+    koottayma{
+      koottaymaName
+      parish{
+        parishName
+      }
+    }
+  }
+}`;
+
+export const parishPageActivePersonTableQuery = `query activePersonByParish ($parishId: ID!){
+  getAllPersonsByParish (parishId: $parishId) {
+    personId
+    personName
+    baptismName
+    gender
+    dob
+    relation{
+      relationName
+    }
+    family{
+      familyName
+    }
+  }
+}`;
 
 // Address Queries
 
