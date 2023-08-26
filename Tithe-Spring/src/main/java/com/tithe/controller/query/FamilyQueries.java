@@ -33,15 +33,45 @@ public class FamilyQueries {
 	public List<FamilyEntity> getManyFamilies(@Argument(name = "filter") FamilyQueryFilter familyQueryFilter){
 		return familyQueryService.getManyFamilies(familyQueryFilter);
 	}
-
+	
 	@QueryMapping(name = "getAllFamilies")
 	public List<FamilyEntity> getAllFamilies(){
 		return familyQueryService.getAllFamilies();
 	}
 
+	@QueryMapping(name = "getAllFamiliesByForane")
+	public List<FamilyEntity> getAllFamiliesByForane(@Argument(name = "foraneId") Long foraneId){
+		return familyQueryService.getAllFamiliesByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getAllFamiliesByParish")
+	public List<FamilyEntity> getAllFamiliesByParish(@Argument(name = "parishId") Long parishId){
+		return familyQueryService.getAllFamiliesByParish(parishId);
+	}
+	
+	@QueryMapping(name = "getAllFamiliesByKoottayma")
+	public List<FamilyEntity> getAllFamiliesByKoottayma(@Argument(name = "koottaymaId") Long koottaymaId){
+		return familyQueryService.getAllFamiliesByKoottayma(koottaymaId);
+	}
+
 	@QueryMapping(name = "getFamilyCount")
 	public Long getFamilyCount() {
 		return familyQueryService.getFamilyCount();
+	}
+	
+	@QueryMapping(name = "getFamilyCountByForane")
+	public Long getFamilyCountByForane(@Argument(name = "foraneId") Long foraneId) {
+		return familyQueryService.getFamilyCountByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getFamilyCountByParish")
+	public Long getFamilyCountByParish(@Argument(name = "parishId") Long parishId) {
+		return familyQueryService.getFamilyCountByParish(parishId);
+	}
+	
+	@QueryMapping(name = "getFamilyCountByKoottayma")
+	public Long getFamilyCountByKoottayma(@Argument(name = "koottaymaId") Long koottaymaId) {
+		return familyQueryService.getFamilyCountByKoottayma(koottaymaId);
 	}
 
 }

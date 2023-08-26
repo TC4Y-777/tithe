@@ -1,3 +1,5 @@
 extend type Mutation{
 	createOneForane(forane: ForaneMutationInput): Forane
+	activateOneForane(foraneId: ID!): Forane
+	deactivateOneForane(foraneId: ID!): Forane
 }

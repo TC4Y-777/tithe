@@ -14,7 +14,7 @@ import {
   mdiTableLarge,
 } from "@mdi/js";
 import gql from "graphql-tag";
-import { useQuery } from "@vue/apollo-composable";
+import { useQuery, useLazyQuery } from "@vue/apollo-composable";
 
 import * as chartConfig from "@/components/Charts/chart.config.js";
 import LineChart from "@/components/Charts/LineChart.vue";
@@ -85,48 +85,56 @@ const activePersonCount = computed(
 
 const activeTitheAnnual = 1;
 
+// Forane Table Data
 const ACTIVE_FORANE_QUERY = gql`
   ${homepageActiveForaneTableQuery}
 `;
-const { result: activeForaneData } = useQuery(ACTIVE_FORANE_QUERY);
+const {
+  result: activeForaneData,
+  load: activeForaneDataLoad,
+  refetch: activeForaneDataRefetch,
+} = useLazyQuery(ACTIVE_FORANE_QUERY);
 const getActiveForaneRows = computed(() => {
-  const activeForaneRows = computed(
-    () => activeForaneData.value?.getAllForanes ?? []
-  );
-  return activeForaneRows.value;
+  return activeForaneData.value?.getAllForanes ?? [];
 });
 
+// Parish Table Data
 const ACTIVE_PARISH_QUERY = gql`
   ${homepageActiveParishTableQuery}
 `;
-const { result: activeParishData } = useQuery(ACTIVE_PARISH_QUERY);
+const {
+  result: activeParishData,
+  load: activeParishDataLoad,
+  refetch: activeParishDataRefetch,
+} = useLazyQuery(ACTIVE_PARISH_QUERY);
 const getActiveParishRows = computed(() => {
-  const activeParishRows = computed(
-    () => activeParishData.value?.getAllParishes ?? []
-  );
-  return activeParishRows.value;
+  return activeParishData.value?.getAllParishes ?? [];
 });
 
+// Family Table Data
 const ACTIVE_FAMILY_QUERY = gql`
   ${homepageActiveFamilyTableQuery}
 `;
-const { result: activeFamilyData } = useQuery(ACTIVE_FAMILY_QUERY);
+const {
+  result: activeFamilyData,
+  load: activeFamilyDataLoad,
+  refetch: activeFamilyDataRefetch,
+} = useLazyQuery(ACTIVE_FAMILY_QUERY);
 const getActiveFamilyRows = computed(() => {
-  const activeFamilyRows = computed(
-    () => activeFamilyData.value?.getAllFamilies ?? []
-  );
-  return activeFamilyRows.value;
+  return activeFamilyData.value?.getAllFamilies ?? [];
 });
 
+// Person Table Data
 const ACTIVE_PERSON_QUERY = gql`
   ${homepageActivePersonTableQuery}
 `;
-const { result: activePersonData } = useQuery(ACTIVE_PERSON_QUERY);
+const {
+  result: activePersonData,
+  load: activePersonDataLoad,
+  refetch: activePersonDataRefetch,
+} = useLazyQuery(ACTIVE_PERSON_QUERY);
 const getActivePersonRows = computed(() => {
-  const activePersonRows = computed(
-    () => activePersonData.value?.getAllPersons ?? []
-  );
-  return activePersonRows.value;
+  return activePersonData.value?.getAllPersons ?? [];
 });
 </script>
 
@@ -224,7 +232,12 @@ const getActivePersonRows = computed(() => {
       <TableTabs :tabs="tableTabTitle">
         <template #default="{ index }">
           <div v-if="index === 0">
-            <CardBox has-table>
+            <CardBox
+              has-table
+              @vnode-mounted="
+                activeForaneDataLoad() || activeForaneDataRefetch()
+              "
+            >
               <TableSampleClients
                 id-name="foraneId"
                 :table-headers="foraneTableHeaders"
@@ -233,7 +246,12 @@ const getActivePersonRows = computed(() => {
             </CardBox>
           </div>
           <div v-if="index === 1">
-            <CardBox has-table>
+            <CardBox
+              has-table
+              @vnode-mounted="
+                activeParishDataLoad() || activeParishDataRefetch()
+              "
+            >
               <TableSampleClients
                 id-name="parishId"
                 :table-headers="parishTableHeaders"
@@ -242,7 +260,12 @@ const getActivePersonRows = computed(() => {
             </CardBox>
           </div>
           <div v-if="index === 2">
-            <CardBox has-table>
+            <CardBox
+              has-table
+              @vnode-mounted="
+                activeFamilyDataLoad() || activeFamilyDataRefetch()
+              "
+            >
               <TableSampleClients
                 id-name="familyId"
                 :table-headers="familyTableHeaders"
@@ -251,7 +274,12 @@ const getActivePersonRows = computed(() => {
             </CardBox>
           </div>
           <div v-if="index === 3">
-            <CardBox has-table>
+            <CardBox
+              has-table
+              @vnode-mounted="
+                activePersonDataLoad() || activePersonDataRefetch()
+              "
+            >
               <TableSampleClients
                 id-name="personId"
                 :table-headers="personTableHeaders"

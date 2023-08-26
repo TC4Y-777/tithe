@@ -16,6 +16,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  // isDismissed: Boolean,
 });
 
 const componentClass = computed(() =>
@@ -23,6 +24,7 @@ const componentClass = computed(() =>
 );
 
 const isDismissed = ref(false);
+// const isDismissed = ref(props.isDismissed);
 
 const dismiss = () => {
   isDismissed.value = true;

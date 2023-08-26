@@ -16,8 +16,8 @@ const emit = defineEmits(["update:modelValue"]);
 
 const props = defineProps({
   modelValue: {
-    type: Object,
-    required: true,
+    type: [Object, String],
+    default: () => {},
   },
   options: {
     type: Array,
@@ -28,14 +28,17 @@ const props = defineProps({
     required: true,
   },
   createOption: {
-    type: Function,
-    default: () => {},
+    type: [Boolean, Function],
+    required: true,
   },
   bgColor: {
     type: String,
     default: "#0f172a",
   },
-  isReloadEnabled: Boolean,
+  reloadMethod: {
+    type: [Boolean, Function],
+    required: true,
+  },
 });
 
 const options = ref(props.options);
@@ -119,11 +122,11 @@ function handleUpdateModelValue(selected) {
             class="absolute inset-y-0 right-0 flex items-center pr-2"
           >
             <BaseButton
-              v-if="props.isReloadEnabled"
+              v-if="props.reloadMethod"
               :icon="mdiReload"
               color="transparent"
-              outline="false"
-              @click="fillChartData"
+              :outline="false"
+              @click="props.reloadMethod"
             />
             <ChevronUpDownIcon
               class="h-5 w-5 text-gray-400"
@@ -138,7 +141,7 @@ function handleUpdateModelValue(selected) {
           @after-leave="query = ''"
         >
           <ComboboxOptions
-            class="theme-color absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            class="z-50 theme-color absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
           >
             <div
               v-if="filteredOptions.length === 0 && !isLoading"

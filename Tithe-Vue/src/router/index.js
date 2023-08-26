@@ -3,6 +3,9 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "@/views/HomeView.vue";
 import Forane from "@/views/ForaneView.vue";
 import Parish from "@/views/ParishView.vue";
+import Koottayma from "@/views/KoottaymaView.vue";
+import Family from "@/views/FamilyView.vue";
+import Person from "@/views/PersonView.vue";
 import Disclosure from "@/components/DisclosureMenu.vue";
 
 const routes = [
@@ -36,6 +39,30 @@ const routes = [
     path: "/parish",
     name: "parish",
     component: Parish,
+  },
+  {
+    meta: {
+      title: "Koottayma",
+    },
+    path: "/koottayma",
+    name: "koottayma",
+    component: Koottayma,
+  },
+  {
+    meta: {
+      title: "Family",
+    },
+    path: "/family",
+    name: "family",
+    component: Family,
+  },
+  {
+    meta: {
+      title: "Person",
+    },
+    path: "/person",
+    name: "person",
+    component: Person,
   },
   {
     meta: {

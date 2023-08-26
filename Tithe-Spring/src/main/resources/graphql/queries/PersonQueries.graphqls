@@ -2,7 +2,15 @@ extend type Query{
 	getOnePerson(id: ID): Person
 	getManyPersons(filter: PersonQueryFilter): [Person]
 	getAllPersons: [Person]
+	getAllPersonsByForane(foraneId: ID!): [Person]
+	getAllPersonsByParish(parishId: ID!): [Person]
+	getAllPersonsByKoottayma(koottaymaId: ID!): [Person]
+	getAllPersonsByFamily(familyId: ID!): [Person]
 	getPersonCount: Int
+	getPersonCountByForane(foraneId: ID!): Int
+	getPersonCountByParish(parishId: ID!): Int
+	getPersonCountByKoottayma(koottaymaId: ID!): Int
+	getPersonCountByFamily(familyId: ID!): Int
 	
 	getOneEducation(id: ID): Education
 	getAllEducations: [Education]

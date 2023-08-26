@@ -2,5 +2,7 @@ extend type Query{
 	getOneParish(id: ID): Parish
 	getManyParishes(filter: ParishQueryFilter): [Parish]
 	getAllParishes: [Parish]
+	getAllParishesByForane(foraneId: ID!): [Parish]
 	getParishCount: Int
+	getParishCountByForane(foraneId: ID!): Int
 }
