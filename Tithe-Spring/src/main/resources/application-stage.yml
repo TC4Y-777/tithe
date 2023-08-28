@@ -5,3 +5,4 @@ spring:
     cors:
       allowed-origins:
         - http://13.53.86.195
+        - http://13.53.86.195:4173
