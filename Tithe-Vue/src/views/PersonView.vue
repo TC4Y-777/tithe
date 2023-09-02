@@ -95,7 +95,7 @@ const {
 activeForaneListLoad();
 const loadForanes = (query, setOptions) => {
   setOptions(
-    activeForaneList.value?.getAllForanes.map((entity) => {
+    activeForaneList.value?.getAllForanes?.map((entity) => {
       return {
         id: entity.foraneId,
         label: entity.foraneName,
@@ -117,7 +117,7 @@ const {
 }));
 const loadParishesByForane = (query, setOptions) => {
   setOptions(
-    activeParishList.value?.getAllParishesByForane.map((entity) => {
+    activeParishList.value?.getAllParishesByForane?.map((entity) => {
       return {
         id: entity.parishId,
         label: entity.parishName,
@@ -139,7 +139,7 @@ const {
 }));
 const loadPersonsByParish = (query, setOptions) => {
   setOptions(
-    activePersonList.value?.getAllPersonsByParish.map((entity) => {
+    activePersonList.value?.getAllPersonsByParish?.map((entity) => {
       return {
         id: entity.personId,
         label: entity.personName,

@@ -44,7 +44,10 @@ import {
   parishPageActiveFamilyTableQuery,
   parishPageActivePersonTableQuery,
 } from "@/externalized-data/graphqlQueries";
-import { createParishMutation, deactivateParishMutation } from "@/externalized-data/graphqlMutations";
+import {
+  createParishMutation,
+  deactivateParishMutation,
+} from "@/externalized-data/graphqlMutations";
 import {
   parishPageTableTabTitle,
   koottaymaTableHeaders,
@@ -91,7 +94,7 @@ const {
 activeForaneListLoad();
 const loadForanes = (query, setOptions) => {
   setOptions(
-    activeForaneList.value?.getAllForanes.map((entity) => {
+    activeForaneList.value?.getAllForanes?.map((entity) => {
       return {
         id: entity.foraneId,
         label: entity.foraneName,
@@ -113,7 +116,7 @@ const {
 }));
 const loadParishesByForane = (query, setOptions) => {
   setOptions(
-    activeParishList.value?.getAllParishesByForane.map((entity) => {
+    activeParishList.value?.getAllParishesByForane?.map((entity) => {
       return {
         id: entity.parishId,
         label: entity.parishName,
@@ -291,6 +294,20 @@ deactivateParishError(() => {
   dangerNotificationContent.value = "Try Again";
 });
 
+// Moving Parish from one forane to another
+const newForane = ref();
+
+const moveParishForm = reactive({
+  parishId: "",
+  foraneId: "",
+});
+
+watch(newForane, (value) => {
+  if (value.id === forane.value.id) {
+    newForane.value = "";
+  }
+});
+
 // =================
 // Remove this
 import * as chartConfig from "@/components/Charts/chart.config.js";
@@ -423,13 +440,41 @@ const getActivePersonRows = computed(() => {
                     @address-form-change="changeInAddressFormData"
                   />
                   <BaseButton
-                    class="baseButtonStyle"
-                    color="info"
+                    class="baseButtonStyle font-bold"
+                    color="success"
                     label="Submit"
                     @click="submitCreateParishForm"
                   />
                 </DisclosurePanel>
               </Disclosure>
+              <Disclosure v-if="parish" v-slot="{ open }" as="div" class="mt-2">
+                  <DisclosureButton
+                    class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
+                  >
+                    <span>Move Parish</span>
+                    <ChevronUpIcon
+                      :class="open ? 'rotate-180 transform' : ''"
+                      class="disclosure-heading h-5 w-5 text-purple-500"
+                    />
+                  </DisclosureButton>
+                  <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
+                    <FormField label="New Forane">
+                      <SearchBox
+                        v-model="newForane"
+                        :load-options="loadForanes"
+                        :create-option="false"
+                        :reload-method="activeForaneListRefetch"
+                        bg-color="#1e293b"
+                      />
+                    </FormField>
+                    <BaseButton
+                      class="baseButtonStyle font-bold"
+                      color="info"
+                      label="Submit"
+                      @click="submitCreateParishForm"
+                    />
+                    </DisclosurePanel>
+                </Disclosure>
               <RemoveEntityDisclosure
                 :entity="parish"
                 heading="Remove Parish"

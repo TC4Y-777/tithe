@@ -397,6 +397,7 @@ defineExpose({
       :load-options="loadStreets"
       :create-option="createStreetOption"
       :reload-method="false"
+      entity-name="Street"
       bg-color="#1e293b"
     />
   </FormField>
@@ -405,6 +406,7 @@ defineExpose({
       v-model="city"
       :load-options="loadCities"
       :create-option="createCityOption"
+      entity-name="City"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -414,6 +416,7 @@ defineExpose({
       v-model="district"
       :load-options="loadDistricts"
       :create-option="createDistrictOption"
+      entity-name="District"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -423,6 +426,7 @@ defineExpose({
       v-model="state"
       :load-options="loadStates"
       :create-option="createStateOption"
+      entity-name="State"
       :reload-method="false"
       bg-color="#1e293b"
     />
@@ -432,6 +436,7 @@ defineExpose({
       v-model="pincode"
       :load-options="loadPincodes"
       :create-option="createPincodeOption"
+      entity-name="Pincode"
       :reload-method="false"
       bg-color="#1e293b"
     />

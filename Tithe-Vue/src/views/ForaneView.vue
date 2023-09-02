@@ -2,7 +2,6 @@
 import { reactive, ref, onMounted, computed, watch } from "vue";
 import gql from "graphql-tag";
 import { useLazyQuery, useMutation, useQuery } from "@vue/apollo-composable";
-import { useRouter } from "vue-router";
 
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/20/solid";
@@ -48,7 +47,7 @@ import {
 import {
   createForaneMutation,
   deactivateForaneMutation,
-  activateForaneMutation,
+  // activateForaneMutation,
 } from "@/externalized-data/graphqlMutations";
 import {
   foranePageTableTabTitle,
@@ -103,37 +102,14 @@ const {
 } = useLazyQuery(ACTIVE_FORANE_LIST_QUERY);
 activeForaneListLoad();
 const loadForanes = (query, setOptions) => {
-  // activeForaneListLoad() || activeForaneListRefetch();
   setOptions(
-    activeForaneList.value?.getAllForanes.map((entity) => {
+    activeForaneList.value?.getAllForanes?.map((entity) => {
       return {
         id: entity.foraneId,
         label: entity.foraneName,
       };
     }) ?? []
   );
-};
-
-const router = useRouter();
-const createForaneOption = (option, setSelected) => {
-  router.push("/dashboard");
-
-  // fetch("link", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     name: option.label,
-  //   }),
-  // })
-  //   .then((response) => response.json())
-  //   .then((user) => {
-  //     setSelected({
-  //       value: user.id,
-  //       label: user.name,
-  //     });
-  //   });
 };
 
 // Entity Count in Forane Page
@@ -374,7 +350,7 @@ const getActivePersonRows = computed(() => {
             <SearchBox
               v-model="forane"
               :load-options="loadForanes"
-              :create-option="createForaneOption"
+              :create-option="false"
               :reload-method="activeForaneListRefetch"
               bg-color="#0f172a"
             />
@@ -419,8 +395,8 @@ const getActivePersonRows = computed(() => {
                     @address-form-change="changeInAddressFormData"
                   />
                   <BaseButton
-                    class="baseButtonStyle"
-                    color="info"
+                    class="baseButtonStyle font-bold"
+                    color="success"
                     label="Submit"
                     @click="submitCreateForaneForm"
                   />
@@ -466,6 +442,10 @@ const getActivePersonRows = computed(() => {
         :danger-notification-enabled="dangerNotificationEnabled"
         :danger-notification-heading="dangerNotificationHeading"
         :danger-notification-content="dangerNotificationContent"
+        @info-false="infoNotificationEnabled = false"
+        @success-false="successNotificationEnabled = false"
+        @warning-false="warningNotificationEnabled = false"
+        @danger-false="dangerNotificationEnabled = false"
       />
     </SectionMain>
 
