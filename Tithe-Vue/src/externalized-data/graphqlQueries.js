@@ -234,6 +234,44 @@ export const koottaymaPageActiveEnityCountQuery = `query activeCountByKoottayma 
     getFamilyCountByKoottayma (koottaymaId: $id)
   }`;
 
+export const koottaymaPageActiveFamilyTableQuery = `query activeFamilyByKoottayma ($koottaymaId: ID!){
+  getAllFamiliesByKoottayma (koottaymaId: $koottaymaId){
+    familyId
+    familyName
+    address{
+      buildingName
+      street{
+        streetName
+      }
+      city{
+        cityName
+      }
+    }
+    koottayma{
+      koottaymaName
+      parish{
+        parishName
+      }
+    }
+  }
+}`;
+
+export const koottaymaPageActivePersonTableQuery = `query activePersonByKoottayma ($koottaymaId: ID!){
+  getAllPersonsByKoottayma (koottaymaId: $koottaymaId) {
+    personId
+    personName
+    baptismName
+    gender
+    dob
+    relation{
+      relationName
+    }
+    family{
+      familyName
+    }
+  }
+}`;
+
 // Family Page
 
 export const familyAllForaneListQuery = foraneAllForaneListQuery;
@@ -247,9 +285,27 @@ export const familyAllFamilyListQuery = `query familyPageActiveFamily ($parishId
   }
 }`;
 
+export const familyAllKoottaymaListQuery = koottaymaAllKoottaymaListQuery;
+
 export const familyPageActiveEnityCountQuery = `query activeCountByFamily ($id: ID!) {
     getPersonCountByFamily (familyId: $id)
   }`;
+
+export const familyPageActivePersonTableQuery = `query activePersonByFamily ($familyId: ID!){
+  getAllPersonsByFamily (familyId: $familyId) {
+    personId
+    personName
+    baptismName
+    gender
+    dob
+    relation{
+      relationName
+    }
+    family{
+      familyName
+    }
+  }
+}`;
 
 // Person Page
 

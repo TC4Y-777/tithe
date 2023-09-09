@@ -31,6 +31,10 @@ const props = defineProps({
     type: [Boolean, Function],
     required: true,
   },
+  entityName: {
+    type: String,
+    default: "",
+  },
   bgColor: {
     type: String,
     default: "#0f172a",
@@ -173,7 +177,7 @@ function handleUpdateModelValue(selected) {
                     'text-white-900': !active,
                   }"
                 >
-                  Create New Forane: {{ queryOption.label }}
+                  Create New {{ entityName }}: {{ queryOption.label }}
                 </li>
               </ComboboxOption>
 
