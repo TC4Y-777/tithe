@@ -1,6 +1,4 @@
 <script setup>
-import { ref, watch } from "vue";
-
 import {
   mdiAlert,
   mdiAlertCircle,
@@ -50,51 +48,38 @@ const props = defineProps({
   },
 });
 
-const reactiveInfoNotificationEnabled = ref(props.infoNotificationEnabled);
-watch(
-  () => props.infoNotificationEnabled,
-  () => {
-    reactiveInfoNotificationEnabled.value = props.infoNotificationEnabled;
-  }
-);
+const emits = defineEmits([
+  "infoFalse",
+  "successFalse",
+  "warningFalse",
+  "dangerFalse",
+]);
 
-const reactiveSuccessNotificationEnabled = ref(
-  props.successNotificationEnabled
-);
-watch(
-  () => props.successNotificationEnabled,
-  () => {
-    reactiveSuccessNotificationEnabled.value = props.successNotificationEnabled;
-  }
-);
+const infoFalse = () => {
+  emits("infoFalse");
+};
 
-const reactiveWarningNotificationEnabled = ref(
-  props.warningNotificationEnabled
-);
-watch(
-  () => props.warningNotificationEnabled,
-  () => {
-    reactiveWarningNotificationEnabled.value = props.warningNotificationEnabled;
-  }
-);
+const successFalse = () => {
+  emits("successFalse");
+};
 
-const reactiveDangerNotificationEnabled = ref(props.dangerNotificationEnabled);
-watch(
-  () => props.dangerNotificationEnabled,
-  () => {
-    reactiveDangerNotificationEnabled.value = props.dangerNotificationEnabled;
-  }
-);
+const warningFalse = () => {
+  emits("warningFalse");
+};
+
+const dangerFalse = () => {
+  emits("dangerFalse");
+};
 </script>
 
 <template>
   <!-- Info Notification -->
   <NotificationBar
-    v-if="reactiveInfoNotificationEnabled"
+    v-if="props.infoNotificationEnabled"
     color="info"
     :icon="mdiInformation"
     :outline="false"
-    @click="reactiveInfoNotificationEnabled = !reactiveInfoNotificationEnabled"
+    @click="infoFalse"
   >
     <b>{{ props.infoNotificationHeading }}</b>
     {{ props.infoNotificationContent }}
@@ -111,13 +96,11 @@ watch(
 
   <!-- Success Notification -->
   <NotificationBar
-    v-if="reactiveSuccessNotificationEnabled"
+    v-if="props.successNotificationEnabled"
     color="success"
     :icon="mdiCheckCircle"
     :outline="false"
-    @click="
-      reactiveSuccessNotificationEnabled = !reactiveSuccessNotificationEnabled
-    "
+    @click="successFalse"
   >
     <b>{{ props.successNotificationHeading }}</b>
     {{ props.successNotificationContent }}
@@ -134,13 +117,11 @@ watch(
 
   <!-- Warning Notification -->
   <NotificationBar
-    v-if="reactiveWarningNotificationEnabled"
+    v-if="props.warningNotificationEnabled"
     color="warning"
     :icon="mdiAlert"
     :outline="false"
-    @click="
-      reactiveWarningNotificationEnabled = !reactiveWarningNotificationEnabled
-    "
+    @click="warningFalse"
   >
     <b>{{ props.warningNotificationHeading }}</b>
     {{ props.warningNotificationContent }}
@@ -157,13 +138,11 @@ watch(
 
   <!-- Danger Notification -->
   <NotificationBar
-    v-if="reactiveDangerNotificationEnabled"
+    v-if="props.dangerNotificationEnabled"
     color="danger"
     :icon="mdiAlertCircle"
     :outline="false"
-    @click="
-      reactiveDangerNotificationEnabled = !reactiveDangerNotificationEnabled
-    "
+    @click="dangerFalse"
   >
     <b>{{ props.dangerNotificationHeading }}</b>
     {{ props.dangerNotificationContent }}

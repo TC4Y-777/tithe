@@ -12,6 +12,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import com.tithe.client.rabbitmq.producer.TempProducer;
 import com.tithe.entity.EducationEntity;
 import com.tithe.entity.FamilyEntity;
 import com.tithe.entity.OccupationEntity;
@@ -38,6 +39,9 @@ public class PersonController {
 
 	@Autowired
 	private TitheRepository titheRepository;
+	
+	@Autowired
+	private TempProducer tempProducer;
 
 	@QueryMapping
 	public PersonEntity getPerson() {
@@ -91,6 +95,13 @@ public class PersonController {
 		tempEntity.setName(time.getName());
 		tempEntity.setTimeStamp(LocalDate.parse(time.getTimeStamp()));
 		return tempRepo.save(tempEntity);
+	}
+	
+	@MutationMapping
+	public RelationEntity tempPublishToRabbit(@Argument String message) {
+		tempProducer.sendMessage(message);
+		RelationEntity relation = new RelationEntity(23L, "Niece");
+		return relation;
 	}
 
 }
