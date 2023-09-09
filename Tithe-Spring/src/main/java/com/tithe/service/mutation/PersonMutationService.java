@@ -65,7 +65,7 @@ public class PersonMutationService {
 
 		List<TitheMutationInput> titheInputs = personMutationInput.getTithes();
 		List<TitheEntity> tithes = new ArrayList<>();
-		if (titheInputs.size()!=0) {
+		if (titheInputs!=null && titheInputs.size()!=0) {
 			tithes = titheQueryService.buildTitheEntities(person, titheInputs);
 		}
 		person.setTithes(tithes);
