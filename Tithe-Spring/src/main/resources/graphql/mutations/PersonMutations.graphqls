@@ -20,6 +20,7 @@ extend type Mutation{
 	createManyTithes(personId: ID!, tithes: [TitheMutationInput!]!): [Tithe]
 	
 	testMutation(time: TempInput): Temp
+	tempPublishToRabbit(message: String): Relation
 }
 
 input TempInput{
