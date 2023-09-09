@@ -102,6 +102,39 @@ export const activateFamilyMutation = `mutation activateFamily ($familyId: ID!){
 }
 `;
 
+// Person Mutations
+
+export const createPersonMutation = `mutation createPerson ($person: PersonMutationInput!){
+    createOnePerson (person: $person){
+        personId
+        personName
+    }
+}
+`;
+
+export const deactivatePersonMutation = `mutation removePerson ($personId: ID!){
+    deactivateOnePerson (personId: $personId){
+        personId
+        personName
+    }
+}
+`;
+
+export const activatePersonMutation = `mutation activatePerson ($personId: ID!){
+    activateOnePerson (personId: $personId){
+        personId
+        personName
+    }
+}
+`;
+
+export const createRelationMutation = `mutation createRelation ($relation: String!){
+    createOneRelation(relation: $relation){
+        relationId
+        relationName
+    }
+}`;
+
 // Address Mutations
 
 export const createStreetMutation = `mutation createNewStreet ($streetName: String!){
