@@ -320,6 +320,15 @@ export const personAllPersonListQuery = `query personPageActivePerson ($parishId
   }
 }`;
 
+export const personAllFamilyListQuery = familyAllFamilyListQuery;
+
+export const personAllRelationListQuery = `query personPageRelations{
+    getAllRelations{
+        relationId
+        relationName
+    }
+}`;
+
 // Address Queries
 
 export const similarStreetListQuery = `query similarStreetList ($streetName: String!){
