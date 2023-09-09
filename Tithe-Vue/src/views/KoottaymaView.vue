@@ -234,7 +234,7 @@ function hasEmptyValues(obj, arrKey) {
   return false;
 }
 
-// Submit Create Parish Form
+// Submit Create Koottayma Form
 const CREATE_KOOTTAYMA_MUTATION = gql`
   ${createKoottaymaMutation}
 `;
@@ -282,7 +282,7 @@ createKoottaymaDone(() => {
   }, 3000);
 });
 
-// Remove Parish
+// Remove Koottayma
 const DEACTIVATE_KOOTTAYMA_MUTATION = gql`
   ${deactivateKoottaymaMutation}
 `;
@@ -437,7 +437,7 @@ const getActivePersonRows = computed(() => {
                       :load-options="loadFormParishesByForane"
                       :create-option="false"
                       :reload-method="activeFormParishListRefetch"
-                      bg-color="#0f172a"
+                      bg-color="#1e293b"
                     />
                   </FormField>
 

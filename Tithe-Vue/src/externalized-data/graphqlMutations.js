@@ -76,6 +76,32 @@ export const activateKoottaymaMutation = `mutation activateKoottayma ($koottayma
 }
 `;
 
+// Family Mutations
+
+export const createFamilyMutation = `mutation createFamily ($family: FamilyMutationInput!){
+    createOneFamily (family: $family){
+        familyId
+        familyName
+    }
+}
+`;
+
+export const deactivateFamilyMutation = `mutation removeFamily ($familyId: ID!){
+    deactivateOneFamily (familyId: $familyId){
+        familyId
+        familyName
+    }
+}
+`;
+
+export const activateFamilyMutation = `mutation activateFamily ($familyId: ID!){
+    activateOneFamily (familyId: $familyId){
+        familyId
+        familyName
+    }
+}
+`;
+
 // Address Mutations
 
 export const createStreetMutation = `mutation createNewStreet ($streetName: String!){

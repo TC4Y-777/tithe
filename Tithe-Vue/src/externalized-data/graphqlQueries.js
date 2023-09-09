@@ -285,9 +285,27 @@ export const familyAllFamilyListQuery = `query familyPageActiveFamily ($parishId
   }
 }`;
 
+export const familyAllKoottaymaListQuery = koottaymaAllKoottaymaListQuery;
+
 export const familyPageActiveEnityCountQuery = `query activeCountByFamily ($id: ID!) {
     getPersonCountByFamily (familyId: $id)
   }`;
+
+export const familyPageActivePersonTableQuery = `query activePersonByFamily ($familyId: ID!){
+  getAllPersonsByFamily (familyId: $familyId) {
+    personId
+    personName
+    baptismName
+    gender
+    dob
+    relation{
+      relationName
+    }
+    family{
+      familyName
+    }
+  }
+}`;
 
 // Person Page
 
