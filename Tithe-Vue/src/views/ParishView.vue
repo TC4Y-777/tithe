@@ -448,33 +448,33 @@ const getActivePersonRows = computed(() => {
                 </DisclosurePanel>
               </Disclosure>
               <Disclosure v-if="parish" v-slot="{ open }" as="div" class="mt-2">
-                  <DisclosureButton
-                    class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
-                  >
-                    <span>Move Parish</span>
-                    <ChevronUpIcon
-                      :class="open ? 'rotate-180 transform' : ''"
-                      class="disclosure-heading h-5 w-5 text-purple-500"
+                <DisclosureButton
+                  class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
+                >
+                  <span>Move Parish</span>
+                  <ChevronUpIcon
+                    :class="open ? 'rotate-180 transform' : ''"
+                    class="disclosure-heading h-5 w-5 text-purple-500"
+                  />
+                </DisclosureButton>
+                <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
+                  <FormField label="New Forane">
+                    <SearchBox
+                      v-model="newForane"
+                      :load-options="loadForanes"
+                      :create-option="false"
+                      :reload-method="activeForaneListRefetch"
+                      bg-color="#1e293b"
                     />
-                  </DisclosureButton>
-                  <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
-                    <FormField label="New Forane">
-                      <SearchBox
-                        v-model="newForane"
-                        :load-options="loadForanes"
-                        :create-option="false"
-                        :reload-method="activeForaneListRefetch"
-                        bg-color="#1e293b"
-                      />
-                    </FormField>
-                    <BaseButton
-                      class="baseButtonStyle font-bold"
-                      color="info"
-                      label="Submit"
-                      @click="submitCreateParishForm"
-                    />
-                    </DisclosurePanel>
-                </Disclosure>
+                  </FormField>
+                  <BaseButton
+                    class="baseButtonStyle font-bold"
+                    color="info"
+                    label="Submit"
+                    @click="submitCreateParishForm"
+                  />
+                </DisclosurePanel>
+              </Disclosure>
               <RemoveEntityDisclosure
                 :entity="parish"
                 heading="Remove Parish"

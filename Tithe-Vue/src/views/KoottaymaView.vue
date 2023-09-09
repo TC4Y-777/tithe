@@ -6,7 +6,6 @@ import { useLazyQuery, useMutation, useQuery } from "@vue/apollo-composable";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/20/solid";
 import {
-  mdiChurch,
   mdiReload,
   mdiFinance,
   mdiEye,
@@ -32,7 +31,6 @@ import CardBoxWidget from "@/components/CardBoxWidget.vue";
 import LineChart from "@/components/Charts/LineChart.vue";
 import AllNotifications from "@/components/AllNotifications.vue";
 import TableSampleClients from "@/components/TableSampleClients.vue";
-import AddressForm from "@/components/AddressForm.vue";
 import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
@@ -41,17 +39,15 @@ import {
   koottaymaAllParishListQuery,
   koottaymaAllKoottaymaListQuery,
   koottaymaPageActiveEnityCountQuery,
-  parishPageActiveKoottaymaTableQuery,
-  parishPageActiveFamilyTableQuery,
-  parishPageActivePersonTableQuery,
+  koottaymaPageActiveFamilyTableQuery,
+  koottaymaPageActivePersonTableQuery,
 } from "@/externalized-data/graphqlQueries";
 import {
-  createParishMutation,
-  deactivateParishMutation,
+  createKoottaymaMutation,
+  deactivateKoottaymaMutation,
 } from "@/externalized-data/graphqlMutations";
 import {
   koottaymaPageTableTabTitle,
-  koottaymaTableHeaders,
   familyTableHeaders,
   personTableHeaders,
 } from "@/externalized-data/tableData";
@@ -149,7 +145,7 @@ const loadKoottaymasByParish = (query, setOptions) => {
   );
 };
 
-// Entity Count in Parish Page
+// Entity Count in Koottayma Page
 const activeEntityByKoottaymaCountEnabled = ref(false);
 
 const ACTIVE_ENTITY_BY_KOOTTAYMA_COUNT_QUERY = gql`
@@ -183,25 +179,41 @@ watch(koottayma, () => {
   activeEntityByKoottaymaCountEnabled.value = true;
 });
 
-const createParishForm = reactive({
-  parishName: "",
-  address: {
-    buildingName: "",
-    streetId: "",
-    cityId: "",
-    districtId: "",
-    stateId: "",
-    pincodeId: "",
-  },
-  phone: "",
-  foraneId: "",
+const createKoottaymaForm = reactive({
+  koottaymaName: "",
+  parishId: "",
 });
 
 // Form Forane Search Box
 const formForane = ref();
 
-watch(formForane, (value) => {
-  createParishForm.foraneId = value.id;
+// Form Parish Search Box
+const formParish = ref();
+
+const {
+  result: activeFormParishList,
+  load: activeFormParishListLoad,
+  refetch: activeFormParishListRefetch,
+} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
+  foraneId: formForane.value.id,
+}));
+const loadFormParishesByForane = (query, setOptions) => {
+  setOptions(
+    activeFormParishList.value?.getAllParishesByForane?.map((entity) => {
+      return {
+        id: entity.parishId,
+        label: entity.parishName,
+      };
+    }) ?? []
+  );
+};
+
+watch(formForane, () => {
+  activeFormParishListLoad();
+});
+
+watch(formParish, (value) => {
+  createKoottaymaForm.parishId = value.id;
 });
 
 // Code for checking whether object has empty values
@@ -222,37 +234,30 @@ function hasEmptyValues(obj, arrKey) {
   return false;
 }
 
-const changeInAddressFormData = (eventData) => {
-  console.log(eventData);
-  createParishForm.address = eventData;
-};
-
-const addressFormComponent = ref(null);
-
 // Submit Create Parish Form
-const CREATE_PARISH_MUTATION = gql`
-  ${createParishMutation}
+const CREATE_KOOTTAYMA_MUTATION = gql`
+  ${createKoottaymaMutation}
 `;
 
 const {
-  mutate: createParish,
-  loading: createParishLoading,
-  onDone: createParishDone,
-} = useMutation(CREATE_PARISH_MUTATION);
+  mutate: createKoottayma,
+  loading: createKoottaymaLoading,
+  onDone: createKoottaymaDone,
+} = useMutation(CREATE_KOOTTAYMA_MUTATION);
 
-const submitCreateParishForm = () => {
-  if (hasEmptyValues(createParishForm, ["buildingName", "phone"])) {
-    console.log("Empty Values: " + createParishForm);
+const submitCreateKoottaymaForm = () => {
+  if (hasEmptyValues(createKoottaymaForm, ["buildingName", "phone"])) {
+    console.log("Empty Values: " + createKoottaymaForm);
   } else {
-    console.log("Complete Values: " + createParishForm);
-    createParish({ parish: createParishForm });
+    console.log("Complete Values: " + createKoottaymaForm);
+    createKoottayma({ koottayma: createKoottaymaForm });
   }
 };
 
-watch(createParishLoading, (value) => {
-  infoNotificationEnabled.value = createParishLoading.value;
+watch(createKoottaymaLoading, (value) => {
+  infoNotificationEnabled.value = createKoottaymaLoading.value;
   if (value === true) {
-    infoNotificationHeading.value = "Creating Parish.";
+    infoNotificationHeading.value = "Creating Koottayma.";
     infoNotificationContent.value = "Please Wait...";
   } else {
     infoNotificationHeading.value = "";
@@ -260,17 +265,15 @@ watch(createParishLoading, (value) => {
   }
 });
 
-createParishDone(() => {
+createKoottaymaDone(() => {
   console.log("onDone called");
   successNotificationEnabled.value = true;
-  successNotificationHeading.value = "Created Parish.";
+  successNotificationHeading.value = "Created Koottayma.";
   successNotificationContent.value = "";
 
-  createParishForm.parishName = "";
-  createParishForm.phone = "";
-  createParishForm.address.buildingName = "";
+  createKoottaymaForm.koottaymaName = "";
   formForane.value = "";
-  addressFormComponent.value.clearAddressFields();
+  formParish.value = "";
 
   setTimeout(() => {
     successNotificationEnabled.value = false;
@@ -280,29 +283,29 @@ createParishDone(() => {
 });
 
 // Remove Parish
-const DEACTIVATE_PARISH_MUTATION = gql`
-  ${deactivateParishMutation}
+const DEACTIVATE_KOOTTAYMA_MUTATION = gql`
+  ${deactivateKoottaymaMutation}
 `;
 
 const {
-  mutate: deactivateParish,
-  loading: deactivateParishLoading,
-  onDone: deactivateParishDone,
-  onError: deactivateParishError,
-} = useMutation(DEACTIVATE_PARISH_MUTATION);
+  mutate: deactivateKoottayma,
+  loading: deactivateKoottaymaLoading,
+  onDone: deactivateKoottaymaDone,
+  onError: deactivateKoottaymaError,
+} = useMutation(DEACTIVATE_KOOTTAYMA_MUTATION);
 
-const deactivateParishButtonMethod = () => {
-  if (parish.value.id != "") {
-    deactivateParish({ parishId: parish.value.id });
+const deactivateKoottaymaButtonMethod = () => {
+  if (koottayma.value.id != "") {
+    deactivateKoottayma({ koottaymaId: koottayma.value.id });
   } else {
-    console.log("Parish ID is empty");
+    console.log("Koottayma ID is empty");
   }
 };
 
-watch(deactivateParishLoading, (value) => {
-  infoNotificationEnabled.value = deactivateParishLoading.value;
+watch(deactivateKoottaymaLoading, (value) => {
+  infoNotificationEnabled.value = deactivateKoottaymaLoading.value;
   if (value === true) {
-    infoNotificationHeading.value = "Removing Parish.";
+    infoNotificationHeading.value = "Removing Koottayma.";
     infoNotificationContent.value = "Please Wait...";
   } else {
     infoNotificationHeading.value = "";
@@ -310,12 +313,12 @@ watch(deactivateParishLoading, (value) => {
   }
 });
 
-deactivateParishDone(() => location.reload());
+deactivateKoottaymaDone(() => location.reload());
 
-deactivateParishError(() => {
-  console.log("Some Error occured while removing parish");
+deactivateKoottaymaError(() => {
+  console.log("Some Error occured while removing Koottayma");
   dangerNotificationEnabled.value = true;
-  dangerNotificationHeading.value = "Error Removing Parish.";
+  dangerNotificationHeading.value = "Error Removing Koottayma.";
   dangerNotificationContent.value = "Try Again";
 });
 
@@ -331,49 +334,34 @@ onMounted(() => {
 });
 // =================
 
-// Koottayma Table Data
-const ACTIVE_KOOTTAYMA_QUERY = gql`
-  ${parishPageActiveKoottaymaTableQuery}
-`;
-const {
-  result: activeKoottaymaData,
-  load: activeKoottaymaDataLoad,
-  refetch: activeKoottaymaDataRefetch,
-} = useLazyQuery(ACTIVE_KOOTTAYMA_QUERY, () => ({
-  parishId: parish.value.id,
-}));
-const getActiveKoottaymaRows = computed(() => {
-  return activeKoottaymaData.value?.getAllKoottaymasByParish ?? [];
-});
-
 // Family Table Data
 const ACTIVE_FAMILY_QUERY = gql`
-  ${parishPageActiveFamilyTableQuery}
+  ${koottaymaPageActiveFamilyTableQuery}
 `;
 const {
   result: activeFamilyData,
   load: activeFamilyDataLoad,
   refetch: activeFamilyDataRefetch,
 } = useLazyQuery(ACTIVE_FAMILY_QUERY, () => ({
-  parishId: parish.value.id,
+  koottaymaId: koottayma.value.id,
 }));
 const getActiveFamilyRows = computed(() => {
-  return activeFamilyData.value?.getAllFamiliesByParish ?? [];
+  return activeFamilyData.value?.getAllFamiliesByKoottayma ?? [];
 });
 
 // Person Table Data
 const ACTIVE_PERSON_QUERY = gql`
-  ${parishPageActivePersonTableQuery}
+  ${koottaymaPageActivePersonTableQuery}
 `;
 const {
   result: activePersonData,
   load: activePersonDataLoad,
   refetch: activePersonDataRefetch,
 } = useLazyQuery(ACTIVE_PERSON_QUERY, () => ({
-  parishId: parish.value.id,
+  koottaymaId: koottayma.value.id,
 }));
 const getActivePersonRows = computed(() => {
-  return activePersonData.value?.getAllPersonsByParish ?? [];
+  return activePersonData.value?.getAllPersonsByKoottayma ?? [];
 });
 </script>
 
@@ -419,24 +407,19 @@ const getActivePersonRows = computed(() => {
                 <DisclosureButton
                   class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
                 >
-                  <span>Create New Parish</span>
+                  <span>Create New Koottayma</span>
                   <ChevronUpIcon
                     :class="open ? 'rotate-180 transform' : ''"
                     class="disclosure-heading h-5 w-5 text-purple-500"
                   />
                 </DisclosureButton>
                 <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
-                  <FormField label="Parish Name">
+                  <FormField label="Koottayma Name">
                     <FormControl
-                      v-model="createParishForm.parishName"
+                      v-model="createKoottaymaForm.koottaymaName"
                       type="text"
-                      :icon="mdiChurch"
-                      placeholder="St. Peter's Church"
-                    />
-                  </FormField>
-                  <FormField label="Building">
-                    <FormControl
-                      v-model="createParishForm.address.buildingName"
+                      :icon="mdiHandsPray"
+                      placeholder="St. George Koottayma"
                     />
                   </FormField>
                   <FormField label="Forane">
@@ -448,22 +431,21 @@ const getActivePersonRows = computed(() => {
                       bg-color="#1e293b"
                     />
                   </FormField>
-                  <FormField label="Phone">
-                    <FormControl
-                      v-model="createParishForm.phone"
-                      type="tel"
-                      placeholder="04792662745"
+                  <FormField label="Parish">
+                    <SearchBox
+                      v-model="formParish"
+                      :load-options="loadFormParishesByForane"
+                      :create-option="false"
+                      :reload-method="activeFormParishListRefetch"
+                      bg-color="#0f172a"
                     />
                   </FormField>
-                  <AddressForm
-                    ref="addressFormComponent"
-                    @address-form-change="changeInAddressFormData"
-                  />
+
                   <BaseButton
                     class="baseButtonStyle"
                     color="info"
                     label="Submit"
-                    @click="submitCreateParishForm"
+                    @click="submitCreateKoottaymaForm"
                   />
                 </DisclosurePanel>
               </Disclosure>
@@ -472,7 +454,7 @@ const getActivePersonRows = computed(() => {
                 heading="Remove Koottayma"
                 content="Are you sure you want to remove this Koottayma"
                 button-label="Yes, Remove this Koottayma"
-                :button-method="deactivateParishButtonMethod"
+                :button-method="deactivateKoottaymaButtonMethod"
               />
             </div>
           </div>

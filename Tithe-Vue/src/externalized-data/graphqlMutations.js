@@ -50,6 +50,32 @@ export const activateParishMutation = `mutation activateParish ($parishId: ID!){
 }
 `;
 
+// Koottayma Page
+
+export const createKoottaymaMutation = `mutation createKoottayma ($koottayma: KoottaymaMutationInput!){
+    createOneKoottayma (koottayma: $koottayma){
+        koottaymaId
+        koottaymaName
+    }
+}
+`;
+
+export const deactivateKoottaymaMutation = `mutation removeKoottayma ($koottaymaId: ID!){
+    deactivateOneKoottayma (koottaymaId: $koottaymaId){
+        koottaymaId
+        koottaymaName
+    }
+}
+`;
+
+export const activateKoottaymaMutation = `mutation activateKoottayma ($koottaymaId: ID!){
+    activateOneKoottayma (koottaymaId: $koottaymaId){
+        koottaymaId
+        koottaymaName
+    }
+}
+`;
+
 // Address Mutations
 
 export const createStreetMutation = `mutation createNewStreet ($streetName: String!){
