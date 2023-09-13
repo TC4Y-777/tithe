@@ -1,9 +1,7 @@
 /**
- *
+ * 
  */
 package com.tithe.entity;
-
-import java.sql.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,25 +22,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "person_moved_table")
-public class PersonMoved {
-
+@Table(name = "parish_moved_table")
+public class ParishMoved {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long personMovedId;
-
+	private Long parishMovedId;
+	
 	@OneToOne
-	@JoinColumn(name = "person_id")
-	private PersonEntity person;
-
+	@JoinColumn(name = "parish_id")
+	private ParishEntity parish;
+	
 	@OneToOne
-	@JoinColumn(name = "old_family_id")
-	private FamilyEntity oldFamily;
-
+	@JoinColumn(name = "old_forane_id")
+	private ForaneEntity oldForane;
+	
 	@OneToOne
-	@JoinColumn(name = "new_family_id")
-	private FamilyEntity newFamily;
-
-	private Date timeStamp;
+	@JoinColumn(name = "new_forane_id")
+	private ForaneEntity newForane;
 
 }

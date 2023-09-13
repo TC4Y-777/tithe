@@ -224,22 +224,7 @@ const styleStore = useStyleStore();
         </template>
       </NotificationBar>
 
-      <NotificationBar
-        color="warning"
-        :icon="mdiAlert"
-        :outline="notificationsOutline"
-      >
-        <b>Warning state</b>. NotificationBar
-        <template #right>
-          <BaseButton
-            label="Button"
-            :color="notificationsOutline ? 'warning' : 'white'"
-            :outline="notificationsOutline"
-            rounded-full
-            small
-          />
-        </template>
-      </NotificationBar>
+      
 
       <NotificationBar
         color="danger"

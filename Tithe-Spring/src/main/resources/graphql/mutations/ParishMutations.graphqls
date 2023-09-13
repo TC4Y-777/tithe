@@ -1,3 +1,8 @@
 extend type Mutation{
 	createOneParish(parish: ParishMutationInput): Parish
+	activateOneParish(parishId: ID!): Parish
+	deactivateOneParish(parishId: ID!): Parish
+	
+	moveOneParish(parishId: ID!, newForaneId: ID!): Parish
+	moveAllParishes(oldForaneId: ID!, newForaneId: ID!): [Parish]
 }

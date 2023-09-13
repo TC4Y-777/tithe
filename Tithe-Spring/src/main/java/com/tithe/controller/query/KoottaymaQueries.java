@@ -38,10 +38,30 @@ public class KoottaymaQueries {
 	public List<KoottaymaEntity> getAllKoottaymas() {
 		return koottaymaQueryService.getAllKoottaymas();
 	}
+	
+	@QueryMapping(name = "getAllKoottaymasByForane")
+	public List<KoottaymaEntity> getAllKoottaymasByForane(@Argument(name = "foraneId") Long foraneId) {
+		return koottaymaQueryService.getAllKoottaymasByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getAllKoottaymasByParish")
+	public List<KoottaymaEntity> getAllKoottaymasByParish(@Argument(name = "parishId") Long parishId) {
+		return koottaymaQueryService.getAllKoottaymasByParish(parishId);
+	}
 
 	@QueryMapping(name = "getKoottaymaCount")
 	public Long getKoottaymaCount() {
 		return koottaymaQueryService.getKoottaymaCount();
+	}
+	
+	@QueryMapping(name = "getKoottaymaCountByForane")
+	public Long getKoottaymaCountByForane(@Argument(name = "foraneId") Long foraneId) {
+		return koottaymaQueryService.getKoottaymaCountByForane(foraneId);
+	}
+	
+	@QueryMapping(name = "getKoottaymaCountByParish")
+	public Long getKoottaymaCountByParish(@Argument(name = "parishId") Long parishId) {
+		return koottaymaQueryService.getKoottaymaCountByParish(parishId);
 	}
 
 }

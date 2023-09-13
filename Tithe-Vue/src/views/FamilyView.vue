@@ -6,12 +6,10 @@ import { useLazyQuery, useMutation, useQuery } from "@vue/apollo-composable";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { ChevronUpIcon } from "@heroicons/vue/20/solid";
 import {
-  mdiChurch,
   mdiReload,
   mdiFinance,
   mdiEye,
   mdiChartTimelineVariant,
-  mdiHandsPray,
   mdiAccountMultiple,
   mdiAccount,
   mdiCashMultiple,
@@ -37,21 +35,19 @@ import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
-  parishAllForaneListQuery,
-  parishAllParishListQuery,
-  parishPageActiveEnityCountQuery,
-  parishPageActiveKoottaymaTableQuery,
-  parishPageActiveFamilyTableQuery,
-  parishPageActivePersonTableQuery,
+  familyAllForaneListQuery,
+  familyAllParishListQuery,
+  familyAllFamilyListQuery,
+  familyPageActiveEnityCountQuery,
+  familyAllKoottaymaListQuery,
+  familyPageActivePersonTableQuery,
 } from "@/externalized-data/graphqlQueries";
 import {
-  createParishMutation,
-  deactivateParishMutation,
+  createFamilyMutation,
+  deactivateFamilyMutation,
 } from "@/externalized-data/graphqlMutations";
 import {
-  parishPageTableTabTitle,
-  koottaymaTableHeaders,
-  familyTableHeaders,
+  familyPageTableTabTitle,
   personTableHeaders,
 } from "@/externalized-data/tableData";
 
@@ -77,13 +73,14 @@ const dangerNotificationEnabled = ref(false);
 const dangerNotificationHeading = ref("");
 const dangerNotificationContent = ref("");
 
-const tableTabTitle = parishPageTableTabTitle;
+const tableTabTitle = familyPageTableTabTitle;
 
 const forane = ref();
 const parish = ref();
+const family = ref();
 
 const ACTIVE_FORANE_LIST_QUERY = gql`
-  ${parishAllForaneListQuery}
+  ${familyAllForaneListQuery}
 `;
 
 const {
@@ -104,7 +101,7 @@ const loadForanes = (query, setOptions) => {
 };
 
 const ACTIVE_PARISH_BY_FORANE_LIST_QUERY = gql`
-  ${parishAllParishListQuery}
+  ${familyAllParishListQuery}
 `;
 
 const {
@@ -125,29 +122,45 @@ const loadParishesByForane = (query, setOptions) => {
   );
 };
 
-// Entity Count in Parish Page
-const activeEntityByParishCountEnabled = ref(false);
-
-const ACTIVE_ENTITY_BY_PARISH_COUNT_QUERY = gql`
-  ${parishPageActiveEnityCountQuery}
+const ACTIVE_FAMILY_BY_PARISH_LIST_QUERY = gql`
+  ${familyAllFamilyListQuery}
 `;
 
 const {
-  result: activeEntityByParishCount,
-  refetch: activeEntityByParishCountRefetch,
+  result: activeFamilyList,
+  load: activeFamilyListLoad,
+  refetch: activeFamilyListRefetch,
+} = useLazyQuery(ACTIVE_FAMILY_BY_PARISH_LIST_QUERY, () => ({
+  parishId: parish.value.id,
+}));
+const loadFamiliesByParish = (query, setOptions) => {
+  setOptions(
+    activeFamilyList.value?.getAllFamiliesByParish?.map((entity) => {
+      return {
+        id: entity.familyId,
+        label: entity.familyName,
+      };
+    }) ?? []
+  );
+};
+
+// Entity Count in Family Page
+const activeEntityByFamilyCountEnabled = ref(false);
+
+const ACTIVE_ENTITY_BY_FAMILY_COUNT_QUERY = gql`
+  ${familyPageActiveEnityCountQuery}
+`;
+
+const {
+  result: activeEntityByFamilyCount,
+  refetch: activeEntityByFamilyCountRefetch,
 } = useQuery(
-  ACTIVE_ENTITY_BY_PARISH_COUNT_QUERY,
-  () => ({ id: parish.value.id }),
-  () => ({ enabled: activeEntityByParishCountEnabled })
-);
-const activeKoottaymaCount = computed(
-  () => activeEntityByParishCount.value?.getKoottaymaCountByParish ?? 0
-);
-const activeFamilyCount = computed(
-  () => activeEntityByParishCount.value?.getFamilyCountByParish ?? 0
+  ACTIVE_ENTITY_BY_FAMILY_COUNT_QUERY,
+  () => ({ id: family.value.id }),
+  () => ({ enabled: activeEntityByFamilyCountEnabled })
 );
 const activePersonCount = computed(
-  () => activeEntityByParishCount.value?.getPersonCountByParish ?? 0
+  () => activeEntityByFamilyCount.value?.getPersonCountByFamily ?? 0
 );
 
 watch(forane, () => {
@@ -155,11 +168,15 @@ watch(forane, () => {
 });
 
 watch(parish, () => {
-  activeEntityByParishCountEnabled.value = true;
+  activeFamilyListLoad();
 });
 
-const createParishForm = reactive({
-  parishName: "",
+watch(family, () => {
+  activeEntityByFamilyCountEnabled.value = true;
+});
+
+const createFamilyForm = reactive({
+  familyName: "",
   address: {
     buildingName: "",
     streetId: "",
@@ -169,14 +186,68 @@ const createParishForm = reactive({
     pincodeId: "",
   },
   phone: "",
-  foraneId: "",
+  koottaymaId: "",
 });
 
 // Form Forane Search Box
 const formForane = ref();
 
-watch(formForane, (value) => {
-  createParishForm.foraneId = value.id;
+// Form Parish Search Box
+const formParish = ref();
+
+const {
+  result: activeFormParishList,
+  load: activeFormParishListLoad,
+  refetch: activeFormParishListRefetch,
+} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
+  foraneId: formForane.value.id,
+}));
+const loadFormParishesByForane = (query, setOptions) => {
+  setOptions(
+    activeFormParishList.value?.getAllParishesByForane?.map((entity) => {
+      return {
+        id: entity.parishId,
+        label: entity.parishName,
+      };
+    }) ?? []
+  );
+};
+
+// Form Koottayma Search Box
+const formKoottayma = ref();
+
+const ACTIVE_KOOTTAYMA_BY_PARISH_LIST_QUERY = gql`
+  ${familyAllKoottaymaListQuery}
+`;
+
+const {
+  result: activeFormKoottaymaList,
+  load: activeFormKoottaymaListLoad,
+  refetch: activeFormKoottaymaListRefetch,
+} = useLazyQuery(ACTIVE_KOOTTAYMA_BY_PARISH_LIST_QUERY, () => ({
+  parishId: formParish.value.id,
+}));
+const loadFormKoottaymasByParish = (query, setOptions) => {
+  setOptions(
+    activeFormKoottaymaList.value?.getAllKoottaymasByParish?.map((entity) => {
+      return {
+        id: entity.koottaymaId,
+        label: entity.koottaymaName,
+      };
+    }) ?? []
+  );
+};
+
+watch(formForane, () => {
+  activeFormParishListLoad();
+});
+
+watch(formParish, () => {
+  activeFormKoottaymaListLoad();
+});
+
+watch(formKoottayma, (value) => {
+  createFamilyForm.koottaymaId = value.id;
 });
 
 // Code for checking whether object has empty values
@@ -199,35 +270,35 @@ function hasEmptyValues(obj, arrKey) {
 
 const changeInAddressFormData = (eventData) => {
   console.log(eventData);
-  createParishForm.address = eventData;
+  createFamilyForm.address = eventData;
 };
 
 const addressFormComponent = ref(null);
 
-// Submit Create Parish Form
-const CREATE_PARISH_MUTATION = gql`
-  ${createParishMutation}
+// Submit Create Family Form
+const CREATE_FAMILY_MUTATION = gql`
+  ${createFamilyMutation}
 `;
 
 const {
-  mutate: createParish,
-  loading: createParishLoading,
-  onDone: createParishDone,
-} = useMutation(CREATE_PARISH_MUTATION);
+  mutate: createFamily,
+  loading: createFamilyLoading,
+  onDone: createFamilyDone,
+} = useMutation(CREATE_FAMILY_MUTATION);
 
-const submitCreateParishForm = () => {
-  if (hasEmptyValues(createParishForm, ["buildingName", "phone"])) {
-    console.log("Empty Values: " + createParishForm);
+const submitCreateFamilyForm = () => {
+  if (hasEmptyValues(createFamilyForm, ["buildingName", "phone"])) {
+    console.log("Empty Values: " + createFamilyForm);
   } else {
-    console.log("Complete Values: " + createParishForm);
-    createParish({ parish: createParishForm });
+    console.log("Complete Values: " + createFamilyForm);
+    createFamily({ family: createFamilyForm });
   }
 };
 
-watch(createParishLoading, (value) => {
-  infoNotificationEnabled.value = createParishLoading.value;
+watch(createFamilyLoading, (value) => {
+  infoNotificationEnabled.value = createFamilyLoading.value;
   if (value === true) {
-    infoNotificationHeading.value = "Creating Parish.";
+    infoNotificationHeading.value = "Creating Family.";
     infoNotificationContent.value = "Please Wait...";
   } else {
     infoNotificationHeading.value = "";
@@ -235,16 +306,18 @@ watch(createParishLoading, (value) => {
   }
 });
 
-createParishDone(() => {
+createFamilyDone(() => {
   console.log("onDone called");
   successNotificationEnabled.value = true;
-  successNotificationHeading.value = "Created Parish.";
+  successNotificationHeading.value = "Created Family.";
   successNotificationContent.value = "";
 
-  createParishForm.parishName = "";
-  createParishForm.phone = "";
-  createParishForm.address.buildingName = "";
+  createFamilyForm.koottaymaName = "";
+  createFamilyForm.phone = "";
+  createFamilyForm.address.buildingName = "";
   formForane.value = "";
+  formParish.value = "";
+  formKoottayma.value = "";
   addressFormComponent.value.clearAddressFields();
 
   setTimeout(() => {
@@ -254,30 +327,30 @@ createParishDone(() => {
   }, 3000);
 });
 
-// Remove Parish
-const DEACTIVATE_PARISH_MUTATION = gql`
-  ${deactivateParishMutation}
+// Remove Family
+const DEACTIVATE_FAMILY_MUTATION = gql`
+  ${deactivateFamilyMutation}
 `;
 
 const {
-  mutate: deactivateParish,
-  loading: deactivateParishLoading,
-  onDone: deactivateParishDone,
-  onError: deactivateParishError,
-} = useMutation(DEACTIVATE_PARISH_MUTATION);
+  mutate: deactivateFamily,
+  loading: deactivateFamilyLoading,
+  onDone: deactivateFamilyDone,
+  onError: deactivateFamilyError,
+} = useMutation(DEACTIVATE_FAMILY_MUTATION);
 
-const deactivateParishButtonMethod = () => {
+const deactivateFamilyButtonMethod = () => {
   if (parish.value.id != "") {
-    deactivateParish({ parishId: parish.value.id });
+    deactivateFamily({ familyId: family.value.id });
   } else {
-    console.log("Parish ID is empty");
+    console.log("Family ID is empty");
   }
 };
 
-watch(deactivateParishLoading, (value) => {
-  infoNotificationEnabled.value = deactivateParishLoading.value;
+watch(deactivateFamilyLoading, (value) => {
+  infoNotificationEnabled.value = deactivateFamilyLoading.value;
   if (value === true) {
-    infoNotificationHeading.value = "Removing Parish.";
+    infoNotificationHeading.value = "Removing Family.";
     infoNotificationContent.value = "Please Wait...";
   } else {
     infoNotificationHeading.value = "";
@@ -285,27 +358,13 @@ watch(deactivateParishLoading, (value) => {
   }
 });
 
-deactivateParishDone(() => location.reload());
+deactivateFamilyDone(() => location.reload());
 
-deactivateParishError(() => {
-  console.log("Some Error occured while removing parish");
+deactivateFamilyError(() => {
+  console.log("Some Error occured while removing family");
   dangerNotificationEnabled.value = true;
-  dangerNotificationHeading.value = "Error Removing Parish.";
+  dangerNotificationHeading.value = "Error Removing Family.";
   dangerNotificationContent.value = "Try Again";
-});
-
-// Moving Parish from one forane to another
-const newForane = ref();
-
-const moveParishForm = reactive({
-  parishId: "",
-  foraneId: "",
-});
-
-watch(newForane, (value) => {
-  if (value.id === forane.value.id) {
-    newForane.value = "";
-  }
 });
 
 // =================
@@ -320,56 +379,26 @@ onMounted(() => {
 });
 // =================
 
-// Koottayma Table Data
-const ACTIVE_KOOTTAYMA_QUERY = gql`
-  ${parishPageActiveKoottaymaTableQuery}
-`;
-const {
-  result: activeKoottaymaData,
-  load: activeKoottaymaDataLoad,
-  refetch: activeKoottaymaDataRefetch,
-} = useLazyQuery(ACTIVE_KOOTTAYMA_QUERY, () => ({
-  parishId: parish.value.id,
-}));
-const getActiveKoottaymaRows = computed(() => {
-  return activeKoottaymaData.value?.getAllKoottaymasByParish ?? [];
-});
-
-// Family Table Data
-const ACTIVE_FAMILY_QUERY = gql`
-  ${parishPageActiveFamilyTableQuery}
-`;
-const {
-  result: activeFamilyData,
-  load: activeFamilyDataLoad,
-  refetch: activeFamilyDataRefetch,
-} = useLazyQuery(ACTIVE_FAMILY_QUERY, () => ({
-  parishId: parish.value.id,
-}));
-const getActiveFamilyRows = computed(() => {
-  return activeFamilyData.value?.getAllFamiliesByParish ?? [];
-});
-
 // Person Table Data
 const ACTIVE_PERSON_QUERY = gql`
-  ${parishPageActivePersonTableQuery}
+  ${familyPageActivePersonTableQuery}
 `;
 const {
   result: activePersonData,
   load: activePersonDataLoad,
   refetch: activePersonDataRefetch,
 } = useLazyQuery(ACTIVE_PERSON_QUERY, () => ({
-  parishId: parish.value.id,
+  familyId: family.value.id,
 }));
 const getActivePersonRows = computed(() => {
-  return activePersonData.value?.getAllPersonsByParish ?? [];
+  return activePersonData.value?.getAllPersonsByFamily ?? [];
 });
 </script>
 
 <template>
   <LayoutAuthenticated>
     <!-- Show only if super admin is logged in -->
-    <SectionTitle :first="true" :last="true"> Parish </SectionTitle>
+    <SectionTitle :first="true" :last="true"> Family </SectionTitle>
     <SectionMain>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="flex-col justify-between">
@@ -391,6 +420,15 @@ const getActivePersonRows = computed(() => {
               bg-color="#0f172a"
             />
           </FormField>
+          <FormField v-if="parish" label="Select Family">
+            <SearchBox
+              v-model="family"
+              :load-options="loadFamiliesByParish"
+              :create-option="false"
+              :reload-method="activeFamilyListRefetch"
+              bg-color="#0f172a"
+            />
+          </FormField>
         </div>
         <div class="flex flex justify-between">
           <div class="w-full pt-7">
@@ -399,24 +437,24 @@ const getActivePersonRows = computed(() => {
                 <DisclosureButton
                   class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
                 >
-                  <span>Create New Parish</span>
+                  <span>Create New Family</span>
                   <ChevronUpIcon
                     :class="open ? 'rotate-180 transform' : ''"
                     class="disclosure-heading h-5 w-5 text-purple-500"
                   />
                 </DisclosureButton>
                 <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
-                  <FormField label="Parish Name">
+                  <FormField label="Family Name">
                     <FormControl
-                      v-model="createParishForm.parishName"
+                      v-model="createFamilyForm.familyName"
                       type="text"
-                      :icon="mdiChurch"
-                      placeholder="St. Peter's Church"
+                      :icon="mdiAccountMultiple"
+                      placeholder="Shalom House"
                     />
                   </FormField>
                   <FormField label="Building">
                     <FormControl
-                      v-model="createParishForm.address.buildingName"
+                      v-model="createFamilyForm.address.buildingName"
                     />
                   </FormField>
                   <FormField label="Forane">
@@ -428,9 +466,27 @@ const getActivePersonRows = computed(() => {
                       bg-color="#1e293b"
                     />
                   </FormField>
+                  <FormField label="Parish">
+                    <SearchBox
+                      v-model="formParish"
+                      :load-options="loadFormParishesByForane"
+                      :create-option="false"
+                      :reload-method="activeFormParishListRefetch"
+                      bg-color="#1e293b"
+                    />
+                  </FormField>
+                  <FormField label="Koottayma">
+                    <SearchBox
+                      v-model="formKoottayma"
+                      :load-options="loadFormKoottaymasByParish"
+                      :create-option="false"
+                      :reload-method="activeFormKoottaymaListRefetch"
+                      bg-color="#1e293b"
+                    />
+                  </FormField>
                   <FormField label="Phone">
                     <FormControl
-                      v-model="createParishForm.phone"
+                      v-model="createFamilyForm.phone"
                       type="tel"
                       placeholder="04792662745"
                     />
@@ -440,47 +496,19 @@ const getActivePersonRows = computed(() => {
                     @address-form-change="changeInAddressFormData"
                   />
                   <BaseButton
-                    class="baseButtonStyle font-bold"
-                    color="success"
-                    label="Submit"
-                    @click="submitCreateParishForm"
-                  />
-                </DisclosurePanel>
-              </Disclosure>
-              <Disclosure v-if="parish" v-slot="{ open }" as="div" class="mt-2">
-                <DisclosureButton
-                  class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
-                >
-                  <span>Move Parish</span>
-                  <ChevronUpIcon
-                    :class="open ? 'rotate-180 transform' : ''"
-                    class="disclosure-heading h-5 w-5 text-purple-500"
-                  />
-                </DisclosureButton>
-                <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
-                  <FormField label="New Forane">
-                    <SearchBox
-                      v-model="newForane"
-                      :load-options="loadForanes"
-                      :create-option="false"
-                      :reload-method="activeForaneListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <BaseButton
-                    class="baseButtonStyle font-bold"
+                    class="baseButtonStyle"
                     color="info"
                     label="Submit"
-                    @click="submitCreateParishForm"
+                    @click="submitCreateFamilyForm"
                   />
                 </DisclosurePanel>
               </Disclosure>
               <RemoveEntityDisclosure
-                :entity="parish"
-                heading="Remove Parish"
-                content="Are you sure you want to remove this parish"
-                button-label="Yes, Remove this Parish"
-                :button-method="deactivateParishButtonMethod"
+                :entity="family"
+                heading="Remove Family"
+                content="Are you sure you want to remove this family"
+                button-label="Yes, Remove this Family"
+                :button-method="deactivateFamilyButtonMethod"
               />
             </div>
           </div>
@@ -502,31 +530,19 @@ const getActivePersonRows = computed(() => {
       />
     </SectionMain>
 
-    <SectionMain v-if="parish">
+    <SectionMain v-if="family">
       <SectionTitleLineWithButton
         :icon="mdiChartTimelineVariant"
-        :title="parish.label"
+        :title="family.label"
         main
       >
         <BaseButton
           :icon="mdiReload"
           color="whiteDark"
-          @click="activeEntityByParishCountRefetch"
+          @click="activeEntityByFamilyCountRefetch"
         />
       </SectionTitleLineWithButton>
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
-        <CardBoxWidget
-          color="text-red-500"
-          :icon="mdiHandsPray"
-          :number="activeKoottaymaCount"
-          label="Koottaymas"
-        />
-        <CardBoxWidget
-          color="text-yellow-500"
-          :icon="mdiAccountMultiple"
-          :number="activeFamilyCount"
-          label="Families"
-        />
         <CardBoxWidget
           color="text-orange-500"
           :icon="mdiAccount"
@@ -561,34 +577,6 @@ const getActivePersonRows = computed(() => {
       <TableTabs :tabs="tableTabTitle">
         <template #default="{ index }">
           <div v-if="index === 0">
-            <CardBox
-              has-table
-              @vnode-mounted="
-                activeKoottaymaDataLoad() || activeKoottaymaDataRefetch()
-              "
-            >
-              <TableSampleClients
-                id-name="koottaymaId"
-                :table-headers="koottaymaTableHeaders"
-                :row-data="getActiveKoottaymaRows"
-              />
-            </CardBox>
-          </div>
-          <div v-if="index === 1">
-            <CardBox
-              has-table
-              @vnode-mounted="
-                activeFamilyDataLoad() || activeFamilyDataRefetch()
-              "
-            >
-              <TableSampleClients
-                id-name="familyId"
-                :table-headers="familyTableHeaders"
-                :row-data="getActiveFamilyRows"
-              />
-            </CardBox>
-          </div>
-          <div v-if="index === 2">
             <CardBox
               has-table
               @vnode-mounted="

@@ -65,7 +65,7 @@ public class PersonMutationService {
 
 		List<TitheMutationInput> titheInputs = personMutationInput.getTithes();
 		List<TitheEntity> tithes = new ArrayList<>();
-		if (titheInputs.size()!=0) {
+		if (titheInputs!=null && titheInputs.size()!=0) {
 			tithes = titheQueryService.buildTitheEntities(person, titheInputs);
 		}
 		person.setTithes(tithes);
@@ -104,6 +104,7 @@ public class PersonMutationService {
 		return null;
 	}
 
+//	TODO If the operation is not successful, should throw an error or something to the frontend
 	public PersonEntity deactivateOnePerson(Long id) {
 		Optional<PersonEntity> person = personRepository.findById(id);
 		if (person.isPresent()) {

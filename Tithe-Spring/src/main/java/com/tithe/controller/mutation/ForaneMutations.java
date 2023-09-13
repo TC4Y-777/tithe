@@ -26,5 +26,15 @@ public class ForaneMutations {
 	public ForaneEntity createOneForane(@Argument(name = "forane") ForaneMutationInput foraneMutationInput) {
 		return foraneMutationService.createOneForane(foraneMutationInput);
 	}
+	
+	@MutationMapping(name = "activateOneForane")
+	public ForaneEntity activateOneForane(@Argument(name = "foraneId") Long foraneId) {
+		return foraneMutationService.activateOneForane(foraneId);
+	}
+	
+	@MutationMapping(name = "deactivateOneForane")
+	public ForaneEntity deactivateOneForane(@Argument(name = "foraneId") Long foraneId) {
+		return foraneMutationService.deactivateOneForane(foraneId);
+	}
 
 }

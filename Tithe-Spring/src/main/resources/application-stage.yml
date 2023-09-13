@@ -4,4 +4,10 @@ spring:
   graphql:
     cors:
       allowed-origins:
-        - http://ip-from-stage-environment
+        - http://13.53.86.195
+        - http://13.53.86.195:4173
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
