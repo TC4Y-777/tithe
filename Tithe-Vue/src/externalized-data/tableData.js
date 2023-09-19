@@ -28,15 +28,15 @@ export const familyPageTableTabTitle = [
 
 export const foraneTableHeaders = [
   { name: "Name", dataKey: "foraneName" },
-  { name: "Building", dataKey: "address.buildingName" },
-  { name: "Street", dataKey: "address.street.streetName" },
+  // { name: "Building", dataKey: "address.buildingName" },
+  { name: "Address", dataKey: "address.street.streetName" },
   { name: "City", dataKey: "address.city.cityName" },
 ];
 
 export const parishTableHeaders = [
   { name: "Name", dataKey: "parishName" },
-  { name: "Building", dataKey: "address.buildingName" },
-  { name: "Street", dataKey: "address.street.streetName" },
+  // { name: "Building", dataKey: "address.buildingName" },
+  { name: "Address", dataKey: "address.street.streetName" },
   { name: "City", dataKey: "address.city.cityName" },
   { name: "Forane", dataKey: "forane.foraneName" },
 ];
@@ -47,8 +47,8 @@ export const koottaymaTableHeaders = [
 
 export const familyTableHeaders = [
   { name: "Name", dataKey: "familyName" },
-  { name: "Building", dataKey: "address.buildingName" },
-  { name: "Street", dataKey: "address.street.streetName" },
+  // { name: "Building", dataKey: "address.buildingName" },
+  { name: "Address", dataKey: "address.street.streetName" },
   { name: "City", dataKey: "address.city.cityName" },
   { name: "Koottayma", dataKey: "koottayma.koottaymaName" },
   { name: "Parish", dataKey: "koottayma.parish.parishName" },

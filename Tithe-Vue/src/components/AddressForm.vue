@@ -391,13 +391,14 @@ defineExpose({
 </script>
 
 <template>
-  <FormField label="Street">
+  <!-- Changed street to address -->
+  <FormField label="Address">
     <SearchBox
       v-model="street"
       :load-options="loadStreets"
       :create-option="createStreetOption"
       :reload-method="false"
-      entity-name="Street"
+      entity-name="Address"
       bg-color="#1e293b"
     />
   </FormField>
