@@ -378,11 +378,12 @@ const getActivePersonRows = computed(() => {
                       placeholder="St. Peter's Church"
                     />
                   </FormField>
-                  <FormField label="Building">
+                  <!-- Remove Building Name -->
+                  <!-- <FormField label="Building">
                     <FormControl
                       v-model="createForaneForm.address.buildingName"
                     />
-                  </FormField>
+                  </FormField> -->
                   <FormField label="Phone">
                     <FormControl
                       v-model="createForaneForm.phone"
