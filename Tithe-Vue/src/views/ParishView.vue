@@ -414,11 +414,12 @@ const getActivePersonRows = computed(() => {
                       placeholder="St. Peter's Church"
                     />
                   </FormField>
-                  <FormField label="Building">
+                  <!-- Remove Building Name -->
+                  <!-- <FormField label="Building">
                     <FormControl
                       v-model="createParishForm.address.buildingName"
                     />
-                  </FormField>
+                  </FormField> -->
                   <FormField label="Forane">
                     <SearchBox
                       v-model="formForane"
