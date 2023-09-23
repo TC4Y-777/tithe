@@ -19,7 +19,7 @@ import {
   mdiTableLarge,
 } from "@mdi/js";
 
-import SearchBox from "@/components/SearchBox.vue";
+import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import FormField from "@/components/FormField.vue";
@@ -91,25 +91,8 @@ const tableTabTitle = foranePageTableTabTitle;
 
 const forane = ref();
 
-const ACTIVE_FORANE_LIST_QUERY = gql`
-  ${foraneAllForaneListQuery}
-`;
-
-const {
-  result: activeForaneList,
-  load: activeForaneListLoad,
-  refetch: activeForaneListRefetch,
-} = useLazyQuery(ACTIVE_FORANE_LIST_QUERY);
-activeForaneListLoad();
-const loadForanes = (query, setOptions) => {
-  setOptions(
-    activeForaneList.value?.getAllForanes?.map((entity) => {
-      return {
-        id: entity.foraneId,
-        label: entity.foraneName,
-      };
-    }) ?? []
-  );
+const changeInForane = (entity) => {
+  forane.value = entity;
 };
 
 // Entity Count in Forane Page
@@ -346,7 +329,7 @@ const getActivePersonRows = computed(() => {
       <SectionTitle :first="true" :last="true"> Forane </SectionTitle>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="flex flex-col justify-between">
-          <FormField label="Select Forane">
+          <!-- <FormField label="Select Forane">
             <SearchBox
               v-model="forane"
               :load-options="loadForanes"
@@ -354,7 +337,9 @@ const getActivePersonRows = computed(() => {
               :reload-method="activeForaneListRefetch"
               bg-color="#0f172a"
             />
-          </FormField>
+          </FormField> -->
+          <!-- New Search Box -->
+          <ForaneSingleSelectBox @change-in-forane="changeInForane" />
         </div>
         <div class="flex flex-col justify-between">
           <div class="w-full pt-7">
@@ -375,6 +360,7 @@ const getActivePersonRows = computed(() => {
                       v-model="createForaneForm.foraneName"
                       type="text"
                       :icon="mdiChurch"
+                      :borderless="true"
                       placeholder="St. Peter's Church"
                     />
                   </FormField>
@@ -387,6 +373,7 @@ const getActivePersonRows = computed(() => {
                   <FormField label="Phone">
                     <FormControl
                       v-model="createForaneForm.phone"
+                      :borderless="true"
                       type="tel"
                       placeholder="04792662745"
                     />
@@ -562,6 +549,8 @@ const getActivePersonRows = computed(() => {
   </LayoutAuthenticated>
 </template>
 
+<!-- <style src="@vueform/multiselect/themes/default.css"></style> -->
+
 <style scoped>
 .theme-color {
   background-color: #0f172a;
@@ -579,4 +568,19 @@ const getActivePersonRows = computed(() => {
 .baseButtonStyle {
   width: 100%;
 }
+/* .multiselect-theme {
+  --ms-bg: #0f172a;
+  --ms-border-color: #0f172a;
+  --ms-ring-width: 1px;
+  --ms-ring-color: #3b82f6;
+
+  --ms-dropdown-bg: #0f172a;
+  --ms-dropdown-border-color: #0f172a;
+  --ms-option-bg-pointed: white;
+  --ms-option-color-pointed: #3b82f6;
+  --ms-option-bg-selected: #3b82f6;
+  --ms-option-color-selected: white;
+  --ms-option-bg-selected-pointed: white;
+  --ms-option-color-selected-pointed: #3b82f6;
+} */
 </style>

@@ -14,6 +14,8 @@ import { useStyleStore } from "@/stores/style.js";
 // import { darkModeKey, styleKey } from "@/config.js";
 import { styleKey } from "@/config.js";
 
+import Multiselect from "@/components/MultiSelectBox/Multiselect.vue";
+
 import "./css/main.css";
 
 /* Init Pinia */
@@ -44,7 +46,7 @@ const app = createApp({
 
 /* Create Vue app */
 // createApp(App).use(router).use(pinia).mount("#app");
-app.use(router).use(pinia).mount("#app");
+app.use(router).use(pinia).component("Multiselect", Multiselect).mount("#app");
 
 /* Init Pinia stores */
 const mainStore = useMainStore(pinia);
