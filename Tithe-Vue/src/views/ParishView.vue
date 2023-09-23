@@ -18,7 +18,8 @@ import {
   mdiTableLarge,
 } from "@mdi/js";
 
-import SearchBox from "@/components/SearchBox.vue";
+import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
+import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import FormField from "@/components/FormField.vue";
@@ -82,47 +83,12 @@ const tableTabTitle = parishPageTableTabTitle;
 const forane = ref();
 const parish = ref();
 
-const ACTIVE_FORANE_LIST_QUERY = gql`
-  ${parishAllForaneListQuery}
-`;
-
-const {
-  result: activeForaneList,
-  load: activeForaneListLoad,
-  refetch: activeForaneListRefetch,
-} = useLazyQuery(ACTIVE_FORANE_LIST_QUERY);
-activeForaneListLoad();
-const loadForanes = (query, setOptions) => {
-  setOptions(
-    activeForaneList.value?.getAllForanes?.map((entity) => {
-      return {
-        id: entity.foraneId,
-        label: entity.foraneName,
-      };
-    }) ?? []
-  );
+const changeInForane = (entity) => {
+  forane.value = entity;
 };
 
-const ACTIVE_PARISH_BY_FORANE_LIST_QUERY = gql`
-  ${parishAllParishListQuery}
-`;
-
-const {
-  result: activeParishList,
-  load: activeParishListLoad,
-  refetch: activeParishListRefetch,
-} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
-  foraneId: forane.value.id,
-}));
-const loadParishesByForane = (query, setOptions) => {
-  setOptions(
-    activeParishList.value?.getAllParishesByForane?.map((entity) => {
-      return {
-        id: entity.parishId,
-        label: entity.parishName,
-      };
-    }) ?? []
-  );
+const changeInParish = (entity) => {
+  parish.value = entity;
 };
 
 // Entity Count in Parish Page
@@ -150,9 +116,9 @@ const activePersonCount = computed(
   () => activeEntityByParishCount.value?.getPersonCountByParish ?? 0
 );
 
-watch(forane, () => {
-  activeParishListLoad();
-});
+// watch(forane, () => {
+//   activeParishListLoad();
+// });
 
 watch(parish, () => {
   activeEntityByParishCountEnabled.value = true;
@@ -174,6 +140,10 @@ const createParishForm = reactive({
 
 // Form Forane Search Box
 const formForane = ref();
+
+const changeInFormForane = (entity) => {
+  formForane.value = entity;
+};
 
 watch(formForane, (value) => {
   createParishForm.foraneId = value.id;
@@ -302,6 +272,10 @@ const moveParishForm = reactive({
   foraneId: "",
 });
 
+const changeInNewForaneMove = (entity) => {
+  newForane.value = entity;
+};
+
 watch(newForane, (value) => {
   if (value.id === forane.value.id) {
     newForane.value = "";
@@ -373,24 +347,13 @@ const getActivePersonRows = computed(() => {
     <SectionMain>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="flex-col justify-between">
-          <FormField label="Select Forane">
-            <SearchBox
-              v-model="forane"
-              :load-options="loadForanes"
-              :create-option="false"
-              :reload-method="activeForaneListRefetch"
-              bg-color="#0f172a"
+          <ForaneSingleSelectBox @change-in-forane="changeInForane" />
+          <span v-if="forane">
+            <ParishByForaneSingleSelectBox
+              :selected-forane="forane"
+              @change-in-parish="changeInParish"
             />
-          </FormField>
-          <FormField v-if="forane" label="Select Parish">
-            <SearchBox
-              v-model="parish"
-              :load-options="loadParishesByForane"
-              :create-option="false"
-              :reload-method="activeParishListRefetch"
-              bg-color="#0f172a"
-            />
-          </FormField>
+          </span>
         </div>
         <div class="flex flex justify-between">
           <div class="w-full pt-7">
@@ -411,6 +374,7 @@ const getActivePersonRows = computed(() => {
                       v-model="createParishForm.parishName"
                       type="text"
                       :icon="mdiChurch"
+                      :borderless="true"
                       placeholder="St. Peter's Church"
                     />
                   </FormField>
@@ -420,19 +384,16 @@ const getActivePersonRows = computed(() => {
                       v-model="createParishForm.address.buildingName"
                     />
                   </FormField> -->
-                  <FormField label="Forane">
-                    <SearchBox
-                      v-model="formForane"
-                      :load-options="loadForanes"
-                      :create-option="false"
-                      :reload-method="activeForaneListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
+                  <ForaneSingleSelectBox
+                    heading="Forane"
+                    class="multipleSelectAddressBox"
+                    @change-in-forane="changeInFormForane"
+                  />
                   <FormField label="Phone">
                     <FormControl
                       v-model="createParishForm.phone"
                       type="tel"
+                      :borderless="true"
                       placeholder="04792662745"
                     />
                   </FormField>
@@ -459,15 +420,11 @@ const getActivePersonRows = computed(() => {
                   />
                 </DisclosureButton>
                 <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
-                  <FormField label="New Forane">
-                    <SearchBox
-                      v-model="newForane"
-                      :load-options="loadForanes"
-                      :create-option="false"
-                      :reload-method="activeForaneListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
+                  <ForaneSingleSelectBox
+                    heading="New Forane"
+                    class="multipleSelectAddressBox"
+                    @change-in-forane="changeInNewForaneMove"
+                  />
                   <BaseButton
                     class="baseButtonStyle font-bold"
                     color="info"
@@ -628,5 +585,13 @@ const getActivePersonRows = computed(() => {
 
 .baseButtonStyle {
   width: 100%;
+}
+
+.multipleSelectAddressBox :deep(.multiselect-theme) {
+  --ms-bg: #1e293b;
+  --ms-dropdown-bg: #1e293b;
+  --ms-dropdown-border-color: #1e293b;
+
+  --ms-py: 0.757rem;
 }
 </style>

@@ -17,6 +17,8 @@ import {
 } from "@mdi/js";
 
 import SearchBox from "@/components/SearchBox.vue";
+import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
+import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import FormField from "@/components/FormField.vue";

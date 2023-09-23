@@ -87,6 +87,11 @@ export const foraneAllForaneListQuery = `query foranePageActiveForane{
   getAllForanes{
     foraneId
     foraneName
+    address{
+      street{
+        streetName
+      }
+    }
   }
 }`;
 
@@ -162,6 +167,11 @@ export const parishAllParishListQuery = `query parishPageActiveParish ($foraneId
   getAllParishesByForane (foraneId: $foraneId){
     parishId
     parishName
+    address{
+      street{
+        streetName
+      }
+    }
   }
 }`;
 
