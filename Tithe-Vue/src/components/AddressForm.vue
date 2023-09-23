@@ -20,6 +20,7 @@ import {
 
 import FormField from "@/components/FormField.vue";
 import SearchBox from "@/components/SearchBox.vue";
+import SingleSelectBox from "@/components/SearchBoxes/SingleSelectBox.vue";
 
 const emit = defineEmits(["addressFormChange"]);
 
@@ -54,21 +55,50 @@ const {
   })
 );
 
-const loadStreets = (query, setOptions) => {
-  streetListQueryEnabled.value = true;
-  similarStreetListVariables.value = {
-    streetName: query,
-  };
-  similarStreetListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarStreets?.map((entity) => {
-        return {
-          id: entity.streetId,
-          label: entity.streetName,
-        };
-      }) ?? []
-    );
-  });
+// const loadStreets = (query, setOptions) => {
+//   streetListQueryEnabled.value = true;
+//   similarStreetListVariables.value = {
+//     streetName: query,
+//   };
+//   similarStreetListOnResult((queryResult) => {
+//     setOptions(
+//       queryResult.data?.getSimilarStreets?.map((entity) => {
+//         return {
+//           id: entity.streetId,
+//           label: entity.streetName,
+//         };
+//       }) ?? []
+//     );
+//   });
+// };
+
+const streetOptions = ref({});
+
+const streetSearchChange = (query) => {
+  if (query != "") {
+    streetListQueryEnabled.value = true;
+    similarStreetListVariables.value = {
+      streetName: query,
+    };
+
+    similarStreetListOnResult((queryResult) => {
+      streetOptions.value =
+        queryResult.data?.getSimilarStreets?.map((entity) => {
+          return {
+            id: entity.streetId,
+            label: entity.streetName,
+            value: {
+              id: entity.streetId,
+              label: entity.streetName,
+            },
+          };
+        }) ?? [];
+    });
+  }
+};
+
+const changeInStreet = (entity) => {
+  street.value = entity;
 };
 
 watch(street, (value) => {
@@ -123,21 +153,50 @@ const {
   })
 );
 
-const loadCities = (query, setOptions) => {
-  cityListQueryEnabled.value = true;
-  similarCityListVariables.value = {
-    cityName: query,
-  };
-  similarCityListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarCities?.map((entity) => {
-        return {
-          id: entity.cityId,
-          label: entity.cityName,
-        };
-      }) ?? []
-    );
-  });
+// const loadCities = (query, setOptions) => {
+//   cityListQueryEnabled.value = true;
+//   similarCityListVariables.value = {
+//     cityName: query,
+//   };
+//   similarCityListOnResult((queryResult) => {
+//     setOptions(
+//       queryResult.data?.getSimilarCities?.map((entity) => {
+//         return {
+//           id: entity.cityId,
+//           label: entity.cityName,
+//         };
+//       }) ?? []
+//     );
+//   });
+// };
+
+const cityOptions = ref({});
+
+const citySearchChange = (query) => {
+  if (query != "") {
+    cityListQueryEnabled.value = true;
+    similarCityListVariables.value = {
+      cityName: query,
+    };
+
+    similarCityListOnResult((queryResult) => {
+      cityOptions.value =
+        queryResult.data?.getSimilarCities?.map((entity) => {
+          return {
+            id: entity.cityId,
+            label: entity.cityName,
+            value: {
+              id: entity.cityId,
+              label: entity.cityName,
+            },
+          };
+        }) ?? [];
+    });
+  }
+};
+
+const changeInCity = (entity) => {
+  city.value = entity;
 };
 
 watch(city, (value) => {
@@ -192,21 +251,33 @@ const {
   })
 );
 
-const loadDistricts = (query, setOptions) => {
-  districtListQueryEnabled.value = true;
-  similarDistrictListVariables.value = {
-    districtName: query,
-  };
-  similarDistrictListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarDistricts?.map((entity) => {
-        return {
-          id: entity.districtId,
-          label: entity.districtName,
-        };
-      }) ?? []
-    );
-  });
+const districtOptions = ref({});
+
+const districtSearchChange = (query) => {
+  if (query != "") {
+    districtListQueryEnabled.value = true;
+    similarDistrictListVariables.value = {
+      districtName: query,
+    };
+
+    similarDistrictListOnResult((queryResult) => {
+      districtOptions.value =
+        queryResult.data?.getSimilarDistricts?.map((entity) => {
+          return {
+            id: entity.districtId,
+            label: entity.districtName,
+            value: {
+              id: entity.districtId,
+              label: entity.districtName,
+            },
+          };
+        }) ?? [];
+    });
+  }
+};
+
+const changeInDistrict = (entity) => {
+  district.value = entity;
 };
 
 watch(district, (value) => {
@@ -261,21 +332,33 @@ const {
   })
 );
 
-const loadStates = (query, setOptions) => {
-  stateListQueryEnabled.value = true;
-  similarStateListVariables.value = {
-    stateName: query,
-  };
-  similarStateListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarStates?.map((entity) => {
-        return {
-          id: entity.stateId,
-          label: entity.stateName,
-        };
-      }) ?? []
-    );
-  });
+const stateOptions = ref({});
+
+const stateSearchChange = (query) => {
+  if (query != "") {
+    stateListQueryEnabled.value = true;
+    similarStateListVariables.value = {
+      stateName: query,
+    };
+
+    similarStateListOnResult((queryResult) => {
+      stateOptions.value =
+        queryResult.data?.getSimilarStates?.map((entity) => {
+          return {
+            id: entity.stateId,
+            label: entity.stateName,
+            value: {
+              id: entity.stateId,
+              label: entity.stateName,
+            },
+          };
+        }) ?? [];
+    });
+  }
+};
+
+const changeInState = (entity) => {
+  state.value = entity;
 };
 
 watch(state, (value) => {
@@ -330,21 +413,33 @@ const {
   })
 );
 
-const loadPincodes = (query, setOptions) => {
-  pincodeListQueryEnabled.value = true;
-  similarPincodeListVariables.value = {
-    pincode: query,
-  };
-  similarPincodeListOnResult((queryResult) => {
-    setOptions(
-      queryResult.data?.getSimilarPincodes?.map((entity) => {
-        return {
-          id: entity.pincodeId,
-          label: entity.pincode,
-        };
-      }) ?? []
-    );
-  });
+const pincodeOptions = ref({});
+
+const pincodeSearchChange = (query) => {
+  if (query != "") {
+    pincodeListQueryEnabled.value = true;
+    similarPincodeListVariables.value = {
+      pincode: query,
+    };
+
+    similarPincodeListOnResult((queryResult) => {
+      pincodeOptions.value =
+        queryResult.data?.getSimilarPincodes?.map((entity) => {
+          return {
+            id: entity.pincodeId,
+            label: entity.pincode,
+            value: {
+              id: entity.pincodeId,
+              label: entity.pincode,
+            },
+          };
+        }) ?? [];
+    });
+  }
+};
+
+const changeInPincode = (entity) => {
+  pincode.value = entity;
 };
 
 watch(pincode, (value) => {
@@ -391,54 +486,91 @@ defineExpose({
 </script>
 
 <template>
-  <FormField label="Street">
+  <!-- Changed street to address -->
+  <!-- <FormField label="Address">
     <SearchBox
       v-model="street"
       :load-options="loadStreets"
       :create-option="createStreetOption"
       :reload-method="false"
-      entity-name="Street"
+      entity-name="Address"
       bg-color="#1e293b"
+    />
+  </FormField> -->
+
+  <FormField label="Address">
+    <SingleSelectBox
+      :options="streetOptions"
+      :can-deselect="false"
+      :can-clear="false"
+      :searchable="true"
+      :resolve-on-load="false"
+      :min-chars="1"
+      class="multipleSelectAddressBox"
+      @search-change="streetSearchChange"
+      @value-change="changeInStreet"
     />
   </FormField>
   <FormField label="City">
-    <SearchBox
-      v-model="city"
-      :load-options="loadCities"
-      :create-option="createCityOption"
-      entity-name="City"
-      :reload-method="false"
-      bg-color="#1e293b"
+    <SingleSelectBox
+      :options="cityOptions"
+      :can-deselect="false"
+      :can-clear="false"
+      :searchable="true"
+      :resolve-on-load="false"
+      :min-chars="1"
+      class="multipleSelectAddressBox"
+      @search-change="citySearchChange"
+      @value-change="changeInCity"
     />
   </FormField>
   <FormField label="District">
-    <SearchBox
-      v-model="district"
-      :load-options="loadDistricts"
-      :create-option="createDistrictOption"
-      entity-name="District"
-      :reload-method="false"
-      bg-color="#1e293b"
+    <SingleSelectBox
+      :options="districtOptions"
+      :can-deselect="false"
+      :can-clear="false"
+      :searchable="true"
+      :resolve-on-load="false"
+      :min-chars="1"
+      class="multipleSelectAddressBox"
+      @search-change="districtSearchChange"
+      @value-change="changeInDistrict"
     />
   </FormField>
   <FormField label="State">
-    <SearchBox
-      v-model="state"
-      :load-options="loadStates"
-      :create-option="createStateOption"
-      entity-name="State"
-      :reload-method="false"
-      bg-color="#1e293b"
+    <SingleSelectBox
+      :options="stateOptions"
+      :can-deselect="false"
+      :can-clear="false"
+      :searchable="true"
+      :resolve-on-load="false"
+      :min-chars="1"
+      class="multipleSelectAddressBox"
+      @search-change="stateSearchChange"
+      @value-change="changeInState"
     />
   </FormField>
   <FormField label="Pincode">
-    <SearchBox
-      v-model="pincode"
-      :load-options="loadPincodes"
-      :create-option="createPincodeOption"
-      entity-name="Pincode"
-      :reload-method="false"
-      bg-color="#1e293b"
+    <SingleSelectBox
+      :options="pincodeOptions"
+      :can-deselect="false"
+      :can-clear="false"
+      :searchable="true"
+      :resolve-on-load="false"
+      :min-chars="1"
+      class="multipleSelectAddressBox"
+      @search-change="pincodeSearchChange"
+      @value-change="changeInPincode"
     />
   </FormField>
 </template>
+
+<style scoped>
+.multiselect-theme {
+  --ms-bg: #1e293b;
+  --ms-dropdown-bg: #1e293b;
+  --ms-dropdown-border-color: #1e293b;
+
+  --ms-py: 0.757rem;
+}
+</style>

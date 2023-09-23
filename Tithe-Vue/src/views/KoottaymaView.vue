@@ -17,6 +17,9 @@ import {
   mdiTableLarge,
 } from "@mdi/js";
 
+import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
+import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
+import KoottaymaByParishSingleSelectBox from "@/components/SearchBoxes/KoottaymaByParishSingleSelectBox.vue";
 import SearchBox from "@/components/SearchBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
@@ -80,69 +83,16 @@ const forane = ref();
 const parish = ref();
 const koottayma = ref();
 
-const ACTIVE_FORANE_LIST_QUERY = gql`
-  ${koottaymaAllForaneListQuery}
-`;
-
-const {
-  result: activeForaneList,
-  load: activeForaneListLoad,
-  refetch: activeForaneListRefetch,
-} = useLazyQuery(ACTIVE_FORANE_LIST_QUERY);
-activeForaneListLoad();
-const loadForanes = (query, setOptions) => {
-  setOptions(
-    activeForaneList.value?.getAllForanes?.map((entity) => {
-      return {
-        id: entity.foraneId,
-        label: entity.foraneName,
-      };
-    }) ?? []
-  );
+const changeInForane = (entity) => {
+  forane.value = entity;
 };
 
-const ACTIVE_PARISH_BY_FORANE_LIST_QUERY = gql`
-  ${koottaymaAllParishListQuery}
-`;
-
-const {
-  result: activeParishList,
-  load: activeParishListLoad,
-  refetch: activeParishListRefetch,
-} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
-  foraneId: forane.value.id,
-}));
-const loadParishesByForane = (query, setOptions) => {
-  setOptions(
-    activeParishList.value?.getAllParishesByForane?.map((entity) => {
-      return {
-        id: entity.parishId,
-        label: entity.parishName,
-      };
-    }) ?? []
-  );
+const changeInParish = (entity) => {
+  parish.value = entity;
 };
 
-const ACTIVE_KOOTTAYMA_BY_PARISH_LIST_QUERY = gql`
-  ${koottaymaAllKoottaymaListQuery}
-`;
-
-const {
-  result: activeKoottaymaList,
-  load: activeKoottaymaListLoad,
-  refetch: activeKoottaymaListRefetch,
-} = useLazyQuery(ACTIVE_KOOTTAYMA_BY_PARISH_LIST_QUERY, () => ({
-  parishId: parish.value.id,
-}));
-const loadKoottaymasByParish = (query, setOptions) => {
-  setOptions(
-    activeKoottaymaList.value?.getAllKoottaymasByParish?.map((entity) => {
-      return {
-        id: entity.koottaymaId,
-        label: entity.koottaymaName,
-      };
-    }) ?? []
-  );
+const changeInKoottayma = (entity) => {
+  koottayma.value = entity;
 };
 
 // Entity Count in Koottayma Page
@@ -167,14 +117,6 @@ const activePersonCount = computed(
   () => activeEntityByKoottaymaCount.value?.getPersonCountByKoottayma ?? 0
 );
 
-watch(forane, () => {
-  activeParishListLoad();
-});
-
-watch(parish, () => {
-  activeKoottaymaListLoad();
-});
-
 watch(koottayma, () => {
   activeEntityByKoottaymaCountEnabled.value = true;
 });
@@ -190,27 +132,13 @@ const formForane = ref();
 // Form Parish Search Box
 const formParish = ref();
 
-const {
-  result: activeFormParishList,
-  load: activeFormParishListLoad,
-  refetch: activeFormParishListRefetch,
-} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
-  foraneId: formForane.value.id,
-}));
-const loadFormParishesByForane = (query, setOptions) => {
-  setOptions(
-    activeFormParishList.value?.getAllParishesByForane?.map((entity) => {
-      return {
-        id: entity.parishId,
-        label: entity.parishName,
-      };
-    }) ?? []
-  );
+const changeInFormForane = (entity) => {
+  formForane.value = entity;
 };
 
-watch(formForane, () => {
-  activeFormParishListLoad();
-});
+const changeInFormParish = (entity) => {
+  formParish.value = entity;
+};
 
 watch(formParish, (value) => {
   createKoottaymaForm.parishId = value.id;
@@ -372,32 +300,21 @@ const getActivePersonRows = computed(() => {
     <SectionMain>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="flex-col justify-between">
-          <FormField label="Select Forane">
-            <SearchBox
-              v-model="forane"
-              :load-options="loadForanes"
-              :create-option="false"
-              :reload-method="activeForaneListRefetch"
-              bg-color="#0f172a"
+          <ForaneSingleSelectBox @change-in-forane="changeInForane" />
+          <span v-if="forane">
+            <ParishByForaneSingleSelectBox
+              :selected-forane="forane"
+              @change-in-parish="changeInParish"
             />
-          </FormField>
-          <FormField v-if="forane" label="Select Parish">
-            <SearchBox
-              v-model="parish"
-              :load-options="loadParishesByForane"
-              :create-option="false"
-              :reload-method="activeParishListRefetch"
-              bg-color="#0f172a"
-            />
-          </FormField>
-          <FormField v-if="parish" label="Select Koottayma">
-            <SearchBox
-              v-model="koottayma"
-              :load-options="loadKoottaymasByParish"
-              :create-option="false"
-              :reload-method="activeKoottaymaListRefetch"
-              bg-color="#0f172a"
-            />
+            <span></span>
+          </span>
+          <FormField>
+            <span v-if="parish">
+              <KoottaymaByParishSingleSelectBox
+                :selected-parish="parish"
+                @change-in-koottayma="changeInKoottayma"
+              />
+            </span>
           </FormField>
         </div>
         <div class="flex flex justify-between">
@@ -422,24 +339,19 @@ const getActivePersonRows = computed(() => {
                       placeholder="St. George Koottayma"
                     />
                   </FormField>
-                  <FormField label="Forane">
-                    <SearchBox
-                      v-model="formForane"
-                      :load-options="loadForanes"
-                      :create-option="false"
-                      :reload-method="activeForaneListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="Parish">
-                    <SearchBox
-                      v-model="formParish"
-                      :load-options="loadFormParishesByForane"
-                      :create-option="false"
-                      :reload-method="activeFormParishListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
+
+                  <ForaneSingleSelectBox
+                    heading="Forane"
+                    class="multipleSelectAddressBox"
+                    @change-in-forane="changeInFormForane"
+                  />
+
+                  <ParishByForaneSingleSelectBox
+                    heading="Parish"
+                    :selected-forane="formForane"
+                    class="multipleSelectAddressBox"
+                    @change-in-parish="changeInFormParish"
+                  />
 
                   <BaseButton
                     class="baseButtonStyle"
@@ -581,5 +493,13 @@ const getActivePersonRows = computed(() => {
 
 .baseButtonStyle {
   width: 100%;
+}
+
+.multipleSelectAddressBox :deep(.multiselect-theme) {
+  --ms-bg: #1e293b;
+  --ms-dropdown-bg: #1e293b;
+  --ms-dropdown-border-color: #1e293b;
+
+  --ms-py: 0.757rem;
 }
 </style>
