@@ -20,7 +20,6 @@ import {
 import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
 import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
 import KoottaymaByParishSingleSelectBox from "@/components/SearchBoxes/KoottaymaByParishSingleSelectBox.vue";
-import SearchBox from "@/components/SearchBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import FormField from "@/components/FormField.vue";
@@ -38,9 +37,6 @@ import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
-  koottaymaAllForaneListQuery,
-  koottaymaAllParishListQuery,
-  koottaymaAllKoottaymaListQuery,
   koottaymaPageActiveEnityCountQuery,
   koottaymaPageActiveFamilyTableQuery,
   koottaymaPageActivePersonTableQuery,
@@ -336,6 +332,7 @@ const getActivePersonRows = computed(() => {
                       v-model="createKoottaymaForm.koottaymaName"
                       type="text"
                       :icon="mdiHandsPray"
+                      :borderless="true"
                       placeholder="St. George Koottayma"
                     />
                   </FormField>
@@ -355,7 +352,7 @@ const getActivePersonRows = computed(() => {
 
                   <BaseButton
                     class="baseButtonStyle"
-                    color="info"
+                    color="success"
                     label="Submit"
                     @click="submitCreateKoottaymaForm"
                   />
