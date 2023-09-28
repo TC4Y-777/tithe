@@ -38,6 +38,20 @@ input PersonMutationInput{
 	active: Boolean = true
 }
 
+input PersonMutationThroughFamilyInput{
+	baptismName: String!
+	personName: String!
+	relationId: ID!
+	gender: GenderEnum!
+	dob: LocalDate!
+	phone: String
+	tithes: [TitheMutationInput]
+	moved: Boolean = false
+	educationIds: [ID]
+	occupationIds: [ID]
+	active: Boolean = true
+}
+
 type Relation{
 	relationId: ID!
 	relationName: String!

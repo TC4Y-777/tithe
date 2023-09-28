@@ -39,6 +39,7 @@ public class PersonQueryService {
 	
 	@Autowired
 	private FamilyQueryService familyQueryService;
+
 	
 	public PersonEntity getOnePerson(Long id) {
 		Optional<PersonEntity> person = personRepository.findById(id);

@@ -53,8 +53,9 @@ public class PersonEntity {
 	@NotBlank(message =  "Name of Person is empty or null")
 	private String personName;
 
-	@NotNull(message = "Family does not exist")
-	@ManyToOne(cascade = CascadeType.PERSIST)
+//	@NotNull(message = "Family does not exist")
+//	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "family_id")
 	private FamilyEntity family;
 
