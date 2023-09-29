@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watchEffect } from "vue";
+import { computed, watchEffect, ref } from "vue";
 import gql from "graphql-tag";
 import { useLazyQuery } from "@vue/apollo-composable";
 
@@ -56,11 +56,20 @@ watchEffect(() => {
 const changeInFamily = (entity) => {
   emits("changeInFamily", entity);
 };
+
+const familyRef = ref(null);
+const clearFamily = () => {
+  familyRef.value.clearField();
+};
+defineExpose({
+  clearFamily,
+});
 </script>
 
 <template>
   <FormField :label="props.heading">
     <SingleSelectBox
+      ref="familyRef"
       :options="loadFamilies"
       :can-deselect="false"
       :can-clear="false"

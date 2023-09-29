@@ -102,7 +102,7 @@ const changeInStreet = (entity) => {
 };
 
 watch(street, (value) => {
-  address.streetId = value.id;
+  address.streetId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -200,7 +200,7 @@ const changeInCity = (entity) => {
 };
 
 watch(city, (value) => {
-  address.cityId = value.id;
+  address.cityId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -281,7 +281,7 @@ const changeInDistrict = (entity) => {
 };
 
 watch(district, (value) => {
-  address.districtId = value.id;
+  address.districtId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -362,7 +362,7 @@ const changeInState = (entity) => {
 };
 
 watch(state, (value) => {
-  address.stateId = value.id;
+  address.stateId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -443,7 +443,7 @@ const changeInPincode = (entity) => {
 };
 
 watch(pincode, (value) => {
-  address.pincodeId = value.id;
+  address.pincodeId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -472,12 +472,24 @@ const createPincodeOption = (option, setSelected) => {
   });
 };
 
+const addressRef = ref(null);
+const cityRef = ref(null);
+const districtRef = ref(null);
+const stateRef = ref(null);
+const pincodeRef = ref(null);
+
 const clearAddressFields = () => {
   street.value = "";
   city.value = "";
   district.value = "";
   state.value = "";
   pincode.value = "";
+
+  addressRef.value.clearField();
+  cityRef.value.clearField();
+  districtRef.value.clearField();
+  stateRef.value.clearField();
+  pincodeRef.value.clearField();
 };
 
 defineExpose({
@@ -500,6 +512,7 @@ defineExpose({
 
   <FormField label="Address">
     <SingleSelectBox
+      ref="addressRef"
       :options="streetOptions"
       :can-deselect="false"
       :can-clear="false"
@@ -513,6 +526,7 @@ defineExpose({
   </FormField>
   <FormField label="City">
     <SingleSelectBox
+      ref="cityRef"
       :options="cityOptions"
       :can-deselect="false"
       :can-clear="false"
@@ -526,6 +540,7 @@ defineExpose({
   </FormField>
   <FormField label="District">
     <SingleSelectBox
+      ref="districtRef"
       :options="districtOptions"
       :can-deselect="false"
       :can-clear="false"
@@ -539,6 +554,7 @@ defineExpose({
   </FormField>
   <FormField label="State">
     <SingleSelectBox
+      ref="stateRef"
       :options="stateOptions"
       :can-deselect="false"
       :can-clear="false"
@@ -552,6 +568,7 @@ defineExpose({
   </FormField>
   <FormField label="Pincode">
     <SingleSelectBox
+      ref="pincodeRef"
       :options="pincodeOptions"
       :can-deselect="false"
       :can-clear="false"

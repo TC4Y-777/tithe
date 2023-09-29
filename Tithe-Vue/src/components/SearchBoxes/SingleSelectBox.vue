@@ -27,10 +27,19 @@ const entity = ref();
 watch(entity, () => {
   emit("valueChange", entity.value);
 });
+
+const multiselect = ref(null);
+const clearField = () => {
+  multiselect.value.clear();
+};
+defineExpose({
+  clearField,
+});
 </script>
 
 <template>
   <Multiselect
+    ref="multiselect"
     v-model="entity"
     :options="options"
     :can-deselect="canDeselect"
@@ -38,8 +47,8 @@ watch(entity, () => {
     :searchable="searchable"
     :meta-label-enabled="metaLabelEnabled"
     :resolve-on-load="resolveOnLoad"
-    @search-change="searchChange"
     class="multiselect-theme"
+    @search-change="searchChange"
   />
 </template>
 

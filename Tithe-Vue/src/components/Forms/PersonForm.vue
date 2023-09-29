@@ -44,29 +44,6 @@ const props = defineProps({
 
 const emits = defineEmits(["update:modelValue", "changeInPersonForm"]);
 
-// const createPersonForm = props.isFamilyRequired
-//   ? reactive({
-//       personName: "",
-//       baptismName: "",
-//       gender: "",
-//       dob: "",
-//       phone: "",
-//       familyId: "",
-//       relationId: "",
-//       educationIds: [],
-//       occupationIds: [],
-//     })
-//   : reactive({
-//       personName: "",
-//       baptismName: "",
-//       gender: "",
-//       dob: "",
-//       phone: "",
-//       relationId: "",
-//       educationIds: [],
-//       occupationIds: [],
-//     });
-
 const createPersonForm = computed({
   get: () => props.modelValue,
   set: (value) => {
@@ -90,17 +67,44 @@ const changeInFormFamily = (entity) => {
   formFamily.value = entity;
 };
 
-const changeInFormRelation = (entity) => {
-  createPersonForm.value.relationId = entity.id;
-};
-
 watch(formFamily, (value) => {
-  createPersonForm.value.familyId = value.id;
+  createPersonForm.value.familyId = value?.id ?? "";
 });
 
+const changeInFormRelation = (entity) => {
+  createPersonForm.value.relationId = entity?.id ?? "";
+};
+
 watchEffect(() => {
-  //   emits("changeInPersonForm", createPersonForm);
-  emits("update:modelValue", createPersonForm);
+  emits("update:modelValue", createPersonForm.value);
+});
+
+const personFormForaneRef = ref(null);
+const personFormParishRef = ref(null);
+const personFormFamilyRef = ref(null);
+const personFormRelationRef = ref(null);
+
+const clearPersonForm = () => {
+  createPersonForm.value.personName = "";
+  createPersonForm.value.baptismName = "";
+  createPersonForm.value.gender = "";
+  createPersonForm.value.dob = "";
+  createPersonForm.value.phone = "";
+
+  personFormForaneRef.value?.clearForane();
+  formForane.value = "";
+  personFormParishRef.value?.clearParish();
+  formParish.value = "";
+  personFormFamilyRef.value?.clearFamily();
+  formFamily.value = "";
+  createPersonForm.value.familyId = "";
+
+  personFormRelationRef.value.clearRelation();
+  createPersonForm.value.relationId = "";
+};
+
+defineExpose({
+  clearPersonForm,
 });
 </script>
 
@@ -144,12 +148,14 @@ watchEffect(() => {
   </FormField>
   <ForaneSingleSelectBox
     v-if="props.isFamilyRequired"
+    ref="personFormForaneRef"
     heading="Forane"
     class="multipleSelectAddressBox"
     @change-in-forane="changeInFormForane"
   />
   <ParishByForaneSingleSelectBox
     v-if="props.isFamilyRequired"
+    ref="personFormParishRef"
     heading="Parish"
     :selected-forane="formForane"
     class="multipleSelectAddressBox"
@@ -157,12 +163,14 @@ watchEffect(() => {
   />
   <FamilyByParishSingleSelectBox
     v-if="props.isFamilyRequired"
+    ref="personFormFamilyRef"
     heading="Family"
     :selected-parish="formParish"
     class="multipleSelectAddressBox"
     @change-in-family="changeInFormFamily"
   />
   <RelationSingleSelectBox
+    ref="personFormRelationRef"
     heading="Relation"
     class="multipleSelectAddressBox"
     @change-in-relation="changeInFormRelation"

@@ -46,11 +46,20 @@ const loadRelations = computed((query, setOptions) => {
 const changeInRelation = (entity) => {
   emits("changeInRelation", entity);
 };
+
+const relationRef = ref(null);
+const clearRelation = () => {
+  relationRef.value.clearField();
+};
+defineExpose({
+  clearRelation,
+});
 </script>
 
 <template>
   <FormField :label="props.heading">
     <SingleSelectBox
+      ref="relationRef"
       :options="loadRelations"
       :can-deselect="false"
       :can-clear="false"

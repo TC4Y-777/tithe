@@ -16,6 +16,7 @@ import {
   mdiTableLarge,
 } from "@mdi/js";
 
+import PersonForm from "@/components/Forms/PersonForm.vue";
 import AddPersonInFamilyForm from "@/components/Forms/AddPersonInFamilyForm.vue";
 import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
 import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
@@ -27,6 +28,7 @@ import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
+import BaseDivider from "@/components/BaseDivider.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import SectionTitle from "@/components/SectionTitle.vue";
 import CardBox from "@/components/CardBox.vue";
@@ -126,6 +128,8 @@ const createFamilyForm = reactive({
   },
   phone: "",
   koottaymaId: "",
+  headOfFamily: {},
+  persons: [],
 });
 
 // Form Forane Search Box
@@ -150,7 +154,7 @@ const changeInFormKoottayma = (entity) => {
 };
 
 watch(formKoottayma, (value) => {
-  createFamilyForm.koottaymaId = value.id;
+  createFamilyForm.koottaymaId = value?.id ?? "";
 });
 
 // Code for checking whether object has empty values
@@ -176,7 +180,9 @@ const changeInAddressFormData = (eventData) => {
   createFamilyForm.address = eventData;
 };
 
-const addressFormComponent = ref(null);
+const changeInFamilyMembers = (value) => {
+  createFamilyForm.persons = value;
+};
 
 // Submit Create Family Form
 const CREATE_FAMILY_MUTATION = gql`
@@ -209,19 +215,42 @@ watch(createFamilyLoading, (value) => {
   }
 });
 
+const foraneSelectBoxRef = ref(null);
+const parishSelectBoxRef = ref(null);
+const koottaymaSelectBoxRef = ref(null);
+
+const addressFormComponent = ref(null);
+
+const headOfFamilyFormRef = ref(null);
+const familyMembersFormRef = ref(null);
+
 createFamilyDone(() => {
   console.log("onDone called");
   successNotificationEnabled.value = true;
   successNotificationHeading.value = "Created Family.";
   successNotificationContent.value = "";
 
-  createFamilyForm.koottaymaName = "";
-  createFamilyForm.phone = "";
+  // createFamilyForm.koottaymaName = "";
+  createFamilyForm.familyName = "";
   createFamilyForm.address.buildingName = "";
+
+  foraneSelectBoxRef.value.clearForane();
   formForane.value = "";
+  parishSelectBoxRef.value.clearParish();
   formParish.value = "";
+  koottaymaSelectBoxRef.value.clearKoottayma();
   formKoottayma.value = "";
+
   addressFormComponent.value.clearAddressFields();
+
+  createFamilyForm.phone = "";
+  createFamilyForm.koottaymaId = "";
+
+  headOfFamilyFormRef.value.clearPersonForm();
+  createFamilyForm.headOfFamily = {};
+
+  familyMembersFormRef.value.clearFamilyMembersForm();
+  createFamilyForm.persons = [];
 
   setTimeout(() => {
     successNotificationEnabled.value = false;
@@ -353,11 +382,13 @@ const getActivePersonRows = computed(() => {
                     />
                   </FormField> -->
                   <ForaneSingleSelectBox
+                    ref="foraneSelectBoxRef"
                     heading="Forane"
                     class="multipleSelectAddressBox"
                     @change-in-forane="changeInFormForane"
                   />
                   <ParishByForaneSingleSelectBox
+                    ref="parishSelectBoxRef"
                     heading="Parish"
                     :selected-forane="formForane"
                     class="multipleSelectAddressBox"
@@ -365,6 +396,7 @@ const getActivePersonRows = computed(() => {
                   />
 
                   <KoottaymaByParishSingleSelectBox
+                    ref="koottaymaSelectBoxRef"
                     heading="Koottayma"
                     :selected-parish="formParish"
                     class="multipleSelectAddressBox"
@@ -382,7 +414,19 @@ const getActivePersonRows = computed(() => {
                     ref="addressFormComponent"
                     @address-form-change="changeInAddressFormData"
                   />
-                  <AddPersonInFamilyForm />
+                  <BaseDivider />
+                  <div class="text-center">
+                    <h1 class="text-xl">Head of Family</h1>
+                  </div>
+                  <PersonForm
+                    ref="headOfFamilyFormRef"
+                    v-model="createFamilyForm.headOfFamily"
+                  />
+
+                  <AddPersonInFamilyForm
+                    ref="familyMembersFormRef"
+                    @change-in-family-members="changeInFamilyMembers"
+                  />
                   <BaseButton
                     class="baseButtonStyle"
                     color="success"

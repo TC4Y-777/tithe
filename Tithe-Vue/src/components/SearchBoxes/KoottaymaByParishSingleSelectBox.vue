@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watchEffect } from "vue";
+import { computed, watchEffect, ref } from "vue";
 import gql from "graphql-tag";
 import { useLazyQuery } from "@vue/apollo-composable";
 
@@ -56,11 +56,20 @@ watchEffect(() => {
 const changeInKoottayma = (entity) => {
   emits("changeInKoottayma", entity);
 };
+
+const koottaymaRef = ref(null);
+const clearKoottayma = () => {
+  koottaymaRef.value.clearField();
+};
+defineExpose({
+  clearKoottayma,
+});
 </script>
 
 <template>
   <FormField :label="props.heading">
     <SingleSelectBox
+      ref="koottaymaRef"
       :options="loadKoottaymas"
       :can-deselect="false"
       :can-clear="false"
