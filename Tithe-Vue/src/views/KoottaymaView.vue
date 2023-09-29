@@ -137,7 +137,7 @@ const changeInFormParish = (entity) => {
 };
 
 watch(formParish, (value) => {
-  createKoottaymaForm.parishId = value.id;
+  createKoottaymaForm.parishId = value?.id ?? "";
 });
 
 // Code for checking whether object has empty values
@@ -189,6 +189,9 @@ watch(createKoottaymaLoading, (value) => {
   }
 });
 
+const formForaneSelectBoxRef = ref(null);
+const formParishSelectBoxRef = ref(null);
+
 createKoottaymaDone(() => {
   console.log("onDone called");
   successNotificationEnabled.value = true;
@@ -196,8 +199,11 @@ createKoottaymaDone(() => {
   successNotificationContent.value = "";
 
   createKoottaymaForm.koottaymaName = "";
+  formForaneSelectBoxRef.value.clearForane();
   formForane.value = "";
+  formParishSelectBoxRef.value.clearParish();
   formParish.value = "";
+  createKoottaymaForm.parishId = "";
 
   setTimeout(() => {
     successNotificationEnabled.value = false;
@@ -338,12 +344,14 @@ const getActivePersonRows = computed(() => {
                   </FormField>
 
                   <ForaneSingleSelectBox
+                    ref="formForaneSelectBoxRef"
                     heading="Forane"
                     class="multipleSelectAddressBox"
                     @change-in-forane="changeInFormForane"
                   />
 
                   <ParishByForaneSingleSelectBox
+                    ref="formParishSelectBoxRef"
                     heading="Parish"
                     :selected-forane="formForane"
                     class="multipleSelectAddressBox"
