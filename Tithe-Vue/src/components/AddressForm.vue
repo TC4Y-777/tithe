@@ -19,7 +19,6 @@ import {
 } from "@/externalized-data/graphqlMutations";
 
 import FormField from "@/components/FormField.vue";
-import SearchBox from "@/components/SearchBox.vue";
 import SingleSelectBox from "@/components/SearchBoxes/SingleSelectBox.vue";
 
 const emit = defineEmits(["addressFormChange"]);
@@ -52,6 +51,7 @@ const {
   },
   () => ({
     enabled: streetListQueryEnabled,
+    fetchPolicy: "no-cache",
   })
 );
 
@@ -102,7 +102,7 @@ const changeInStreet = (entity) => {
 };
 
 watch(street, (value) => {
-  address.streetId = value.id;
+  address.streetId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -118,17 +118,19 @@ const {
   onError: createStreetError,
 } = useMutation(CREATE_STREET_MUTATION);
 
-const createStreetOption = (option, setSelected) => {
+const createStreetOption = async (option, select$) => {
   createStreet({ streetName: option.label });
 
   // Not using loading for now
 
-  createStreetDone((mutationResult) => {
-    setSelected({
-      id: mutationResult.data?.createOneStreet?.streetId ?? "",
-      label: mutationResult.data?.createOneStreet?.streetName ?? "",
+  await new Promise((resolve, reject) => {
+    createStreetDone(() => {
+      select$.clear();
+      resolve("Success");
     });
   });
+
+  return false;
 };
 
 // City Search Box
@@ -150,6 +152,7 @@ const {
   },
   () => ({
     enabled: cityListQueryEnabled,
+    fetchPolicy: "no-cache",
   })
 );
 
@@ -200,7 +203,7 @@ const changeInCity = (entity) => {
 };
 
 watch(city, (value) => {
-  address.cityId = value.id;
+  address.cityId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -216,17 +219,17 @@ const {
   onError: createCityError,
 } = useMutation(CREATE_CITY_MUTATION);
 
-const createCityOption = (option, setSelected) => {
+const createCityOption = async (option, select$) => {
   createCity({ cityName: option.label });
 
-  // Not using loading for now
-
-  createCityDone((mutationResult) => {
-    setSelected({
-      id: mutationResult.data?.createOneCity?.cityId ?? "",
-      label: mutationResult.data?.createOneCity?.cityName ?? "",
+  await new Promise((resolve, reject) => {
+    createCityDone(() => {
+      select$.clear();
+      resolve("Success");
     });
   });
+
+  return false;
 };
 
 // District Search Box
@@ -248,6 +251,7 @@ const {
   },
   () => ({
     enabled: districtListQueryEnabled,
+    fetchPolicy: "no-cache",
   })
 );
 
@@ -281,7 +285,7 @@ const changeInDistrict = (entity) => {
 };
 
 watch(district, (value) => {
-  address.districtId = value.id;
+  address.districtId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -297,17 +301,17 @@ const {
   onError: createDistrictError,
 } = useMutation(CREATE_DISTRICT_MUTATION);
 
-const createDistrictOption = (option, setSelected) => {
+const createDistrictOption = async (option, select$) => {
   createDistrict({ districtName: option.label });
 
-  // Not using loading for now
-
-  createDistrictDone((mutationResult) => {
-    setSelected({
-      id: mutationResult.data?.createOneDistrict?.districtId ?? "",
-      label: mutationResult.data?.createOneDistrict?.districtName ?? "",
+  await new Promise((resolve, reject) => {
+    createDistrictDone(() => {
+      select$.clear();
+      resolve("Success");
     });
   });
+
+  return false;
 };
 
 // State Search Box
@@ -329,6 +333,7 @@ const {
   },
   () => ({
     enabled: stateListQueryEnabled,
+    fetchPolicy: "no-cache",
   })
 );
 
@@ -362,7 +367,7 @@ const changeInState = (entity) => {
 };
 
 watch(state, (value) => {
-  address.stateId = value.id;
+  address.stateId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -378,17 +383,17 @@ const {
   onError: createStateError,
 } = useMutation(CREATE_STATE_MUTATION);
 
-const createStateOption = (option, setSelected) => {
+const createStateOption = async (option, select$) => {
   createState({ stateName: option.label });
 
-  // Not using loading for now
-
-  createStateDone((mutationResult) => {
-    setSelected({
-      id: mutationResult.data?.createOneState?.stateId ?? "",
-      label: mutationResult.data?.createOneState?.stateName ?? "",
+  await new Promise((resolve, reject) => {
+    createStateDone(() => {
+      select$.clear();
+      resolve("Success");
     });
   });
+
+  return false;
 };
 
 // Pincode Search Box
@@ -410,6 +415,7 @@ const {
   },
   () => ({
     enabled: pincodeListQueryEnabled,
+    fetchPolicy: "no-cache",
   })
 );
 
@@ -443,7 +449,7 @@ const changeInPincode = (entity) => {
 };
 
 watch(pincode, (value) => {
-  address.pincodeId = value.id;
+  address.pincodeId = value?.id ?? "";
   emit("addressFormChange", address);
 });
 
@@ -459,18 +465,24 @@ const {
   onError: createPincodeError,
 } = useMutation(CREATE_PINCODE_MUTATION);
 
-const createPincodeOption = (option, setSelected) => {
+const createPincodeOption = async (option, select$) => {
   createPincode({ pincode: option.label });
 
-  // Not using loading for now
-
-  createPincodeDone((mutationResult) => {
-    setSelected({
-      id: mutationResult.data?.createOnePincode?.pincodeId ?? "",
-      label: mutationResult.data?.createOnePincode?.pincode ?? "",
+  await new Promise((resolve, reject) => {
+    createPincodeDone(() => {
+      select$.clear();
+      resolve("Success");
     });
   });
+
+  return false;
 };
+
+const addressRef = ref(null);
+const cityRef = ref(null);
+const districtRef = ref(null);
+const stateRef = ref(null);
+const pincodeRef = ref(null);
 
 const clearAddressFields = () => {
   street.value = "";
@@ -478,6 +490,12 @@ const clearAddressFields = () => {
   district.value = "";
   state.value = "";
   pincode.value = "";
+
+  addressRef.value.clearField();
+  cityRef.value.clearField();
+  districtRef.value.clearField();
+  stateRef.value.clearField();
+  pincodeRef.value.clearField();
 };
 
 defineExpose({
@@ -500,12 +518,15 @@ defineExpose({
 
   <FormField label="Address">
     <SingleSelectBox
+      ref="addressRef"
       :options="streetOptions"
       :can-deselect="false"
       :can-clear="false"
       :searchable="true"
+      :create-option="true"
       :resolve-on-load="false"
       :min-chars="1"
+      :on-create="createStreetOption"
       class="multipleSelectAddressBox"
       @search-change="streetSearchChange"
       @value-change="changeInStreet"
@@ -513,12 +534,15 @@ defineExpose({
   </FormField>
   <FormField label="City">
     <SingleSelectBox
+      ref="cityRef"
       :options="cityOptions"
       :can-deselect="false"
       :can-clear="false"
       :searchable="true"
+      :create-option="true"
       :resolve-on-load="false"
       :min-chars="1"
+      :on-create="createCityOption"
       class="multipleSelectAddressBox"
       @search-change="citySearchChange"
       @value-change="changeInCity"
@@ -526,12 +550,15 @@ defineExpose({
   </FormField>
   <FormField label="District">
     <SingleSelectBox
+      ref="districtRef"
       :options="districtOptions"
       :can-deselect="false"
       :can-clear="false"
       :searchable="true"
+      :create-option="true"
       :resolve-on-load="false"
       :min-chars="1"
+      :on-create="createDistrictOption"
       class="multipleSelectAddressBox"
       @search-change="districtSearchChange"
       @value-change="changeInDistrict"
@@ -539,12 +566,15 @@ defineExpose({
   </FormField>
   <FormField label="State">
     <SingleSelectBox
+      ref="stateRef"
       :options="stateOptions"
       :can-deselect="false"
       :can-clear="false"
       :searchable="true"
+      :create-option="true"
       :resolve-on-load="false"
       :min-chars="1"
+      :on-create="createStateOption"
       class="multipleSelectAddressBox"
       @search-change="stateSearchChange"
       @value-change="changeInState"
@@ -552,12 +582,15 @@ defineExpose({
   </FormField>
   <FormField label="Pincode">
     <SingleSelectBox
+      ref="pincodeRef"
       :options="pincodeOptions"
       :can-deselect="false"
       :can-clear="false"
       :searchable="true"
+      :create-option="true"
       :resolve-on-load="false"
       :min-chars="1"
+      :on-create="createPincodeOption"
       class="multipleSelectAddressBox"
       @search-change="pincodeSearchChange"
       @value-change="changeInPincode"

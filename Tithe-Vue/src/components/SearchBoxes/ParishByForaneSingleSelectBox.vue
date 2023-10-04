@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watchEffect } from "vue";
+import { computed, watchEffect, ref } from "vue";
 import gql from "graphql-tag";
 import { useLazyQuery } from "@vue/apollo-composable";
 
@@ -59,11 +59,20 @@ watchEffect(() => {
 const changeInParish = (entity) => {
   emits("changeInParish", entity);
 };
+
+const parishRef = ref(null);
+const clearParish = () => {
+  parishRef.value.clearField();
+};
+defineExpose({
+  clearParish,
+});
 </script>
 
 <template>
   <FormField :label="props.heading">
     <SingleSelectBox
+      ref="parishRef"
       :options="loadParishes"
       :can-deselect="false"
       :can-clear="false"

@@ -292,6 +292,29 @@ export const familyAllFamilyListQuery = `query familyPageActiveFamily ($parishId
   getAllFamiliesByParish (parishId: $parishId){
     familyId
     familyName
+    headOfFamily{
+      personId
+      personName
+      baptismName
+      relation{
+        relationId
+        relationName
+      }
+    }
+    address{
+      street{
+        streetName
+      }
+    }
+    persons{
+      personId
+      personName
+      baptismName
+      relation{
+        relationId
+        relationName
+      }
+    }
   }
 }`;
 
@@ -300,6 +323,18 @@ export const familyAllKoottaymaListQuery = koottaymaAllKoottaymaListQuery;
 export const familyPageActiveEnityCountQuery = `query activeCountByFamily ($id: ID!) {
     getPersonCountByFamily (familyId: $id)
   }`;
+
+export const familyPagePersonsQuery = `query familyMembersQuery ($id: ID!){
+  getAllPersonsByFamily (familyId: $id) {
+    personId
+    personName
+    baptismName
+    relation{
+      relationId
+      relationName
+    }
+  }
+}`;
 
 export const familyPageActivePersonTableQuery = `query activePersonByFamily ($familyId: ID!){
   getAllPersonsByFamily (familyId: $familyId) {
@@ -333,11 +368,25 @@ export const personAllPersonListQuery = `query personPageActivePerson ($parishId
 export const personAllFamilyListQuery = familyAllFamilyListQuery;
 
 export const personAllRelationListQuery = `query personPageRelations{
-    getAllRelations{
-        relationId
-        relationName
-    }
+  getAllRelations{
+      relationId
+      relationName
+  }
 }`;
+
+export const personAllEducationsListQuery = `query personEducations{
+  getAllEducations{
+    educationId
+    educationName
+  }
+}`;
+
+export const personAllOccupationsListQuery = `query personOccupations{
+  getAllOccupations{
+    occupationId
+    occupationName
+  }
+}`
 
 // Address Queries
 

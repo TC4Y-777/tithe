@@ -27,8 +27,8 @@ public class PersonMutationInput {
 	@NotBlank(message = "Name of Person should not be empty or null")
 	String personName;
 
-	@Positive(message = "Id of Family should be valid")
-	@NotNull(message = "Id of Family should not be empty or null")
+//	@Positive(message = "Id of Family should be valid")
+//	@NotNull(message = "Id of Family should not be empty or null")
 	Long familyId;
 
 	@Positive(message = "Id of Relation should be valid")
@@ -46,6 +46,9 @@ public class PersonMutationInput {
 	List<TitheMutationInput> tithes;
 	Boolean moved = false;
 	List<Long> educationIds;
+	
+	OccupationSectorEnum occupationSector;
+	
 	List<Long> occupationIds;
 	Boolean active = true;
 
