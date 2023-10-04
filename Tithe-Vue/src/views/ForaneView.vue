@@ -38,7 +38,6 @@ import AddressForm from "@/components/AddressForm.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
-  foraneAllForaneListQuery,
   foranePageActiveEnityCountQuery,
   foranePageActiveParishTableQuery,
   foranePageActiveFamilyTableQuery,
@@ -79,15 +78,6 @@ const dangerNotificationHeading = ref("");
 const dangerNotificationContent = ref("");
 
 const tableTabTitle = foranePageTableTabTitle;
-
-// const options = [
-//   { id: 1, label: "Wade Cooper" },
-//   { id: 2, label: "Arlene Mccoy" },
-//   { id: 3, label: "Devon Webb" },
-//   { id: 4, label: "Tom Cook" },
-//   { id: 5, label: "Tanya Fox" },
-//   { id: 6, label: "Hellen Schmidt" },
-// ];
 
 const forane = ref();
 

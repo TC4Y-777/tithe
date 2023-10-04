@@ -4,6 +4,7 @@ type Family{
 	address: Address
 	phone: String
 	koottayma: Koottayma!
+	headOfFamily: Person
 	persons: [Person]
 	tithes: [Tithe]
 	active: Boolean
@@ -21,5 +22,7 @@ input FamilyMutationInput{
 	address: AddressMutationInput
 	phone: String
 	koottaymaId: ID!
+	headOfFamily: PersonMutationThroughFamilyInput!
+	persons: [PersonMutationThroughFamilyInput]
 	active: Boolean = true
 }

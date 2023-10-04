@@ -3,6 +3,7 @@
  */
 package com.tithe.controller.mutation;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.tithe.service.mutation.OccupationMutationService;
 import com.tithe.service.mutation.PersonMutationService;
 import com.tithe.service.mutation.RelationMutationService;
 import com.tithe.service.mutation.TitheMutationService;
+
 
 /**
  * @author Ashish Sam T George
@@ -46,8 +48,21 @@ public class PersonMutations {
 	private TitheMutationService titheMutationService;
 
 	@MutationMapping(name = "createOnePerson")
-	public PersonEntity createOnePerson(@Argument(name = "person") PersonMutationInput personMutationInput) {
+	public PersonEntity createOnePerson(
+			@Argument(name = "person") PersonMutationInput personMutationInput) {
 		return personMutationService.createOnePerson(personMutationInput);
+	}
+
+	@MutationMapping(name = "createManyPersonsInOneFamily")
+	public List<PersonEntity> createManyPersons(@Argument(name = "familyId") Long familyId,
+			@Argument(name = "persons") List<PersonMutationInput> personMutationInputs) {
+		return personMutationService.createManyPersonsInOneFamily(familyId, personMutationInputs);
+	}
+
+	@MutationMapping(name = "changeRelation")
+	public PersonEntity changeRelation(@Argument(name = "personId") Long personId,
+			@Argument(name = "relationId") Long relationId) {
+		return personMutationService.changeRelation(personId, relationId);
 	}
 
 	@MutationMapping(name = "activateOnePerson")
@@ -73,24 +88,29 @@ public class PersonMutations {
 	@MutationMapping(name = "createOneEducation")
 	public EducationEntity createOneEducation(@Argument(name = "education") String educationName) {
 		List<String> educationNames = List.of(educationName);
-		List<EducationEntity> educations = educationMutationService.createManyEducations(educationNames);
+		List<EducationEntity> educations = educationMutationService
+				.createManyEducations(educationNames);
 		return educations.get(0);
 	}
 
 	@MutationMapping(name = "createManyEducations")
-	public List<EducationEntity> createManyEducations(@Argument(name = "educations") List<String> educationNames) {
+	public List<EducationEntity> createManyEducations(
+			@Argument(name = "educations") List<String> educationNames) {
 		return educationMutationService.createManyEducations(educationNames);
 	}
 
 	@MutationMapping(name = "createOneOccupation")
-	public OccupationEntity createOneOccupation(@Argument(name = "occupation") String occupationName) {
+	public OccupationEntity createOneOccupation(
+			@Argument(name = "occupation") String occupationName) {
 		List<String> occupationNames = List.of(occupationName);
-		List<OccupationEntity> occupations = occupationMutationService.createManyOccupations(occupationNames);
+		List<OccupationEntity> occupations = occupationMutationService
+				.createManyOccupations(occupationNames);
 		return occupations.get(0);
 	}
 
 	@MutationMapping(name = "createManyOccupations")
-	public List<OccupationEntity> createManyOccupations(@Argument(name = "occupations") List<String> occupationNames) {
+	public List<OccupationEntity> createManyOccupations(
+			@Argument(name = "occupations") List<String> occupationNames) {
 		return occupationMutationService.createManyOccupations(occupationNames);
 	}
 
@@ -102,7 +122,8 @@ public class PersonMutations {
 	}
 
 	@MutationMapping(name = "createManyRelations")
-	public List<RelationEntity> createManyRelations(@Argument(name = "relations") List<String> relationNames) {
+	public List<RelationEntity> createManyRelations(
+			@Argument(name = "relations") List<String> relationNames) {
 		return relationMutationService.createManyRelations(relationNames);
 	}
 
@@ -110,7 +131,8 @@ public class PersonMutations {
 	public TitheEntity createOneTithe(@Argument(name = "personId") Long personId,
 			@Argument(name = "tithe") TitheMutationInput titheMutationInput) {
 		List<TitheMutationInput> titheMutationInputs = List.of(titheMutationInput);
-		List<TitheEntity> tithes = titheMutationService.createManyTithes(personId, titheMutationInputs);
+		List<TitheEntity> tithes = titheMutationService.createManyTithes(personId,
+				titheMutationInputs);
 		return tithes.get(0);
 	}
 

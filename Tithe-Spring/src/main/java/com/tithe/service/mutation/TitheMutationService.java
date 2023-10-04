@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tithe.entity.PersonEntity;
+import com.tithe.entity.TitheBuilder;
 import com.tithe.entity.TitheEntity;
 import com.tithe.model.TitheMutationInput;
 import com.tithe.repository.TitheRepository;
@@ -36,7 +37,8 @@ public class TitheMutationService {
 
 //		TODO Try adding @NotNull in the method parameter above - No Use
 		PersonEntity person = personQueryService.getOnePerson(personId);
-		List<TitheEntity> tithes = titheQueryService.buildTitheEntities(person, titheMutationInputs);
+		TitheBuilder titheBuilder = new TitheBuilder();
+		List<TitheEntity> tithes = titheBuilder.buildTithe(person, titheMutationInputs);
 		return titheRepository.saveAll(tithes);
 	}
 

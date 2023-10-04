@@ -86,6 +86,22 @@ export const createFamilyMutation = `mutation createFamily ($family: FamilyMutat
 }
 `;
 
+export const createFamilyMembers = `mutation createFamilyMembers ($familyId: ID!, $persons: [PersonMutationThroughFamilyInput]!){
+    createManyPersonsInOneFamily (familyId: $familyId, persons: $persons){
+        personId
+        personName
+    }
+}
+`;
+
+export const changeHeadOfFamily = `mutation changeHeadOfFamily ($familyId: ID!, $newHeadOfFamily: PersonRelationSchema!, $persons: [PersonRelationSchema]){
+    changeHeadOfFamily (familyId: $familyId, newHeadOfFamily: $newHeadOfFamily, persons: $persons){
+        familyId
+        familyName
+    }
+}
+`;
+
 export const deactivateFamilyMutation = `mutation removeFamily ($familyId: ID!){
     deactivateOneFamily (familyId: $familyId){
         familyId
@@ -132,6 +148,20 @@ export const createRelationMutation = `mutation createRelation ($relation: Strin
     createOneRelation(relation: $relation){
         relationId
         relationName
+    }
+}`;
+
+export const createOneEducationMutation = `mutation createOneEducation ($education: String){
+    createOneEducation(education: $education){
+        educationId
+        educationName
+    }
+}`;
+
+export const createOneOccupationMutation = `mutation createOneOccupation ($occupation: String){
+    createOneOccupation(occupation: $occupation){
+        occupationId
+        occupationName
     }
 }`;
 

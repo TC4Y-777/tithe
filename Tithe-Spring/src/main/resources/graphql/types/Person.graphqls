@@ -10,6 +10,7 @@ type Person{
 	tithes: [Tithe]
 	moved: Boolean
 	educations: [Education]
+	occupationSector: OccupationSectorEnum
 	occupations: [Occupation]
 	active: Boolean
 }
@@ -34,8 +35,29 @@ input PersonMutationInput{
 	tithes: [TitheMutationInput]
 	moved: Boolean = false
 	educationIds: [ID]
+	occupationSector: OccupationSectorEnum
 	occupationIds: [ID]
 	active: Boolean = true
+}
+
+input PersonMutationThroughFamilyInput{
+	baptismName: String!
+	personName: String!
+	relationId: ID!
+	gender: GenderEnum!
+	dob: LocalDate!
+	phone: String
+	tithes: [TitheMutationInput]
+	moved: Boolean = false
+	educationIds: [ID]
+	occupationSector: OccupationSectorEnum
+	occupationIds: [ID]
+	active: Boolean = true
+}
+
+input PersonRelationSchema{
+	personId: ID!
+	relationId: ID!
 }
 
 type Relation{
@@ -52,6 +74,11 @@ type Education{
 	educationId: ID!
 	educationName: String!
 	persons: [Person]
+}
+
+enum OccupationSectorEnum{
+	GOVERNMENT
+	PRIVATE
 }
 
 type Occupation{

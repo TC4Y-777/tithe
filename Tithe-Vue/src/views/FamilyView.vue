@@ -16,15 +16,21 @@ import {
   mdiTableLarge,
 } from "@mdi/js";
 
-import SearchBox from "@/components/SearchBox.vue";
+import PersonForm from "@/components/Forms/PersonForm.vue";
+import AddPersonInFamilyForm from "@/components/Forms/AddPersonInFamilyForm.vue";
+import SingleSelectBox from "@/components/SearchBoxes/SingleSelectBox.vue";
 import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBox.vue";
 import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
+import FamilyByParishSingleSelectBox from "@/components/SearchBoxes/FamilyByParishSingleSelectBox.vue";
+import KoottaymaByParishSingleSelectBox from "@/components/SearchBoxes/KoottaymaByParishSingleSelectBox.vue";
+import RelationSingleSelectBox from "@/components/SearchBoxes/RelationSingleSelectBox.vue";
 import LayoutAuthenticated from "@/layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
+import BaseDivider from "@/components/BaseDivider.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import SectionTitle from "@/components/SectionTitle.vue";
 import CardBox from "@/components/CardBox.vue";
@@ -37,16 +43,15 @@ import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
-  familyAllForaneListQuery,
-  familyAllParishListQuery,
-  familyAllFamilyListQuery,
   familyPageActiveEnityCountQuery,
-  familyAllKoottaymaListQuery,
   familyPageActivePersonTableQuery,
+  familyPagePersonsQuery,
 } from "@/externalized-data/graphqlQueries";
 import {
   createFamilyMutation,
   deactivateFamilyMutation,
+  createFamilyMembers,
+  changeHeadOfFamily,
 } from "@/externalized-data/graphqlMutations";
 import {
   familyPageTableTabTitle,
@@ -81,69 +86,16 @@ const forane = ref();
 const parish = ref();
 const family = ref();
 
-const ACTIVE_FORANE_LIST_QUERY = gql`
-  ${familyAllForaneListQuery}
-`;
-
-const {
-  result: activeForaneList,
-  load: activeForaneListLoad,
-  refetch: activeForaneListRefetch,
-} = useLazyQuery(ACTIVE_FORANE_LIST_QUERY);
-activeForaneListLoad();
-const loadForanes = (query, setOptions) => {
-  setOptions(
-    activeForaneList.value?.getAllForanes?.map((entity) => {
-      return {
-        id: entity.foraneId,
-        label: entity.foraneName,
-      };
-    }) ?? []
-  );
+const changeInForane = (entity) => {
+  forane.value = entity;
 };
 
-const ACTIVE_PARISH_BY_FORANE_LIST_QUERY = gql`
-  ${familyAllParishListQuery}
-`;
-
-const {
-  result: activeParishList,
-  load: activeParishListLoad,
-  refetch: activeParishListRefetch,
-} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
-  foraneId: forane.value.id,
-}));
-const loadParishesByForane = (query, setOptions) => {
-  setOptions(
-    activeParishList.value?.getAllParishesByForane?.map((entity) => {
-      return {
-        id: entity.parishId,
-        label: entity.parishName,
-      };
-    }) ?? []
-  );
+const changeInParish = (entity) => {
+  parish.value = entity;
 };
 
-const ACTIVE_FAMILY_BY_PARISH_LIST_QUERY = gql`
-  ${familyAllFamilyListQuery}
-`;
-
-const {
-  result: activeFamilyList,
-  load: activeFamilyListLoad,
-  refetch: activeFamilyListRefetch,
-} = useLazyQuery(ACTIVE_FAMILY_BY_PARISH_LIST_QUERY, () => ({
-  parishId: parish.value.id,
-}));
-const loadFamiliesByParish = (query, setOptions) => {
-  setOptions(
-    activeFamilyList.value?.getAllFamiliesByParish?.map((entity) => {
-      return {
-        id: entity.familyId,
-        label: entity.familyName,
-      };
-    }) ?? []
-  );
+const changeInFamily = (entity) => {
+  family.value = entity;
 };
 
 // Entity Count in Family Page
@@ -165,16 +117,156 @@ const activePersonCount = computed(
   () => activeEntityByFamilyCount.value?.getPersonCountByFamily ?? 0
 );
 
-watch(forane, () => {
-  activeParishListLoad();
+const createFamilyMembersForm = reactive({
+  familyId: "",
+  persons: [],
 });
 
-watch(parish, () => {
-  activeFamilyListLoad();
+// Change in Head of Family
+const changeHeadOfFamilyForm = reactive({
+  familyId: "",
+  newHeadOfFamily: {},
+  persons: [],
+});
+
+// Members in a family
+const personsByFamilyEnabled = ref(false);
+
+const PERSONS_BY_FAMILY_QUERY = gql`
+  ${familyPagePersonsQuery}
+`;
+
+const {
+  result: personsByFamilyResult,
+  onResult: personsByFamilyOnResult,
+  refetch: personsByFamilyRefetch,
+} = useQuery(
+  PERSONS_BY_FAMILY_QUERY,
+  () => ({ id: family.value.id }),
+  () => ({ enabled: personsByFamilyEnabled })
+);
+const personsByFamily = computed(
+  () =>
+    personsByFamilyResult.value?.getAllPersonsByFamily?.map((entity) => {
+      return {
+        id: entity.personId,
+        label: entity.personName,
+        value: {
+          id: entity.personId,
+          label: entity.personName,
+          relationName: entity.relation?.relationName ?? "",
+        },
+        meta: {
+          baptismName: entity.baptismName,
+          relation: entity.relation?.relationName ?? "",
+        },
+      };
+    }) ?? []
+);
+
+const personsByFamilyExcludingOldHeadOfFamily = computed(() =>
+  personsByFamily.value.filter(
+    (person) => person.id !== family.value?.headOfFamily?.personId
+  )
+);
+const personsByFamilyExcludingNewHeadOfFamily = computed(() =>
+  personsByFamily.value.filter(
+    (person) => person.id !== changeHeadOfFamilyForm.newHeadOfFamily?.personId
+  )
+);
+
+const changeInHeadOfFamily = (entity) => {
+  if (entity !== null && entity !== undefined) {
+    changeHeadOfFamilyForm.newHeadOfFamily.personId = entity?.id ?? "";
+  }
+};
+const changeInHeadOfFamilyRelation = (relation) => {
+  if (relation !== null && relation !== undefined) {
+    changeHeadOfFamilyForm.newHeadOfFamily.relationId = relation?.id ?? "";
+  }
+};
+const changeInHeadOfFamily_MemberRelation = (personId, personRelationId) => {
+  let personIdAlreadyExists = false;
+  changeHeadOfFamilyForm.persons = changeHeadOfFamilyForm.persons.map((obj) => {
+    if (obj.personId === personId) {
+      personIdAlreadyExists = true;
+      return { ...obj, relationId: personRelationId };
+    }
+    return obj;
+  });
+
+  if (!personIdAlreadyExists) {
+    changeHeadOfFamilyForm.persons.push({
+      personId: personId,
+      relationId: personRelationId,
+    });
+  }
+};
+
+const newHeadOfFamilySelectBoxRef = ref(null);
+const newHeadOfFamilyFormRelationRef = ref(null);
+
+// Change of Head of Family Mutation
+const CHANGE_HEAD_OF_FAMILY_MUTATION = gql`
+  ${changeHeadOfFamily}
+`;
+
+const {
+  mutate: changeHeadOfFamilyMutate,
+  loading: changeHeadOfFamilyLoading,
+  onDone: changeHeadOfFamilyDone,
+  onError: changeHeadOfFamilyError,
+} = useMutation(CHANGE_HEAD_OF_FAMILY_MUTATION);
+
+const submitChangeHeadOfFamilyForm = () => {
+  if (hasEmptyValues(createFamilyMembersForm, ["persons"])) {
+    console.log("Empty Values: " + createFamilyMembersForm);
+  } else {
+    console.log("Complete Values: " + createFamilyMembersForm);
+    changeHeadOfFamilyMutate({
+      familyId: changeHeadOfFamilyForm.familyId,
+      newHeadOfFamily: changeHeadOfFamilyForm.newHeadOfFamily,
+      persons: changeHeadOfFamilyForm.persons,
+    });
+  }
+};
+
+watch(changeHeadOfFamilyLoading, (value) => {
+  infoNotificationEnabled.value = changeHeadOfFamilyLoading.value;
+  if (value === true) {
+    infoNotificationHeading.value = "Changing Head of Family.";
+    infoNotificationContent.value = "Please Wait...";
+  } else {
+    infoNotificationHeading.value = "";
+    infoNotificationContent.value = "";
+  }
+});
+
+changeHeadOfFamilyDone(() => {
+  console.log("onDone called");
+  successNotificationEnabled.value = true;
+  successNotificationHeading.value = "Changed Head of Family.";
+  successNotificationContent.value = "";
+
+  setTimeout(() => {
+    successNotificationEnabled.value = false;
+    successNotificationHeading.value = "";
+    successNotificationContent.value = "";
+  }, 3000);
+
+  location.reload();
 });
 
 watch(family, () => {
   activeEntityByFamilyCountEnabled.value = true;
+  createFamilyMembersForm.familyId = family.value?.id ?? "";
+
+  personsByFamilyEnabled.value = true;
+  changeHeadOfFamilyForm.familyId = family.value?.id ?? "";
+  newHeadOfFamilySelectBoxRef.value?.clearField();
+  newHeadOfFamilyFormRelationRef.value?.clearRelation();
+  changeHeadOfFamilyForm.newHeadOfFamily = {};
+  changeHeadOfFamilyForm.persons = [];
 });
 
 const createFamilyForm = reactive({
@@ -189,6 +281,8 @@ const createFamilyForm = reactive({
   },
   phone: "",
   koottaymaId: "",
+  headOfFamily: {},
+  persons: [],
 });
 
 // Form Forane Search Box
@@ -197,59 +291,23 @@ const formForane = ref();
 // Form Parish Search Box
 const formParish = ref();
 
-const {
-  result: activeFormParishList,
-  load: activeFormParishListLoad,
-  refetch: activeFormParishListRefetch,
-} = useLazyQuery(ACTIVE_PARISH_BY_FORANE_LIST_QUERY, () => ({
-  foraneId: formForane.value.id,
-}));
-const loadFormParishesByForane = (query, setOptions) => {
-  setOptions(
-    activeFormParishList.value?.getAllParishesByForane?.map((entity) => {
-      return {
-        id: entity.parishId,
-        label: entity.parishName,
-      };
-    }) ?? []
-  );
-};
-
 // Form Koottayma Search Box
 const formKoottayma = ref();
 
-const ACTIVE_KOOTTAYMA_BY_PARISH_LIST_QUERY = gql`
-  ${familyAllKoottaymaListQuery}
-`;
-
-const {
-  result: activeFormKoottaymaList,
-  load: activeFormKoottaymaListLoad,
-  refetch: activeFormKoottaymaListRefetch,
-} = useLazyQuery(ACTIVE_KOOTTAYMA_BY_PARISH_LIST_QUERY, () => ({
-  parishId: formParish.value.id,
-}));
-const loadFormKoottaymasByParish = (query, setOptions) => {
-  setOptions(
-    activeFormKoottaymaList.value?.getAllKoottaymasByParish?.map((entity) => {
-      return {
-        id: entity.koottaymaId,
-        label: entity.koottaymaName,
-      };
-    }) ?? []
-  );
+const changeInFormForane = (entity) => {
+  formForane.value = entity;
 };
 
-watch(formForane, () => {
-  activeFormParishListLoad();
-});
+const changeInFormParish = (entity) => {
+  formParish.value = entity;
+};
 
-watch(formParish, () => {
-  activeFormKoottaymaListLoad();
-});
+const changeInFormKoottayma = (entity) => {
+  formKoottayma.value = entity;
+};
 
 watch(formKoottayma, (value) => {
-  createFamilyForm.koottaymaId = value.id;
+  createFamilyForm.koottaymaId = value?.id ?? "";
 });
 
 // Code for checking whether object has empty values
@@ -275,7 +333,9 @@ const changeInAddressFormData = (eventData) => {
   createFamilyForm.address = eventData;
 };
 
-const addressFormComponent = ref(null);
+const changeInFamilyMembers = (value) => {
+  createFamilyForm.persons = value;
+};
 
 // Submit Create Family Form
 const CREATE_FAMILY_MUTATION = gql`
@@ -289,7 +349,15 @@ const {
 } = useMutation(CREATE_FAMILY_MUTATION);
 
 const submitCreateFamilyForm = () => {
-  if (hasEmptyValues(createFamilyForm, ["buildingName", "phone"])) {
+  if (
+    hasEmptyValues(createFamilyForm, [
+      "buildingName",
+      "phone",
+      "educationIds",
+      "occupationSector",
+      "occupationIds",
+    ])
+  ) {
     console.log("Empty Values: " + createFamilyForm);
   } else {
     console.log("Complete Values: " + createFamilyForm);
@@ -308,19 +376,101 @@ watch(createFamilyLoading, (value) => {
   }
 });
 
+const foraneSelectBoxRef = ref(null);
+const parishSelectBoxRef = ref(null);
+const koottaymaSelectBoxRef = ref(null);
+
+const addressFormComponent = ref(null);
+
+const headOfFamilyFormRef = ref(null);
+const familyMembersFormRef = ref(null);
+
 createFamilyDone(() => {
   console.log("onDone called");
   successNotificationEnabled.value = true;
   successNotificationHeading.value = "Created Family.";
   successNotificationContent.value = "";
 
-  createFamilyForm.koottaymaName = "";
-  createFamilyForm.phone = "";
+  // createFamilyForm.koottaymaName = "";
+  createFamilyForm.familyName = "";
   createFamilyForm.address.buildingName = "";
+
+  foraneSelectBoxRef.value.clearForane();
   formForane.value = "";
+  parishSelectBoxRef.value.clearParish();
   formParish.value = "";
+  koottaymaSelectBoxRef.value.clearKoottayma();
   formKoottayma.value = "";
+
   addressFormComponent.value.clearAddressFields();
+
+  createFamilyForm.phone = "";
+  createFamilyForm.koottaymaId = "";
+
+  headOfFamilyFormRef.value.clearPersonForm();
+  createFamilyForm.headOfFamily = {};
+
+  familyMembersFormRef.value.clearFamilyMembersForm();
+  createFamilyForm.persons = [];
+
+  setTimeout(() => {
+    successNotificationEnabled.value = false;
+    successNotificationHeading.value = "";
+    successNotificationContent.value = "";
+  }, 3000);
+});
+
+// Add Family Members of selected Family
+const addFamilyMembersAloneRef = ref(null);
+
+const changeInFamilyMembersAlone = (value) => {
+  createFamilyMembersForm.persons = value;
+};
+
+const ADD_FAMILY_MEMBERS_ALONE_MUTATION = gql`
+  ${createFamilyMembers}
+`;
+
+const {
+  mutate: addFamilyMembersAlone,
+  loading: addFamilyMembersAloneLoading,
+  onDone: addFamilyMembersAloneDone,
+  onError: addFamilyMembersAloneError,
+} = useMutation(ADD_FAMILY_MEMBERS_ALONE_MUTATION);
+
+const submitAddFamilyMembersForm = () => {
+  if (hasEmptyValues(createFamilyMembersForm, ["buildingName", "phone"])) {
+    console.log("Empty Values: " + createFamilyMembersForm);
+  } else {
+    console.log("Complete Values: " + createFamilyMembersForm);
+    addFamilyMembersAlone({
+      familyId: family.value?.id,
+      persons: createFamilyMembersForm.persons,
+    });
+  }
+};
+
+watch(addFamilyMembersAloneLoading, (value) => {
+  infoNotificationEnabled.value = addFamilyMembersAloneLoading.value;
+  if (value === true) {
+    infoNotificationHeading.value = "Adding Family Members.";
+    infoNotificationContent.value = "Please Wait...";
+  } else {
+    infoNotificationHeading.value = "";
+    infoNotificationContent.value = "";
+  }
+});
+
+addFamilyMembersAloneDone(() => {
+  console.log("onDone called");
+  successNotificationEnabled.value = true;
+  successNotificationHeading.value = "Added Family Members.";
+  successNotificationContent.value = "";
+
+  addFamilyMembersAloneRef.value.clearFamilyMembersForm();
+
+  createFamilyMembersForm.familyId = "";
+  createFamilyMembersForm.persons = [];
 
   setTimeout(() => {
     successNotificationEnabled.value = false;
@@ -404,32 +554,22 @@ const getActivePersonRows = computed(() => {
     <SectionMain>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="flex-col justify-between">
-          <FormField label="Select Forane">
-            <SearchBox
-              v-model="forane"
-              :load-options="loadForanes"
-              :create-option="false"
-              :reload-method="activeForaneListRefetch"
-              bg-color="#0f172a"
+          <ForaneSingleSelectBox @change-in-forane="changeInForane" />
+          <span v-if="forane">
+            <ParishByForaneSingleSelectBox
+              :selected-forane="forane"
+              @change-in-parish="changeInParish"
             />
-          </FormField>
-          <FormField v-if="forane" label="Select Parish">
-            <SearchBox
-              v-model="parish"
-              :load-options="loadParishesByForane"
-              :create-option="false"
-              :reload-method="activeParishListRefetch"
-              bg-color="#0f172a"
-            />
-          </FormField>
-          <FormField v-if="parish" label="Select Family">
-            <SearchBox
-              v-model="family"
-              :load-options="loadFamiliesByParish"
-              :create-option="false"
-              :reload-method="activeFamilyListRefetch"
-              bg-color="#0f172a"
-            />
+            <span></span>
+          </span>
+
+          <FormField>
+            <span v-if="parish">
+              <FamilyByParishSingleSelectBox
+                :selected-parish="parish"
+                @change-in-family="changeInFamily"
+              />
+            </span>
           </FormField>
         </div>
         <div class="flex flex justify-between">
@@ -451,6 +591,7 @@ const getActivePersonRows = computed(() => {
                       v-model="createFamilyForm.familyName"
                       type="text"
                       :icon="mdiAccountMultiple"
+                      :borderless="true"
                       placeholder="Shalom House"
                     />
                   </FormField>
@@ -460,37 +601,32 @@ const getActivePersonRows = computed(() => {
                       v-model="createFamilyForm.address.buildingName"
                     />
                   </FormField> -->
-                  <FormField label="Forane">
-                    <SearchBox
-                      v-model="formForane"
-                      :load-options="loadForanes"
-                      :create-option="false"
-                      :reload-method="activeForaneListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="Parish">
-                    <SearchBox
-                      v-model="formParish"
-                      :load-options="loadFormParishesByForane"
-                      :create-option="false"
-                      :reload-method="activeFormParishListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
-                  <FormField label="Koottayma">
-                    <SearchBox
-                      v-model="formKoottayma"
-                      :load-options="loadFormKoottaymasByParish"
-                      :create-option="false"
-                      :reload-method="activeFormKoottaymaListRefetch"
-                      bg-color="#1e293b"
-                    />
-                  </FormField>
+                  <ForaneSingleSelectBox
+                    ref="foraneSelectBoxRef"
+                    heading="Forane"
+                    class="multipleSelectAddressBox"
+                    @change-in-forane="changeInFormForane"
+                  />
+                  <ParishByForaneSingleSelectBox
+                    ref="parishSelectBoxRef"
+                    heading="Parish"
+                    :selected-forane="formForane"
+                    class="multipleSelectAddressBox"
+                    @change-in-parish="changeInFormParish"
+                  />
+
+                  <KoottaymaByParishSingleSelectBox
+                    ref="koottaymaSelectBoxRef"
+                    heading="Koottayma"
+                    :selected-parish="formParish"
+                    class="multipleSelectAddressBox"
+                    @change-in-koottayma="changeInFormKoottayma"
+                  />
                   <FormField label="Phone">
                     <FormControl
                       v-model="createFamilyForm.phone"
                       type="tel"
+                      :borderless="true"
                       placeholder="04792662745"
                     />
                   </FormField>
@@ -498,11 +634,146 @@ const getActivePersonRows = computed(() => {
                     ref="addressFormComponent"
                     @address-form-change="changeInAddressFormData"
                   />
+                  <BaseDivider />
+                  <div class="text-center">
+                    <h1 class="text-xl">Head of Family</h1>
+                  </div>
+                  <PersonForm
+                    ref="headOfFamilyFormRef"
+                    v-model="createFamilyForm.headOfFamily"
+                  />
+
+                  <AddPersonInFamilyForm
+                    ref="familyMembersFormRef"
+                    @change-in-family-members="changeInFamilyMembers"
+                  />
                   <BaseButton
+                    class="baseButtonStyle"
+                    color="success"
+                    label="Submit"
+                    @click="submitCreateFamilyForm"
+                  />
+                </DisclosurePanel>
+              </Disclosure>
+              <Disclosure v-if="family" v-slot="{ open }" as="div" class="mt-2">
+                <DisclosureButton
+                  class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
+                >
+                  <span>Add New Family Members</span>
+                  <ChevronUpIcon
+                    :class="open ? 'rotate-180 transform' : ''"
+                    class="disclosure-heading h-5 w-5 text-purple-500"
+                  />
+                </DisclosureButton>
+                <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
+                  <AddPersonInFamilyForm
+                    ref="addFamilyMembersAloneRef"
+                    @change-in-family-members="changeInFamilyMembersAlone"
+                  />
+                  <BaseButton
+                    v-if="createFamilyMembersForm.persons.length !== 0"
                     class="baseButtonStyle"
                     color="info"
                     label="Submit"
-                    @click="submitCreateFamilyForm"
+                    @click="submitAddFamilyMembersForm"
+                  />
+                </DisclosurePanel>
+              </Disclosure>
+              <Disclosure v-if="family" v-slot="{ open }" as="div" class="mt-2">
+                <DisclosureButton
+                  class="disclosure-heading flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-transparent focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
+                >
+                  <span>Change Head of Family</span>
+                  <ChevronUpIcon
+                    :class="open ? 'rotate-180 transform' : ''"
+                    class="disclosure-heading h-5 w-5 text-purple-500"
+                  />
+                </DisclosureButton>
+                <DisclosurePanel class="px-4 pt-4 pb-2 text-sm text-white">
+                  <FormField
+                    label="Current Head of Family"
+                    class="justify-between"
+                  >
+                    <FormControl
+                      v-model="family.headOfFamily.personName"
+                      type="text"
+                      :borderless="true"
+                      :disabled="true"
+                      placeholder="Head of Family"
+                    />
+                    <FormControl
+                      v-model="family.headOfFamily.relation.relationName"
+                      type="text"
+                      :borderless="true"
+                      :disabled="true"
+                      placeholder="Relation"
+                    />
+                  </FormField>
+
+                  <FormField label="New Head of Family" class="justify-between">
+                    <span>
+                      <SingleSelectBox
+                        ref="newHeadOfFamilySelectBoxRef"
+                        :can-deselect="false"
+                        :can-clear="false"
+                        :searchable="false"
+                        :options="personsByFamilyExcludingOldHeadOfFamily"
+                        class="multipleSelectAddressBox"
+                        @value-change="changeInHeadOfFamily"
+                      />
+                    </span>
+
+                    <RelationSingleSelectBox
+                      ref="newHeadOfFamilyFormRelationRef"
+                      heading=""
+                      class="multipleSelectAddressBox"
+                      @change-in-relation="changeInHeadOfFamilyRelation"
+                    />
+                  </FormField>
+
+                  <div
+                    v-if="
+                      Object.values(changeHeadOfFamilyForm.newHeadOfFamily)
+                        .length !== 0
+                    "
+                  >
+                    <FormField label="Family Members">
+                      <span></span>
+                    </FormField>
+                    <FormField
+                      v-for="(
+                        person, index
+                      ) in personsByFamilyExcludingNewHeadOfFamily"
+                      :key="index"
+                      class="justify-between"
+                    >
+                      <FormControl
+                        v-model="person.label"
+                        type="text"
+                        :borderless="true"
+                        :disabled="true"
+                        placeholder="Family Member"
+                      />
+                      <RelationSingleSelectBox
+                        heading=""
+                        class="multipleSelectAddressBox"
+                        @change-in-relation="
+                          (relation) => {
+                            changeInHeadOfFamily_MemberRelation(
+                              person.id,
+                              relation.id
+                            );
+                          }
+                        "
+                      />
+                    </FormField>
+                    <span></span>
+                  </div>
+                  <BaseButton
+                    class="baseButtonStyle font-bold"
+                    color="info"
+                    label="Submit"
+                    @click="submitChangeHeadOfFamilyForm"
                   />
                 </DisclosurePanel>
               </Disclosure>
@@ -618,5 +889,21 @@ const getActivePersonRows = computed(() => {
 
 .baseButtonStyle {
   width: 100%;
+}
+
+.multipleSelectAddressBox :deep(.multiselect-theme) {
+  --ms-bg: #1e293b;
+  --ms-dropdown-bg: #1e293b;
+  --ms-dropdown-border-color: #1e293b;
+
+  --ms-py: 0.757rem;
+}
+
+.multiselect-theme {
+  --ms-bg: #1e293b;
+  --ms-dropdown-bg: #1e293b;
+  --ms-dropdown-border-color: #1e293b;
+
+  --ms-py: 0.757rem;
 }
 </style>

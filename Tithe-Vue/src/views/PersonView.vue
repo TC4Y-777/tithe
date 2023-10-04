@@ -569,7 +569,7 @@ onMounted(() => {
 
                   <BaseButton
                     class="baseButtonStyle"
-                    color="info"
+                    color="success"
                     label="Submit"
                     @click="submitCreatePersonForm"
                   />

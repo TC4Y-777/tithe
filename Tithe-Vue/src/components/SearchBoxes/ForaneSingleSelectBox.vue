@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import gql from "graphql-tag";
 import { useLazyQuery } from "@vue/apollo-composable";
 
@@ -61,11 +61,20 @@ const loadForanes = computed((query, setOptions) => {
 const changeInForane = (entity) => {
   emits("changeInForane", entity);
 };
+
+const foraneRef = ref(null);
+const clearForane = () => {
+  foraneRef.value.clearField();
+};
+defineExpose({
+  clearForane,
+});
 </script>
 
 <template>
   <FormField :label="heading">
     <SingleSelectBox
+      ref="foraneRef"
       :options="loadForanes"
       :can-deselect="false"
       :can-clear="false"

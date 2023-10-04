@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.tithe.model.GenderEnum;
+import com.tithe.model.OccupationSectorEnum;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -53,8 +54,9 @@ public class PersonEntity {
 	@NotBlank(message =  "Name of Person is empty or null")
 	private String personName;
 
-	@NotNull(message = "Family does not exist")
-	@ManyToOne(cascade = CascadeType.PERSIST)
+//	@NotNull(message = "Family does not exist")
+//	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne
 	@JoinColumn(name = "family_id")
 	private FamilyEntity family;
 
@@ -84,6 +86,8 @@ public class PersonEntity {
 	@JoinTable(name = "person_educations_table", uniqueConstraints =
 	@UniqueConstraint(columnNames = {"persons_person_id", "educations_education_id"}))
 	private List<EducationEntity> educations;
+	
+	private OccupationSectorEnum occupationSector;
 
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "person_occupations_table", joinColumns = @JoinColumn(name = "person_id"),

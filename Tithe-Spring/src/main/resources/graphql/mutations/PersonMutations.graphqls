@@ -1,5 +1,8 @@
 extend type Mutation{
-	createOnePerson(person: PersonMutationInput): Person
+	createOnePerson(person: PersonMutationInput!): Person
+	createManyPersonsInOneFamily(familyId: ID!, persons: [PersonMutationThroughFamilyInput]!): [Person]
+	
+	changeRelation(personId: ID!, relationId: ID!): Person
 	
 	activateOnePerson(id: ID): Person
 	activateManyPersons(ids: [ID]): [Person]

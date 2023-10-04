@@ -1,16 +1,22 @@
 <script setup>
 import { watch, ref } from "vue";
 
-// import Multiselect from "@vueform/multiselect";
-
 defineProps({
+  mode: {
+    type: String,
+    default: "multiple",
+  },
+  max: {
+    type: Number,
+    default: 1,
+  },
   options: {
     type: [Array, Object, Function],
     required: false,
     default: () => [],
   },
-  canDeselect: Boolean,
   canClear: Boolean,
+  closeOnSelect: Boolean,
   searchable: Boolean,
   metaLabelEnabled: Boolean,
   createOption: Boolean,
@@ -46,9 +52,11 @@ defineExpose({
   <Multiselect
     ref="multiselect"
     v-model="entity"
+    :mode="mode"
+    :max="max"
     :options="options"
-    :can-deselect="canDeselect"
     :can-clear="canClear"
+    :close-on-select="closeOnSelect"
     :searchable="searchable"
     :meta-label-enabled="metaLabelEnabled"
     :create-option="createOption"
@@ -75,10 +83,4 @@ defineExpose({
   --ms-option-bg-selected-pointed: white;
   --ms-option-color-selected-pointed: #3b82f6;
 }
-
-/* .multiselect-theme :deep(input) {
-  background-color: #0f172a;
-  border-width: 0px;
-  border-color: #0f172a;
-} */
 </style>

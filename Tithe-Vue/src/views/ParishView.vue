@@ -38,8 +38,6 @@ import RemoveEntityDisclosure from "@/components/RemoveEntityDisclosure.vue";
 
 import TableTabs from "@/components/TableTabs.vue";
 import {
-  parishAllForaneListQuery,
-  parishAllParishListQuery,
   parishPageActiveEnityCountQuery,
   parishPageActiveKoottaymaTableQuery,
   parishPageActiveFamilyTableQuery,
@@ -146,7 +144,7 @@ const changeInFormForane = (entity) => {
 };
 
 watch(formForane, (value) => {
-  createParishForm.foraneId = value.id;
+  createParishForm.foraneId = value?.id ?? "";
 });
 
 // Code for checking whether object has empty values
@@ -205,6 +203,8 @@ watch(createParishLoading, (value) => {
   }
 });
 
+const formForaneSelectBoxRef = ref(null);
+
 createParishDone(() => {
   console.log("onDone called");
   successNotificationEnabled.value = true;
@@ -214,8 +214,11 @@ createParishDone(() => {
   createParishForm.parishName = "";
   createParishForm.phone = "";
   createParishForm.address.buildingName = "";
-  formForane.value = "";
   addressFormComponent.value.clearAddressFields();
+
+  formForaneSelectBoxRef.value.clearForane();
+  formForane.value = "";
+  createParishForm.foraneId = "";
 
   setTimeout(() => {
     successNotificationEnabled.value = false;
@@ -385,6 +388,7 @@ const getActivePersonRows = computed(() => {
                     />
                   </FormField> -->
                   <ForaneSingleSelectBox
+                    ref="formForaneSelectBoxRef"
                     heading="Forane"
                     class="multipleSelectAddressBox"
                     @change-in-forane="changeInFormForane"
