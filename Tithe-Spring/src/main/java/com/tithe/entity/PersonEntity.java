@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.tithe.model.GenderEnum;
+import com.tithe.model.OccupationSectorEnum;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -85,6 +86,8 @@ public class PersonEntity {
 	@JoinTable(name = "person_educations_table", uniqueConstraints =
 	@UniqueConstraint(columnNames = {"persons_person_id", "educations_education_id"}))
 	private List<EducationEntity> educations;
+	
+	private OccupationSectorEnum occupationSector;
 
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "person_occupations_table", joinColumns = @JoinColumn(name = "person_id"),

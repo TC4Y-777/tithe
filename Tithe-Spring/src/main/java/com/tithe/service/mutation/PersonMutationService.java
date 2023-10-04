@@ -186,6 +186,7 @@ public class PersonMutationService {
 				.phone(personMutationInput.getPhone())
 				.moved(personMutationInput.getMoved())
 				.educations(educations)
+				.occupationSector(personMutationInput.getOccupationSector())
 				.occupations(occupations)
 				.active(personMutationInput.getActive())
 				.build();

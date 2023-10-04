@@ -10,6 +10,7 @@ type Person{
 	tithes: [Tithe]
 	moved: Boolean
 	educations: [Education]
+	occupationSector: OccupationSectorEnum
 	occupations: [Occupation]
 	active: Boolean
 }
@@ -34,6 +35,7 @@ input PersonMutationInput{
 	tithes: [TitheMutationInput]
 	moved: Boolean = false
 	educationIds: [ID]
+	occupationSector: OccupationSectorEnum
 	occupationIds: [ID]
 	active: Boolean = true
 }
@@ -48,6 +50,7 @@ input PersonMutationThroughFamilyInput{
 	tithes: [TitheMutationInput]
 	moved: Boolean = false
 	educationIds: [ID]
+	occupationSector: OccupationSectorEnum
 	occupationIds: [ID]
 	active: Boolean = true
 }
@@ -71,6 +74,11 @@ type Education{
 	educationId: ID!
 	educationName: String!
 	persons: [Person]
+}
+
+enum OccupationSectorEnum{
+	GOVERNMENT
+	PRIVATE
 }
 
 type Occupation{

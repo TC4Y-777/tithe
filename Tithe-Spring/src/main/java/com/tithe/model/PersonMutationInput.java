@@ -46,6 +46,9 @@ public class PersonMutationInput {
 	List<TitheMutationInput> tithes;
 	Boolean moved = false;
 	List<Long> educationIds;
+	
+	OccupationSectorEnum occupationSector;
+	
 	List<Long> occupationIds;
 	Boolean active = true;
 

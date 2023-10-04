@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tithe.model.GenderEnum;
+import com.tithe.model.OccupationSectorEnum;
 import com.tithe.utils.ObjectValidation;
 
 
@@ -30,6 +31,7 @@ public class PersonBuilder {
 	private List<TitheEntity> tithes;
 	private Boolean moved = false;
 	private List<EducationEntity> educations;
+	private OccupationSectorEnum occupationSector;
 	private List<OccupationEntity> occupations;
 	private Boolean active = true;
 
@@ -87,6 +89,11 @@ public class PersonBuilder {
 		this.educations = educations;
 		return this;
 	}
+	
+	public PersonBuilder occupationSector(OccupationSectorEnum occupationSector) {
+		this.occupationSector = occupationSector;
+		return this;
+	}
 
 	public PersonBuilder occupations(List<OccupationEntity> occupations) {
 		this.occupations = occupations;
@@ -100,7 +107,7 @@ public class PersonBuilder {
 
 	public PersonEntity build() {
 		PersonEntity person = new PersonEntity(personId, baptismName, personName, family, relation, gender, dob, phone,
-				tithes, moved, educations, occupations, active);
+				tithes, moved, educations, occupationSector, occupations, active);
 		return person;
 	}
 
