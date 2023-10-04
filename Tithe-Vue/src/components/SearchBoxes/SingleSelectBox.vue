@@ -13,7 +13,12 @@ defineProps({
   canClear: Boolean,
   searchable: Boolean,
   metaLabelEnabled: Boolean,
+  createOption: Boolean,
   resolveOnLoad: Boolean,
+  onCreate: {
+    type: Function,
+    default: () => {},
+  },
 });
 
 const emit = defineEmits(["valueChange", "searchChange"]);
@@ -46,6 +51,8 @@ defineExpose({
     :can-clear="canClear"
     :searchable="searchable"
     :meta-label-enabled="metaLabelEnabled"
+    :create-option="createOption"
+    :on-create="onCreate"
     :resolve-on-load="resolveOnLoad"
     class="multiselect-theme"
     @search-change="searchChange"

@@ -259,9 +259,9 @@
               :is-pointed="isPointed"
               :search="search"
             >
-              <span>{{ localize(option[label]) }} </span>
+              <span> {{ localize(option[label]) }} </span>
               <span v-if="metaLabelEnabled" class="meta-label"
-                >{{ Object.values(option?.meta ?? {}).join(",") }}
+                >{{ Object.values(option?.meta ?? {}).join(", ") }}
               </span>
             </slot>
           </li>

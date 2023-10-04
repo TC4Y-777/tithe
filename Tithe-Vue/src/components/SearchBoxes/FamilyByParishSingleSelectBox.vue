@@ -42,6 +42,12 @@ const loadFamilies = computed((query, setOptions) => {
         value: {
           id: entity.familyId,
           label: entity.familyName,
+          headOfFamily: entity.headOfFamily,
+          persons: entity.persons,
+        },
+        meta: {
+          headOfFamily: entity.headOfFamily?.personName ?? "",
+          address: entity.address?.street?.streetName ?? "",
         },
       };
     }) ?? []
@@ -74,7 +80,7 @@ defineExpose({
       :can-deselect="false"
       :can-clear="false"
       :searchable="true"
-      :meta-label-enabled="false"
+      :meta-label-enabled="true"
       @value-change="changeInFamily"
     />
   </FormField>
