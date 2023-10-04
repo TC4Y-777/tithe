@@ -52,6 +52,11 @@ input PersonMutationThroughFamilyInput{
 	active: Boolean = true
 }
 
+input PersonRelationSchema{
+	personId: ID!
+	relationId: ID!
+}
+
 type Relation{
 	relationId: ID!
 	relationName: String!

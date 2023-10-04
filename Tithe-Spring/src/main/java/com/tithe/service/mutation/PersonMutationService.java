@@ -81,6 +81,33 @@ public class PersonMutationService {
 		return personRepository.save(person);
 	}
 
+	public List<PersonEntity> createManyPersonsInOneFamily(Long familyId,
+			List<PersonMutationInput> personMutationInputs) {
+		FamilyEntity family = familyQueryService.getOneFamily(familyId);
+
+		if (family != null) {
+			List<PersonEntity> persons = buildPersonsWithTithe(family, personMutationInputs);
+			return personRepository.saveAll(persons);
+		}
+		throw new GraphQLException("Family does not exist");
+	}
+
+	public PersonEntity changeRelation(Long personId, Long relationId) {
+		if (personId == null || relationId == null) {
+			throw new GraphQLException("Person Id and Relation Id should be valid");
+		}
+
+		PersonEntity person = personQueryService.getOnePerson(personId);
+		RelationEntity relation = relationQueryService.getOneRelation(relationId);
+
+		if (person == null || relation == null) {
+			throw new GraphQLException("Person and Relation should exist");
+		}
+
+		person.setRelation(relation);
+		return personRepository.save(person);
+	}
+
 	public PersonEntity activateOnePerson(Long id) {
 		Optional<PersonEntity> person = personRepository.findById(id);
 		if (person.isPresent()) {
@@ -121,7 +148,7 @@ public class PersonMutationService {
 		}
 		return null;
 	}
-	
+
 	public List<EducationEntity> getEducations(List<Long> educationIds) {
 		List<EducationEntity> educations = new ArrayList<>();
 		if (educationIds != null && educationIds.size() != 0) {
@@ -129,16 +156,17 @@ public class PersonMutationService {
 		}
 		return educations;
 	}
-	
-	public List<OccupationEntity> getOccupations(List<Long> occupationIds){
+
+	public List<OccupationEntity> getOccupations(List<Long> occupationIds) {
 		List<OccupationEntity> occupations = new ArrayList<>();
 		if (occupationIds != null && occupationIds.size() != 0) {
 			occupations = occupationQueryService.getManyOccupations(occupationIds);
 		}
 		return occupations;
 	}
-	
-	public PersonEntity buildPersonWithTithe(FamilyEntity family, PersonMutationInput personMutationInput) {
+
+	public PersonEntity buildPersonWithTithe(FamilyEntity family,
+			PersonMutationInput personMutationInput) {
 		objectValidation.validateObject(personMutationInput);
 
 		RelationEntity relation = relationQueryService
@@ -166,13 +194,14 @@ public class PersonMutationService {
 		TitheBuilder titheBuilder = new TitheBuilder();
 		List<TitheEntity> tithes = titheBuilder.buildTithe(person, personMutationInput.getTithes());
 		person.setTithes(tithes);
-	
+
 		return person;
 	}
-	
-	public List<PersonEntity> buildPersonsWithTithe(FamilyEntity family, List<PersonMutationInput> personMutationInputs){
+
+	public List<PersonEntity> buildPersonsWithTithe(FamilyEntity family,
+			List<PersonMutationInput> personMutationInputs) {
 		List<PersonEntity> persons = new ArrayList<>();
-		for(PersonMutationInput personMutationInput: personMutationInputs) {
+		for (PersonMutationInput personMutationInput : personMutationInputs) {
 			PersonEntity person = buildPersonWithTithe(family, personMutationInput);
 			persons.add(person);
 		}

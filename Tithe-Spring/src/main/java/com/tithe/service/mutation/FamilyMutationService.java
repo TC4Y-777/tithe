@@ -4,6 +4,7 @@
 package com.tithe.service.mutation;
 
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import com.tithe.entity.PersonEntity;
 import com.tithe.model.AddressMutationInput;
 import com.tithe.model.FamilyMutationInput;
 import com.tithe.model.PersonMutationInput;
+import com.tithe.model.PersonRelationInputModel;
 import com.tithe.repository.FamilyRepository;
 import com.tithe.service.query.AddressQueryService;
 import com.tithe.service.query.KoottaymaQueryService;
@@ -88,6 +90,35 @@ public class FamilyMutationService {
 		family.setActive(familyMutationInput.getActive());
 
 		return familyRepository.save(family);
+	}
+
+	public FamilyEntity changeHeadOfFamily(Long familyId,
+			PersonRelationInputModel headOfFamilyModel,
+			List<PersonRelationInputModel> personModels) {
+
+		objectValidation.validateObject(headOfFamilyModel);
+		objectValidation.validateObject(personModels);
+
+		if (familyId == null) {
+			throw new GraphQLException("Family Id is invalid");
+		}
+
+		Optional<FamilyEntity> obtainedFamily = familyRepository.findById(familyId);
+		FamilyEntity family = obtainedFamily.orElseThrow();
+
+		PersonEntity headOfFamily = personMutationService
+				.changeRelation(headOfFamilyModel.getPersonId(), headOfFamilyModel.getRelationId());
+		family.setHeadOfFamily(headOfFamily);
+
+		if (personModels != null && personModels.size() != 0) {
+			for (PersonRelationInputModel personModel : personModels) {
+				personMutationService.changeRelation(personModel.getPersonId(),
+						personModel.getRelationId());
+			}
+		}
+
+		return family;
+
 	}
 
 	public FamilyEntity activateOneFamily(Long familyId) {
