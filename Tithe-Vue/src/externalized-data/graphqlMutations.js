@@ -151,6 +151,20 @@ export const createRelationMutation = `mutation createRelation ($relation: Strin
     }
 }`;
 
+export const createOneEducationMutation = `mutation createOneEducation ($education: String){
+    createOneEducation(education: $education){
+        educationId
+        educationName
+    }
+}`;
+
+export const createOneOccupationMutation = `mutation createOneOccupation ($occupation: String){
+    createOneOccupation(occupation: $occupation){
+        occupationId
+        occupationName
+    }
+}`;
+
 // Address Mutations
 
 export const createStreetMutation = `mutation createNewStreet ($streetName: String!){

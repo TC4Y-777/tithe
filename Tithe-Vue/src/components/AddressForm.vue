@@ -19,7 +19,6 @@ import {
 } from "@/externalized-data/graphqlMutations";
 
 import FormField from "@/components/FormField.vue";
-import SearchBox from "@/components/SearchBox.vue";
 import SingleSelectBox from "@/components/SearchBoxes/SingleSelectBox.vue";
 
 const emit = defineEmits(["addressFormChange"]);

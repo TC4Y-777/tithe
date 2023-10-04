@@ -368,11 +368,25 @@ export const personAllPersonListQuery = `query personPageActivePerson ($parishId
 export const personAllFamilyListQuery = familyAllFamilyListQuery;
 
 export const personAllRelationListQuery = `query personPageRelations{
-    getAllRelations{
-        relationId
-        relationName
-    }
+  getAllRelations{
+      relationId
+      relationName
+  }
 }`;
+
+export const personAllEducationsListQuery = `query personEducations{
+  getAllEducations{
+    educationId
+    educationName
+  }
+}`;
+
+export const personAllOccupationsListQuery = `query personOccupations{
+  getAllOccupations{
+    occupationId
+    occupationName
+  }
+}`
 
 // Address Queries
 

@@ -10,6 +10,8 @@ import ForaneSingleSelectBox from "@/components/SearchBoxes/ForaneSingleSelectBo
 import ParishByForaneSingleSelectBox from "@/components/SearchBoxes/ParishByForaneSingleSelectBox.vue";
 import FamilyByParishSingleSelectBox from "@/components/SearchBoxes/FamilyByParishSingleSelectBox.vue";
 import RelationSingleSelectBox from "@/components/SearchBoxes/RelationSingleSelectBox.vue";
+import EducationsMultiSelectBox from "@/components/SearchBoxes/EducationsMultiSelectBox.vue";
+import OccupationsMultiSelectBox from "@/components/SearchBoxes/OccupationsMultiSelectBox.vue";
 
 const props = defineProps({
   // Since this form is being used in both family and person page
@@ -27,6 +29,7 @@ const props = defineProps({
             familyId: "",
             relationId: "",
             educationIds: [],
+            occupationSector: "",
             occupationIds: [],
           }
         : {
@@ -37,6 +40,7 @@ const props = defineProps({
             phone: "",
             relationId: "",
             educationIds: [],
+            occupationSector: "",
             occupationIds: [],
           },
   },
@@ -75,6 +79,18 @@ const changeInFormRelation = (entity) => {
   createPersonForm.value.relationId = entity?.id ?? "";
 };
 
+const changeInEducation = (entity) => {
+  if (entity !== null && entity !== undefined) {
+    createPersonForm.value.educationIds = entity.map((obj) => obj.id);
+  }
+};
+
+const changeInOccupation = (entity) => {
+  if (entity !== null && entity !== undefined) {
+    createPersonForm.value.occupationIds = entity.map((obj) => obj.id);
+  }
+};
+
 watchEffect(() => {
   emits("update:modelValue", createPersonForm.value);
 });
@@ -83,6 +99,8 @@ const personFormForaneRef = ref(null);
 const personFormParishRef = ref(null);
 const personFormFamilyRef = ref(null);
 const personFormRelationRef = ref(null);
+const personFormEducationsRef = ref(null);
+const personFormOccupationsRef = ref(null);
 
 const clearPersonForm = () => {
   createPersonForm.value.personName = "";
@@ -90,6 +108,7 @@ const clearPersonForm = () => {
   createPersonForm.value.gender = "";
   createPersonForm.value.dob = "";
   createPersonForm.value.phone = "";
+  createPersonForm.value.occupationSector = "";
 
   personFormForaneRef.value?.clearForane();
   formForane.value = "";
@@ -101,6 +120,11 @@ const clearPersonForm = () => {
 
   personFormRelationRef.value.clearRelation();
   createPersonForm.value.relationId = "";
+
+  personFormEducationsRef.value.clearEducations();
+  createPersonForm.value.educationIds = [];
+  personFormOccupationsRef.value.clearOccupations();
+  createPersonForm.value.occupationIds = [];
 };
 
 defineExpose({
@@ -175,6 +199,27 @@ defineExpose({
     class="multipleSelectAddressBox"
     @change-in-relation="changeInFormRelation"
   />
+
+  <EducationsMultiSelectBox
+    ref="personFormEducationsRef"
+    class="multipleSelectAddressBox"
+    @change-in-education="changeInEducation"
+  />
+
+  <FormField label="Occupation Sector">
+    <FormCheckRadioGroup
+      v-model="createPersonForm.occupationSector"
+      name="sample-radio"
+      type="radio"
+      :options="{ GOVERNMENT: 'Government', PRIVATE: 'Private' }"
+    />
+  </FormField>
+
+  <OccupationsMultiSelectBox
+    ref="personFormOccupationsRef"
+    class="multipleSelectAddressBox"
+    @change-in-occupation="changeInOccupation"
+  />
 </template>
 
 <style scoped>
@@ -184,5 +229,9 @@ defineExpose({
   --ms-dropdown-border-color: #1e293b;
 
   --ms-py: 0.757rem;
+}
+
+.multipleSelectAddressBox :deep(.multiselect-tags-search) {
+  background: transparent;
 }
 </style>

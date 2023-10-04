@@ -349,7 +349,15 @@ const {
 } = useMutation(CREATE_FAMILY_MUTATION);
 
 const submitCreateFamilyForm = () => {
-  if (hasEmptyValues(createFamilyForm, ["buildingName", "phone"])) {
+  if (
+    hasEmptyValues(createFamilyForm, [
+      "buildingName",
+      "phone",
+      "educationIds",
+      "occupationSector",
+      "occupationIds",
+    ])
+  ) {
     console.log("Empty Values: " + createFamilyForm);
   } else {
     console.log("Complete Values: " + createFamilyForm);
@@ -705,7 +713,7 @@ const getActivePersonRows = computed(() => {
                   <FormField label="New Head of Family" class="justify-between">
                     <span>
                       <SingleSelectBox
-                      ref="newHeadOfFamilySelectBoxRef"
+                        ref="newHeadOfFamilySelectBoxRef"
                         :can-deselect="false"
                         :can-clear="false"
                         :searchable="false"
