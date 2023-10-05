@@ -13,3 +13,8 @@ input TitheMutationInput{
 	titheAmount: Float!
 	timeStamp: LocalDate!
 }
+
+type AnnualTitheTotalSchema{
+	year: String!
+	titheTotal: Float!
+}

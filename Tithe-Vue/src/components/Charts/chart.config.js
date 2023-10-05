@@ -47,8 +47,8 @@ export const sampleChartData = (points = 9) => {
     labels,
     datasets: [
       datasetObject("primary", points),
-      datasetObject("info", points),
-      datasetObject("danger", points),
+      // datasetObject("info", points),
+      // datasetObject("danger", points),
     ],
   };
 };

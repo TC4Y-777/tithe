@@ -1,0 +1,16 @@
+extend type Query{
+	getCurrentYearPersonTitheTotal(personId: ID!): Float!
+	getAnnualPersonTitheTotal(personId: ID!): [AnnualTitheTotalSchema]
+	
+	getCurrentYearFamilyTitheTotal(familyId: ID!): Float!
+	getAnnualFamilyTitheTotal(familyId: ID!): [AnnualTitheTotalSchema]
+	
+	getCurrentYearKoottaymaTitheTotal(koottaymaId: ID!): Float!
+	getAnnualKoottaymaTitheTotal(koottaymaId: ID!): [AnnualTitheTotalSchema]
+	
+	getCurrentYearParishTitheTotal(parishId: ID!): Float!
+	getAnnualParishTitheTotal(parishId: ID!): [AnnualTitheTotalSchema]
+	
+	getCurrentYearForaneTitheTotal(foraneId: ID!): Float!
+	getAnnualForaneTitheTotal(foraneId: ID!): [AnnualTitheTotalSchema]
+}
