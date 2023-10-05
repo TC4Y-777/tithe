@@ -15,6 +15,9 @@ import com.tithe.model.TitheMutationInput;
 import com.tithe.repository.TitheRepository;
 import com.tithe.service.query.PersonQueryService;
 import com.tithe.service.query.TitheQueryService;
+import com.tithe.utils.ObjectValidation;
+
+import graphql.GraphQLException;
 
 /**
  * @author Ashish Sam T George
@@ -22,6 +25,9 @@ import com.tithe.service.query.TitheQueryService;
  */
 @Service
 public class TitheMutationService {
+	
+	@Autowired
+	private ObjectValidation objectValidation;
 
 	@Autowired
 	private PersonQueryService personQueryService;
@@ -34,9 +40,18 @@ public class TitheMutationService {
 
 	public List<TitheEntity> createManyTithes(Long personId,
 			List<TitheMutationInput> titheMutationInputs) {
+		
+		objectValidation.validateObjects(titheMutationInputs);
 
-//		TODO Try adding @NotNull in the method parameter above - No Use
+		if(personId==null) {
+			throw new GraphQLException("Person Id is not valid");
+		}
+		
 		PersonEntity person = personQueryService.getOnePerson(personId);
+		if(person==null) {
+			throw new GraphQLException("Person does not exist");
+		}
+		
 		TitheBuilder titheBuilder = new TitheBuilder();
 		List<TitheEntity> tithes = titheBuilder.buildTithe(person, titheMutationInputs);
 		return titheRepository.saveAll(tithes);
