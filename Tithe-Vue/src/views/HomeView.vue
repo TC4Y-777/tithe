@@ -17,7 +17,8 @@ import gql from "graphql-tag";
 import { useQuery, useLazyQuery } from "@vue/apollo-composable";
 
 import * as chartConfig from "@/components/Charts/chart.config.js";
-import LineChart from "@/components/Charts/LineChart.vue";
+// import LineChart from "@/components/Charts/LineChart.vue";
+import SingleEntityTitheChart from "@/components/Charts/SingleEntityTitheChart.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBoxWidget from "@/components/CardBoxWidget.vue";
 import CardBox from "@/components/CardBox.vue";
@@ -44,17 +45,49 @@ import {
   homepageActivePersonTableQuery,
 } from "@/externalized-data/graphqlQueries";
 
-const chartData = ref(null);
-
 const tableTabTitle = homepageTableTabTitle;
 
-const fillChartData = () => {
-  chartData.value = chartConfig.sampleChartData();
-};
+// onMounted(() => {
+//   fillChartData();
+// });
 
-onMounted(() => {
-  fillChartData();
-});
+const somanData = ref([]);
+
+somanData.value = [
+  {
+    timeStamp: "2004",
+    titheAmount: 400,
+  },
+  {
+    timeStamp: "2005",
+    titheAmount: 700,
+  },
+  {
+    timeStamp: "2006",
+    titheAmount: 12000,
+  },
+];
+
+const fillChartData = () => {
+  somanData.value = [
+    {
+      timeStamp: "2004",
+      titheAmount: 400,
+    },
+    {
+      timeStamp: "2005",
+      titheAmount: 800,
+    },
+    {
+      timeStamp: "2006",
+      titheAmount: 12000,
+    },
+    {
+      timeStamp: "2007",
+      titheAmount: 14000,
+    },
+  ];
+};
 
 // const mainStore = useMainStore();
 
@@ -195,10 +228,14 @@ const getActivePersonRows = computed(() => {
         />
       </SectionTitleLineWithButton>
 
-      <CardBox class="mb-6">
+      <!-- <CardBox class="mb-6">
         <div v-if="chartData">
           <line-chart :data="chartData" class="h-96" />
         </div>
+      </CardBox> -->
+
+      <CardBox class="mb-6">
+        <SingleEntityTitheChart :data="somanData" />
       </CardBox>
 
       <!-- List of cardboxes -->
