@@ -4,8 +4,8 @@ spring:
   graphql:
     cors:
       allowed-origins:
-        - http://13.53.86.195
-        - http://13.53.86.195:4173
+        - http://16.171.119.189
+        - http://16.171.119.189:4173
   rabbitmq:
     host: rabbitmq
     port: 5672
